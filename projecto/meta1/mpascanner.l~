@@ -1,0 +1,23 @@
+ID								[a-zA-Z][a-zA-Z0-9]*
+INTLIT								[0-9]+
+
+%%
+
+{INTLIT}							{printf("INTLIT()\n");}
+{ID}								{printf("ID()\n");}
+({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{printf("REALLIT\n");}
+'([^']|'')*'							{printf("STRING\n");}
+
+%%
+
+int main()
+{
+yylex();
+return 0;
+}
+
+int yywrap()
+{
+return 1;
+}
+

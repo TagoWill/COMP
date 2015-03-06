@@ -1,8 +1,15 @@
-numero				[0-9]+
+ID								[a-zA-Z][a-zA-Z0-9]*
+INTLIT								[0-9]+
+
 %%
 
-{numero}                        {printf(" Inteiro ");}
-{numero}"."{numero}		{printf(" Real ");}
+
+
+{INTLIT}							{printf("INTLIT()\n");}
+{ID}								{printf("ID()\n");}
+({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{printf("REALLIT\n");}
+'([^']|'')*'							{printf("STRING\n");}
+
 %%
 
 int main()
