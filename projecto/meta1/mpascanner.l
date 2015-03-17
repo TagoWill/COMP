@@ -92,11 +92,11 @@ ENDCOMMENT                          "*)"|"}"
 {INTLIT}                                                        {printf("INTLIT(%s)\n", yytext); col+=yyleng;}
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
 ({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{printf("REALLIT\n"); col+=yyleng;}
-'([^\n']|'')*                               {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux;)}
+'([^\n']|'')*                               {printf("Line %d, col %d: unterminated string\n", lineaux, colaux;)}
 '([^\n']|''|\\.)*'                                              {printf("STRING\n"); col+=yyleng;}
 
 
-TAB                                                             {col++;}
+TAB                                                             {col += yyleng;}
 NEWLINE                                                         {line++; col=1;}
 BLACKSPACE                                                      {col++;}
 
