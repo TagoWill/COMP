@@ -46,7 +46,7 @@ TAB                                 "\t"
 NEWLINE                             "\n"
 STARTCOMMENT                        "(*"|"{"
 ENDCOMMENT                          "*)"
-ENDCOMMENT                          "}"
+ENDCOMMENTT                         "}"
 %X                                  comment
 
 %%
@@ -55,6 +55,7 @@ ENDCOMMENT                          "}"
 <comment>.                  {col++;}
 <comment>{NEWLINE}			{col=1; line++;}
 <comment>{ENDCOMMENT}		{BEGIN 0; col+=yyleng;}
+<comment>{ENDCOMMENTT}		{BEGIN 0; col+=yyleng;}
 {ASSIGN}                                                        {printf("ASSIGN\n"); col +=yyleng;}
 {BEGIN}                                                         {printf("BEGIN\n"); col +=yyleng;}
 {COLON}                                                         {printf("COLON\n"); col +=yyleng;}
