@@ -54,8 +54,7 @@ ENDCOMMENTT                         "}"
 <comment><<EOF>>            {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux); BEGIN 0;}
 <comment>.                  {col++;}
 <comment>{NEWLINE}			{col=1; line++;}
-<comment>{ENDCOMMENT}		{BEGIN 0; col+=yyleng;}
-<comment>{ENDCOMMENTT}		{BEGIN 0; col+=yyleng;}
+<comment>({ENDCOMMENT}|{ENDCOMMENTT})		{BEGIN 0; col+=yyleng;}
 {ASSIGN}                                                        {printf("ASSIGN\n"); col +=yyleng;}
 {BEGIN}                                                         {printf("BEGIN\n"); col +=yyleng;}
 {COLON}                                                         {printf("COLON\n"); col +=yyleng;}
