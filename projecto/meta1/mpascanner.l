@@ -90,7 +90,7 @@ ENDCOMMENT                          "*)"|"}"
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
 ({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?    {printf("REALLIT(%s)\n", yytext); col+=yyleng;}
 '([^\n']*('')*)*                               {printf("Line %d, col %d: unterminated string\n", line, col);}
-'([^\n']|''|\\.)*('')*'                                              {printf("STRING\n"); col+=yyleng;}
+'([^\n']|''|\\.)*('')*'                                              {printf("STRING(%s)\n", yytext); col+=yyleng;}
 {TAB}                                                           {col += yyleng;}
 {NEWLINE}                                                       {line++; col=1;}
 {BLANKSPACE}                                                    {col++;}
