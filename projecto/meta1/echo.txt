@@ -4,3 +4,7 @@ begin
 	val(paramstr(1), x);
 	writeln(x)
 end.
+
+
+
+'sdadasd''''''''''
