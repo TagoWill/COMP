@@ -41,17 +41,14 @@ OP1                                 and|or
 OP2                                 "<"|">"|"="|"<>"|"<="|">="
 OP3                                 "+"|"-"
 OP4                                 "*"|"/"|mod|div
-
 BLANKSPACE                          " "
 TAB                                 "\t"
 NEWLINE                             "\n"
-
 STARTCOMMENT                        "(*"|"{"
 ENDCOMMENT                          "*)"|"}"
 %X                                  comment
 
 %%
-
 {STARTCOMMENT}              {lineaux=line; colaux=col; col += yyleng; BEGIN(comment);}
 <comment><<EOF>>            {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux); BEGIN 0;}
 <comment>.                  {col++;}
@@ -82,10 +79,10 @@ ENDCOMMENT                          "*)"|"}"
 {VAR}                                                           {printf("VAR\n"); col +=yyleng;}
 {WHILE}                                                         {printf("WHILE\n"); col +=yyleng;}
 {WRITELN}                                                       {printf("WRITELN\n"); col +=yyleng;}
-{OP1}                                                           {printf("OP1\n"); col +=yyleng;}
-{OP2}                                                           {printf("OP2\n"); col +=yyleng;}
-{OP3}                                                           {printf("OP3\n"); col +=yyleng;}
-{OP4}                                                           {printf("OP4\n"); col +=yyleng;}
+{OP1}                                                           {printf("OP1(%s)\n", yytext); col +=yyleng;}
+{OP2}                                                           {printf("OP2(%s)\n", yytext); col +=yyleng;}
+{OP3}                                                           {printf("OP3(%s)\n", yytext); col +=yyleng;}
+{OP4}                                                           {printf("OP4(%s)\n", yytext); col +=yyleng;}
 
 {RESERVED}                                                      {printf("RESERVED\n"); col +=yyleng;}
 
@@ -93,8 +90,6 @@ ENDCOMMENT                          "*)"|"}"
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
 ({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{printf("REALLIT\n"); col+=yyleng;}
 '([^\n']|''|\\.)*'                                              {printf("STRING\n"); col+=yyleng;}
-
-
 {TAB}                                                             {col += yyleng;}
 {NEWLINE}                                                         {line++; col=1;}
 {BLANKSPACE}                                                      {col++;}
