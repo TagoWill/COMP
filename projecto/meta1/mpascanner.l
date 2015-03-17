@@ -45,7 +45,8 @@ BLANKSPACE                          " "
 TAB                                 "\t"
 NEWLINE                             "\n"
 STARTCOMMENT                        "(*"|"{"
-ENDCOMMENT                          "*)"|"}"
+ENDCOMMENT                          "*)"
+ENDCOMMENT                          "}"
 %X                                  comment
 
 %%
