@@ -51,9 +51,9 @@ ENDCOMMENT                          "*)"|"}"
 %%
 {STARTCOMMENT}              {lineaux=line; colaux=col; col += yyleng; BEGIN(comment);}
 <comment><<EOF>>            {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux); BEGIN 0;}
-<comment>.                  {col++;}
 <comment>{NEWLINE}			{col=1; line++;}
 <comment>{ENDCOMMENT}		{BEGIN 0; col+=yyleng;}
+<comment>.                  {col++;}
 {ASSIGN}                                                        {printf("ASSIGN\n"); col +=yyleng;}
 {BEGIN}                                                         {printf("BEGIN\n"); col +=yyleng;}
 {COLON}                                                         {printf("COLON\n"); col +=yyleng;}
@@ -84,12 +84,13 @@ ENDCOMMENT                          "*)"|"}"
 {OP3}                                                           {printf("OP3(%s)\n", yytext); col +=yyleng;}
 {OP4}                                                           {printf("OP4(%s)\n", yytext); col +=yyleng;}
 
-{RESERVED}                                                      {printf("RESERVED\n"); col +=yyleng;}
+{RESERVED}                                                      {printf("RESERVED(%s)\n", yytext); col +=yyleng;}
 
 {INTLIT}                                                        {printf("INTLIT(%s)\n", yytext); col+=yyleng;}
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
 ({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?    {printf("REALLIT\n"); col+=yyleng;}
-'([^\n']|''|\\.)*'                                              {printf("STRING\n"); col+=yyleng;}
+'([^\n']|'')*                               {printf("Line %d, col %d: unterminated string\n", line, col;)}
+'([^\n']|''|\\.)*('')*'                                              {printf("STRING\n"); col+=yyleng;}
 {TAB}                                                           {col += yyleng;}
 {NEWLINE}                                                       {line++; col=1;}
 {BLANKSPACE}                                                    {col++;}
