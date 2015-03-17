@@ -42,7 +42,7 @@ OP2                                 "<"|">"|"="|"<>"|"<="|">="
 OP3                                 "+"|"-"
 OP4                                 "*"|"/"|mod|div
 
-BLACKSPACE                          " "
+BLANKSPACE                          " "
 TAB                                 "\t"
 NEWLINE                             "\n"
 
@@ -97,8 +97,7 @@ ENDCOMMENT                          "*)"|"}"
 
 {TAB}                                                             {col += yyleng;}
 {NEWLINE}                                                         {line++; col=1;}
-{BLACKSPACE}                                                      {col++;}
-
+{BLANKSPACE}                                                      {col++;}
 
 .                   {printf("Line %d, col %d: illegal character ('%s')\n", line, col, yytext); col += yyleng;}
 
