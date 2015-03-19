@@ -4,13 +4,14 @@
     int colaux = 0;
     int lineaux = 0;
     
-    %}
+%}
 
 %option case-insensitive
 
 ID                                  [a-zA-Z][a-zA-Z0-9]*
 INTLIT								[0-9]+
 EXPOENTE                            [eE][+-]?{INTLIT}+
+REALLIT                             ({INTLIT}+"."{INTLIT}+){EXPOENTE}?|{INTLIT}+{EXPOENTE}?
 RESERVED    abs|arctan|array|case|char|chr|const|cos|dispose|downto|eof|eoln|exp|file|for|get|goto|in|input|label|ln|maxint|new|nil|odd|of|ord|pack|packed|page|pred|procedure|put|read|readln|record|reset|rewrite|round|set|sin|sqr|sqrt|succ|text|to|trunc|type|unpack|with|write
 
 ASSIGN                              ":="
@@ -89,7 +90,7 @@ ENDCOMMENT                          "*)"|"}"
 
 {INTLIT}                                                        {printf("INTLIT(%s)\n", yytext); col+=yyleng;}
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
-({INTLIT}+"."{INTLIT}+){EXPOENTE}?|{INTLIT}+{EXPOENTE}?         {printf("REALLIT(%s)\n", yytext); col+=yyleng;}
+{REALLIT}                                                       {printf("REALLIT(%s)\n", yytext); col+=yyleng;}
 '([^\n']*('')*)*                               {printf("Line %d, col %d: unterminated string\n", line, col);}
 '([^\n']|''|\\.)*('')*'                                         {printf("STRING(%s)\n", yytext); col+=yyleng;}
 {TAB}                                                           {col += yyleng;}
