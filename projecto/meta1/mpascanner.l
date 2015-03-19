@@ -41,8 +41,6 @@ OP1                                 and|or
 OP2                                 "<"|">"|"="|"<>"|"<="|">="
 OP3                                 "+"|"-"
 OP4                                 "*"|"/"|mod|div
-STRING                              \'([^\n\']|\'\'|\\.)*\'
-BADSTRING                           \'([^\n\']|\'\')*
 BLANKSPACE                          " "
 TAB                                 "\t"
 NEWLINE                             "\n"
@@ -91,8 +89,8 @@ ENDCOMMENT                          "*)"|"}"
 {INTLIT}                                                        {printf("INTLIT(%s)\n", yytext); col+=yyleng;}
 {ID}                                                            {printf("ID(%s)\n", yytext); col+=yyleng;}
 ({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?    {printf("REALLIT(%s)\n", yytext); col+=yyleng;}
-STRING                                                          {printf("STRING(%s)\n", yytext); col+=yyleng;}
-BADSTRING                                   {printf("Line %d, col %d: unterminated string\n", line, col);}
+'([^\n']*('')*)*                               {printf("Line %d, col %d: unterminated string\n", line, col);}
+'([^\n']|''|\\.)*('')*'                                         {printf("STRING(%s)\n", yytext); col+=yyleng;}
 {TAB}                                                           {col += yyleng;}
 {NEWLINE}                                                       {line++; col=1;}
 {BLANKSPACE}                                                    {col++;}
