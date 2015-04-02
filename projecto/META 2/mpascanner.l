@@ -15,48 +15,48 @@ ENDCOMMENT2		"}"
 LINECOMMENT		"//".*
 %X				comment
 %%
-":="					{printf("ASSIGN\n"); col += yyleng;}
-begin					{printf("BEGIN\n"); col += yyleng;}
-":"						{printf("COLON\n"); col += yyleng;}
-","						{printf("COMMA\n"); col += yyleng;}
-do						{printf("DO\n"); col += yyleng;}
-"."						{printf("DOT\n"); col += yyleng;}
-else					{printf("ELSE\n"); col += yyleng;}
-end						{printf("END\n"); col += yyleng;}
-forward					{printf("FORWARD\n"); col += yyleng;}
-function				{printf("FUNCTION\n"); col += yyleng;}
-if						{printf("IF\n"); col += yyleng;}
-"("						{printf("LBRAC\n"); col += yyleng;}
-not						{printf("NOT\n"); col += yyleng;}
-output					{printf("OUTPUT\n"); col += yyleng;}
-paramstr				{printf("PARAMSTR\n"); col += yyleng;}
-program					{printf("PROGRAM\n"); col += yyleng;}
-")"						{printf("RBRAC\n"); col += yyleng;}
-repeat					{printf("REPEAT\n"); col += yyleng;}
-";"						{printf("SEMIC\n"); col += yyleng;}
-then					{printf("THEN\n"); col += yyleng;}
-until					{printf("UNTIL\n"); col += yyleng;}
-val						{printf("VAL\n"); col += yyleng;}
-var						{printf("VAR\n"); col += yyleng;}
-while					{printf("WHILE\n"); col += yyleng;}
-writeln					{printf("WRITELN\n"); col += yyleng;}
+":="					{col += yyleng; return(ASSIGN);}
+begin					{col += yyleng; return(BEGIN)}
+":"						{col += yyleng; return(COLON)}
+","						{col += yyleng; return(COMMA)}
+do						{col += yyleng; return(DO)}
+"."						{col += yyleng; return(DOT)}
+else					{col += yyleng; return(ELSE)}
+end						{col += yyleng; return(END)}
+forward					{col += yyleng; return(FORWARD)}
+function				{col += yyleng; return(FUNCTION)}
+if						{col += yyleng; return(IF)}
+"("						{col += yyleng; return(LBRAC)}
+not						{col += yyleng; return(NOT)}
+output					{col += yyleng; return(OUTPUT)}
+paramstr				{col += yyleng; return(PARAMSTR)}
+program					{col += yyleng; return(PROGRAM)}
+")"						{col += yyleng; return(RBRAC)}
+repeat					{col += yyleng; return(REPEAT)}
+";"						{col += yyleng; return(SEMIC)}
+then					{col += yyleng; return(THEN)}
+until					{col += yyleng; return(UNTIL)}
+val						{col += yyleng; return(VAL)}
+var						{col += yyleng; return(VAR)}
+while					{col += yyleng; return(WHILE)}
+writeln					{col += yyleng; return(WRITELN)}
 
-{RESERVED}				{printf("RESERVED\n"); col += yyleng;}
+{RESERVED}				{col += yyleng; return(RESERVED)}
 
-and 					{printf("OP1(%s)\n", yytext); col += yyleng;}
-or 						{printf("OP1(%s)\n", yytext); col += yyleng;}
-"<"						{printf("OP2(%s)\n", yytext); col += yyleng;}
-">"						{printf("OP2(%s)\n", yytext); col += yyleng;}
-"="						{printf("OP2(%s)\n", yytext); col += yyleng;}
-"<>"					{printf("OP2(%s)\n", yytext); col += yyleng;}
-"<="					{printf("OP2(%s)\n", yytext); col += yyleng;}
-">="					{printf("OP2(%s)\n", yytext); col += yyleng;}
-"+"	 					{printf("OP3(%s)\n", yytext); col += yyleng;}
-"-"	 					{printf("OP3(%s)\n", yytext); col += yyleng;}
-"*"						{printf("OP4(%s)\n", yytext); col += yyleng;}
-"/"						{printf("OP4(%s)\n", yytext); col += yyleng;}
-mod						{printf("OP4(%s)\n", yytext); col += yyleng;}
-div						{printf("OP4(%s)\n", yytext); col += yyleng;}
+and 					{col += yyleng; return(AND)}
+or 						{col += yyleng; return(OR)}
+"<"						{col += yyleng; return(GREATER)}
+">"						{col += yyleng; return(LESS)}
+"="						{col += yyleng; return(EQUALS)}
+"<>"					{col += yyleng; return(DIFFERENT)}
+"<="					{col += yyleng; return(GEQUAL)}
+">="					{col += yyleng; return(LEQUAL)}
+"+"	 					{col += yyleng; return(PLUS)}
+"-"	 					{col += yyleng; return(MINUS)}
+"*"						{col += yyleng; return(MULT)}
+"/"						{col += yyleng; return(DIV)}
+mod						{col += yyleng; return(MOD)}
+div						{col += yyleng; return(DIV)}
 
 {INTLIT}                {printf("INTLIT(%s)\n",yytext); col += yyleng;}
 {ID}					{printf("ID(%s)\n",yytext); col += yyleng;}
