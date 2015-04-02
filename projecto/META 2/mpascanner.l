@@ -1,4 +1,9 @@
 %{
+    #include "y.tab.h"
+    extern int yylval;  /* Para partilhar yylval*/
+    %}
+
+%{
 	int col=1;
 	int line=1;
 	int colaux=0;
