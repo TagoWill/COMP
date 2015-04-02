@@ -1,9 +1,4 @@
 %{
-    #include "y.tab.h"
-    extern int yylval;  /* Para partilhar yylval*/
-    %}
-
-%{
 	int col=1;
 	int line=1;
 	int colaux=0;
@@ -63,10 +58,10 @@ or 						{col += yyleng; return(OR)}
 mod						{col += yyleng; return(MOD)}
 div						{col += yyleng; return(DIV)}
 
-{INTLIT}                {printf("INTLIT(%s)\n",yytext); col += yyleng;}
-{ID}					{printf("ID(%s)\n",yytext); col += yyleng;}
-({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{printf("REALLIT\n"); col+=yyleng;}
-'([^\n']|''|\\.)*'      {printf("STRING\n"); col+=yyleng;}
+{INTLIT}                {col += yyleng; yylval.value=atoi(yytext); return(INTLIT);}
+{ID}					{col += yyleng; yylval.id=(char*)strdup(yytext); return(ID);}
+({INTLIT}+("."{INTLIT}*)?|"."{INTLIT}+)([eE][+-]?{INTLIT}+)?	{col+=yyleng; yylval.value=atoi(yytext); return(REALLIT);}
+'([^\n']|''|\\.)*'      {col+=yyleng; yylval.str=(char*)strdup(yytext); return(STRING);}
 "\n" 					{line++; col=1;}
 "\t" 					{col += yyleng;}
 " "						{col++;}

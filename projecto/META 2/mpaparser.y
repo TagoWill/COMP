@@ -5,7 +5,9 @@
 %}
 
 %union {
-
+	int value;
+	char* id;
+	char* str;
 }
 
 %token ASSIGN
@@ -51,7 +53,7 @@
 %token <id> ID
 %token <value> INTLIT
 %token <value> REALLIT
-%token <id> STRING
+%token <str> STRING
 
 %left	COMMA
 %right	ASSIGN
@@ -62,9 +64,7 @@
 %left	PLUS MINUS
 %left	MULT DIV MOD        		
 %right	NOT
-%right	NEW
-%left	CCURV OSQUARE CSQUARE OCURV
-%left	DOTLENGTH
+%left	RBRAC LBRAC
 
 %nonassoc	IF ELSE
 
