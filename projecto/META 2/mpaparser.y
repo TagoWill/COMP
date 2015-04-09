@@ -1,50 +1,21 @@
 %{
+	#include "y.tab.h"
 	#include <stdio.h>
 	#include <string.h>
 	
+	extern int line;
+	extern int col;
+	extern char *yytext;
+	extern int yyleng;
+
 %}
 
 %union {
-	int value;
-	char *id;
 	char *str;
-
-	is_Prog *p;
-	is_ProgHeading *ph;
-	is_ProgBlock *pb;
-	is_VarPart *vp;
-	is_VarDeclaration *vd;
-	is_IDList *il;
-	is_FuncPart *fp;
-	is_FuncDeclaration1 *fd1; 
-	is_FuncDeclaration2 *fd2;
-	is_FuncDeclaration3 *fd3;
-	is_FuncHeading *fh;
-	is_FuncIdent *fi;
-	is_FormalParamList *fpl;
-	is_FormalParams *fps;
-	is_FuncBlock *fb;
-	is_StatPart *sp;
-	is_CompStat *cs;
-	is_StatList *sl;
-	is_Stat1 *s1;
-	is_Stat2 *s2;
-	is_Stat3 *s3;
-	is_Stat4 *s4;
-	is_Stat5 *s5;
-	is_Stat6 *s6;
-	is_Stat7 *s7;
-	is_WritelnPList *wl;
-	is_Expr1 *ex1;
-	is_Expr2 *ex2;
-	is_Expr3 *ex3;
-	is_Expr4 *ex4;
-	is_Expr5 *ex5;
-	is_ParamList *pl;
 }
 
 %token ASSIGN
-%token BEGIN
+%token BEG
 %token COLON
 %token COMMA
 %token DO
@@ -68,166 +39,98 @@
 %token VAR
 %token WHILE
 %token WRITELN
-%token OR
-%token AND
-%token GREATER
-%token LESS
-%token GEQUAL
-%token LEQUAL
-%token EQUALS
-%token DIFFERENT
-%token PLUS
-%token MINUS
-%token MULT
-%token DIV
-%token MOD
-%token RESERVED
-%token <id> ID
-%token <value> INTLIT
-%token <value> REALLIT
+%token <str> RESERVED
+%token <str> OP1
+%token <str> OP2
+%token <str> OP3
+%token <str> OP4
+%token <str> ID
+%token <str> INTLIT
+%token <str> REALLIT
 %token <str> STRING
 
-%type <p> Prog
-%type <ph> ProgHeading
-%type <pb> ProgBlock
-%type <vp> VarPart
-%type <vd> VarDeclaration
-%type <il> IDList
-%type <fp> FuncPart
-%type <fd1> FuncDeclaration1
-%type <fd2> FuncDeclaration2
-%type <fd3> FuncDeclaration3
-%type <fh> FuncHeading
-%type <fi> FuncIdent
-%type <fpl> FormalParamList
-%type <fps> FormalParams
-%type <fb> FuncBlock
-%type <sp> StatPart
-%type <cs> CompStat
-%type <sl> StatList
-%type <s1> Stat1
-%type <s2> Stat2
-%type <s3> Stat3
-%type <s4> Stat4
-%type <s5> Stat5
-%type <s6> Stat6
-%type <s7> Stat7
-%type <wl> WritelnPList
-%type <ex1> Expr1
-%type <ex2> Expr2
-%type <ex3> Expr3
-%type <ex4> Expr4
-%type <ex5> Expr5
-%type <pl> ParamList
 
 %left	COMMA
 %right	ASSIGN
-%left	OR
-%left	AND            
-%left   EQUALS DIFFERENT
-%left   GREATER LESS LEQUAL GEQUAL
-%left	PLUS MINUS
-%left	MULT DIV MOD        		
+%right	OP1            
+%right  OP2
+%left   OP4
+%right	OP3
+%right   NOT       		
 %left	RBRAC LBRAC
 
 %nonassoc	IF ELSE
 
 %%
 Prog: 
-	ProgHeading
-	SEMIC
-	ProgBlock
-	DOT
+	ProgHeading SEMIC ProgBlock DOT
 	;
 
 ProgHeading:
-	PROGRAM
-	ID
-	LBRAC
-	OUTPUT
-	RBRAC
+	PROGRAM	ID LBRAC OUTPUT RBRAC
 	;
 
 ProgBlock:
-	VarPart
-	FuncPart
-	StatPart
+	VarPart FuncPart StatPart
 	;
 
 VarPart:
-	VAR
-	VarDeclaration
-	SEMIC
-	VarDeclaration
-	SEMIC
+	VAR VarDeclaration SEMIC VarPart2
+	|
+	;
+
+VarPart2:
+	VarDeclaration SEMIC
+	|
 	;
 
 VarDeclaration:
-	IDList
-	COLON
-	ID
+	IDList ID VarDeclaration SEMIC
+	| IDList COLON ID
+	|
 	;
 
 IDList:
-	ID
-	COMMA
-	ID
+	ID COMMA IDList
+	| ID
 	;
 
 FuncPart:
-	FuncDeclaration 
-	SEMIC
+	FuncDeclaration SEMIC
+	| 
 	;
 
 FuncDeclaration:
-	FuncHeading
-	SEMIC
-	FORWARD
-	;
-
-FuncDeclaration2:
-	FuncIdent
-	SEMIC
-	FuncBlock
-	;
-
-FuncDeclaration3:
-	FuncHeading
-	SEMIC
-	FuncBlock
+	FuncHeading SEMIC FORWARD
+	| FuncIdent SEMIC FuncBlock
+	| FuncHeading SEMIC FuncBlock
 	;
 
 FuncHeading:
-	FUNCTION
-	ID
-	FormalParamList
-	COLON
-	ID
+	FUNCTION ID FormalParamList COLON ID
+	| FUNCTION ID COLON ID
 	;
 
 FuncIdent:
-	FUNCTION
-	ID
+	FUNCTION ID
 	;
 
 FormalParamList:
-	LBRAC
-	FormalParams
-	SEMIC
-	FormalParams
-	RBRAC
+	LBRAC FormalParams2 FormalParams RBRAC
 	;
 
 FormalParams:
-	VAR
-	IDList
-	COLON
-	ID
+	SEMIC FormalParams2 FormalParams
+	| 
+	;
+
+FormalParams2:
+	VAR IDList COLON ID
+	| IDList COLON ID
 	;
 
 FuncBlock:
-	VarPart
-	StatPart
+	VarPart StatPart {/*SHIFT/REDUCE no VarPart*/}
 	;
 
 StatPart:
@@ -235,121 +138,73 @@ StatPart:
 	;
 
 CompStat:
-	BEGIN
-	StatList
-	END
+	BEG StatList END
 	;
 
 StatList:
-	Stat
-	SEMIC
-	Stat
+	Stat SEMIC StatList
+	| Stat
 	;
 
 Stat:
 	CompStat
+	| IF Expr THEN Stat Stat2
+	| WHILE Expr DO Stat
+	| REPEAT StatList UNTIL Expr
+	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC
+	| Stat3
+	| WRITELN WritelnPList
+	| WRITELN
 	;
 
 Stat2:
-	IF
-	Expr
-	THEN
-	Stat
-	ELSE
-	Stat
+	ELSE Stat 	{/*SIGHT/REDUCE No lo se soluciono*/}
 	;
 
 Stat3:
-	WHILE
-	Expr
-	DO
-	Stat
-	;
-
-Stat4:
-	REPEAT 
-	StatList 
-	UNTIL 
-	Expr
-	;
-
-Stat5:
-	VAL
-	LBRAC
-	PARAMSTR
-	LBRAC
-	Expr
-	RBRAC
-	COMMA
-	ID
-	RBRAC
-	;
-
-Stat6:
-	ID
-	ASSIGN
-	Expr
-	;
-
-Stat7:
-	WRITELN
-	WritelnPList
+	ID ASSIGN Expr
+	|
 	;
 
 WritelnPList:
-	LBRAC
-	Expr
-	String
-	COMMA
-	Expr
-	STRING
-	RBRAC
+	LBRAC Expr RBRAC WritelnPList2
+	| LBRAC STRING RBRAC WritelnPList2
+	;
+
+WritelnPList2:
+	COMMA STRING WritelnPList2
+	|COMMA Expr WritelnPList2
+	|
 	;
 
 Expr:
-	Expr
-	OP1
-	OP2
-	OP3
-	OP4
-	Expr
-	;
-
-Expr2:
-	OP3
-	NOT
-	Expr
-	;
-
-Expr3:
-	LBRAC
-	Expr
-	RBRAC
-	;
-
-Expr4:
-	INTLIT
-	REALLIT
-	;
-
-Expr5:
-	ID
-	ParamList
+	Expr OP1 Expr
+	| Expr OP2 Expr
+	| Expr OP3 Expr
+	| Expr OP4 Expr	
+	| OP3 Expr
+	| NOT Expr
+	| LBRAC Expr RBRAC
+	| INTLIT
+	| REALLIT
+	| ID ParamList
+	| ID
 	;
 
 ParamList:
-	LBRAC
-	Expr
-	COMMA
-	Expr
-	RBRAC
+	LBRAC Expr ParamList2 RBRAC
 	;
 
+ParamList2:
+	COMMA Expr
+	|
+	;
 
 %%
 int yyerror (char *s)
 {
-	if(strcmp(yytext, "")==0)
+	
+	if(strcmp(s, "")==0)
 	{
 		printf ("Line %d, col %d: %s: %s\n", line, (col), s, yytext);
 	} else {

@@ -1,0 +1,123 @@
+
+ProgBlock:
+	VarPart FuncPart StatPart
+	;
+
+VarPart:
+	VAR VarDeclaration SEMIC VarPart2
+	|
+	;
+
+VarPart2:
+	VarDeclaration SEMIC
+	|
+	;
+
+VarDeclaration:
+	IDList COLON ID VarDeclaration SEMIC
+	| IDList COLON ID
+	|
+	;
+
+IDList:
+	ID COMMA IDList
+	| ID
+	;
+
+FuncPart:
+	FuncDeclaration SEMIC
+	| 
+	;
+
+FuncDeclaration:
+	FuncHeading SEMIC FORWARD
+	| FuncIdent SEMIC FuncBlock
+	| FuncHeading SEMIC FuncBlock
+	;
+
+FuncHeading:
+	FUNCTION ID FormalParamList COLON ID
+	| FUNCTION ID COLON ID
+	;
+
+FuncIdent:
+	FUNCTION ID
+	;
+
+FormalParamList:
+	LBRAC FormalParams2 FormalParams RBRAC
+	;
+
+FormalParams:
+	SEMIC FormalParams2 FormalParams
+	| 
+	;
+
+FormalParams2:
+	VAR IDList COLON ID
+	| IDList COLON ID
+	;
+
+FuncBlock:
+	VarPart StatPart
+	;
+
+StatPart:
+	CompStat
+	;
+
+CompStat:
+	BEG StatList END
+	;
+
+StatList:
+	Stat SEMIC StatList
+	| Stat
+	;
+
+Stat:
+	CompStat
+	| IF Expr THEN Stat ELSE Stat
+	| IF Expr THEN Stat
+	| WHILE Expr DO Stat
+	| REPEAT StatList UNTIL Expr
+	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC
+	| ID ASSIGN Expr
+	| WRITELN WritelnPList
+	| WRITELN
+	|
+	;
+
+WritelnPList:
+	LBRAC Expr RBRAC WritelnPList2
+	| LBRAC STRING RBRAC WritelnPList2
+	;
+
+WritelnPList2:
+	COMMA STRING WritelnPList2
+	|COMMA Expr WritelnPList2
+	|
+	;
+
+Expr:
+	Expr OP1 Expr
+	| Expr OP2 Expr
+	| Expr OP3 Expr
+	| Expr OP4 Expr	
+	| OP3 Expr
+	| NOT Expr
+	| LBRAC Expr RBRAC
+	| INTLIT
+	| REALLIT
+	| ID ParamList
+	| ID
+	;
+
+ParamList:
+	LBRAC Expr ParamList2 RBRAC
+	;
+
+ParamList2:
+	COMMA Expr
+	|
+	;
