@@ -39,171 +39,191 @@
 %token VAR
 %token WHILE
 %token WRITELN
+%token OR
+%token AND
+%token GREATER
+%token LESS
+%token GEQUAL
+%token LEQUAL
+%token EQUALS
+%token DIFFERENT
+%token PLUS
+%token MINUS
+%token MULT
+%token DIV
+%token MOD
 %token <str> RESERVED
-%token <str> OP1
-%token <str> OP2
-%token <str> OP3
-%token <str> OP4
 %token <str> ID
 %token <str> INTLIT
 %token <str> REALLIT
 %token <str> STRING
 
 
-%left	COMMA
-%right	ASSIGN
-%right	OP1            
-%right  OP2
-%left   OP4
-%right	OP3
-%right   NOT       		
-%left	RBRAC LBRAC
 
-%nonassoc	IF ELSE
+%left 	MULT DIV MOD AND
+%left	PLUS MINUS OR
+%left	GREATER LESS GEQUAL LEQUAL EQUALS DIFFERENT
+%left 	NOT
+%left 	IF
+%left	THEN
+%left   ELSE
+
+
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT
+	ProgHeading SEMIC ProgBlock DOT 							{}
 	;
 
 ProgHeading:
-	PROGRAM	ID LBRAC OUTPUT RBRAC
+	PROGRAM	ID LBRAC OUTPUT RBRAC 								{}
 	;
 
 ProgBlock:
-	VarPart FuncPart StatPart
+	VarPart FuncPart StatPart 									{}
 	;
 
 VarPart:
-	VAR VarDeclaration SEMIC VarPart2
+	VAR VarDeclaration SEMIC VarPart2 							{}
 	|
 	;
 
 VarPart2:
-	VarDeclaration SEMIC
+	VarDeclaration SEMIC VarPart2 								{}
 	|
 	;
 
 VarDeclaration:
-	IDList ID VarDeclaration SEMIC
-	| IDList COLON ID
-	|
+	IDList COLON ID 											{}
 	;
 
 IDList:
-	ID COMMA IDList
-	| ID
+	ID IDList2 													{}
+	;
+
+IDList2:
+	COMMA ID IDList2 											{}
+	|
 	;
 
 FuncPart:
-	FuncDeclaration SEMIC
+	FuncDeclaration SEMIC FuncPart 								{}
 	| 
 	;
 
 FuncDeclaration:
-	FuncHeading SEMIC FORWARD
-	| FuncIdent SEMIC FuncBlock
-	| FuncHeading SEMIC FuncBlock
+	FuncHeading SEMIC FORWARD 									{}
+	| FuncIdent SEMIC FuncBlock 								{}
+	| FuncHeading SEMIC FuncBlock 								{}
 	;
 
 FuncHeading:
-	FUNCTION ID FormalParamList COLON ID
-	| FUNCTION ID COLON ID
+	FUNCTION ID FormalParamList COLON ID 						{}
+	| FUNCTION ID COLON ID 										{}
 	;
 
 FuncIdent:
-	FUNCTION ID
+	FUNCTION ID 												{}
 	;
 
 FormalParamList:
-	LBRAC FormalParams2 FormalParams RBRAC
+	LBRAC FormalParams2 FormalParams RBRAC 						{}
 	;
 
 FormalParams:
-	SEMIC FormalParams2 FormalParams
+	SEMIC FormalParams2 FormalParams 							{}
 	| 
 	;
 
 FormalParams2:
-	VAR IDList COLON ID
-	| IDList COLON ID
+	VAR IDList COLON ID 										{}
+	| IDList COLON ID 											{}
 	;
 
 FuncBlock:
-	VarPart StatPart {/*SHIFT/REDUCE no VarPart*/}
+	VarPart StatPart 											{}
 	;
 
 StatPart:
-	CompStat
+	CompStat 													{}
 	;
 
 CompStat:
-	BEG StatList END
+	BEG StatList END 											{}
 	;
 
 StatList:
-	Stat SEMIC StatList
-	| Stat
+	Stat StatList2 												{}
+	;
+
+StatList2:
+	SEMIC Stat StatList2 										{}
+	|
 	;
 
 Stat:
-	CompStat
-	| IF Expr THEN Stat Stat2
-	| WHILE Expr DO Stat
-	| REPEAT StatList UNTIL Expr
-	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC
-	| Stat3
-	| WRITELN WritelnPList
-	| WRITELN
+	CompStat 													{}
+	| IF Expr THEN Stat ELSE Stat  								{}
+	| IF Expr THEN Stat  										{}
+	| WHILE Expr DO Stat 										{}
+	| REPEAT StatList UNTIL Expr 								{}
+	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{}
+	| Stat2 							{}
+	| WRITELN WritelnPList 				{}
+	| WRITELN 							{}
 	;
 
 Stat2:
-	ELSE Stat 	{/*SIGHT/REDUCE No lo se soluciono*/}
-	;
-
-Stat3:
-	ID ASSIGN Expr
+	ID ASSIGN Expr 						{}
 	|
 	;
 
 WritelnPList:
-	LBRAC Expr RBRAC WritelnPList2
-	| LBRAC STRING RBRAC WritelnPList2
+	LBRAC Expr RBRAC WritelnPList2 		{}
+	| LBRAC STRING RBRAC WritelnPList2 	{}
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2
-	|COMMA Expr WritelnPList2
+	COMMA STRING WritelnPList2 			{}
+	|COMMA Expr WritelnPList2 			{}
 	|
 	;
 
 Expr:
-	Expr OP1 Expr
-	| Expr OP2 Expr
-	| Expr OP3 Expr
-	| Expr OP4 Expr	
-	| OP3 Expr
-	| NOT Expr
-	| LBRAC Expr RBRAC
-	| INTLIT
-	| REALLIT
-	| ID ParamList
-	| ID
+	Expr PLUS Expr 						{}
+	| Expr MINUS Expr 					{}
+	| Expr AND Expr 					{}
+	| Expr OR Expr 						{}
+	| Expr MULT Expr 					{}
+	| Expr DIV Expr 					{}
+	| Expr MOD Expr	 					{}
+	| Expr GREATER Expr 				{}
+	| Expr LESS Expr 					{}
+	| Expr GEQUAL Expr 					{}
+	| Expr EQUALS Expr 					{}
+	| Expr DIFFERENT Expr 				{}
+	| AND Expr 							{}
+	| MINUS Expr 						{}
+	| NOT Expr 							{}
+	| LBRAC Expr RBRAC 					{}
+	| INTLIT 							{}
+	| REALLIT 							{}
+	| ID ParamList 						{}
+	| ID 								{}
 	;
 
 ParamList:
-	LBRAC Expr ParamList2 RBRAC
+	LBRAC Expr ParamList2 RBRAC			{}
 	;
 
 ParamList2:
-	COMMA Expr
+	COMMA Expr ParamList2				{}
 	|
 	;
 
 %%
 int yyerror (char *s)
 {
-	
 	if(strcmp(s, "")==0)
 	{
 		printf ("Line %d, col %d: %s: %s\n", line, (col), s, yytext);

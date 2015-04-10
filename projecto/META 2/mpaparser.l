@@ -40,10 +40,6 @@ VAL                                 val
 VAR                                 var
 WHILE                               while
 WRITELN                             writeln
-OP1                                 and|or
-OP2                                 "<"|">"|"="|"<>"|"<="|">="
-OP3                                 "+"|"-"
-OP4                                 "*"|"/"|mod|div
 BLANKSPACE                          " "
 TAB                                 "\t"
 NEWLINE                             "\n"
@@ -82,10 +78,20 @@ ENDCOMMENT                          "*)"|"}"
 {VAR}                                                           {col +=yyleng;return VAR;}
 {WHILE}                                                         {col +=yyleng;return WHILE;}
 {WRITELN}                                                       {col +=yyleng;return WRITELN;}
-{OP1}                                                           {col +=yyleng;yylval.str=(char*)strdup(yytext);return OP1;}
-{OP2}                                                           {col +=yyleng;yylval.str=(char*)strdup(yytext);return OP2;}
-{OP3}                                                           {col +=yyleng;yylval.str=(char*)strdup(yytext);return OP3;}
-{OP4}                                                           {col +=yyleng;yylval.str=(char*)strdup(yytext);return OP4;}
+and 															{col += yyleng; return(AND);}
+or 																{col += yyleng; return(OR);}
+"<"																{col += yyleng; return(GREATER);}
+">"																{col += yyleng; return(LESS);}
+"="																{col += yyleng; return(EQUALS);}
+"<>"															{col += yyleng; return(DIFFERENT);}
+"<="															{col += yyleng; return(GEQUAL);}
+">="															{col += yyleng; return(LEQUAL);}
+"+"	 															{col += yyleng; return(PLUS);}
+"-"	 															{col += yyleng; return(MINUS);}
+"*"																{col += yyleng; return(MULT);}
+"/"																{col += yyleng; return(DIV);}
+mod																{col += yyleng; return(MOD);}
+div																{col += yyleng; return(DIV);}
 
 {RESERVED}                                                      {col +=yyleng;yylval.str=(char*)strdup(yytext);return RESERVED;}
 
