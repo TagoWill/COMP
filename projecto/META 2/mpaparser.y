@@ -1,6 +1,6 @@
 %{
-	#include "y.tab.h"
 	#include "structures.h"
+	#include "y.tab.h"
 	#include "functions.h"
 	#include "shows.h"
 	#include <stdio.h>
