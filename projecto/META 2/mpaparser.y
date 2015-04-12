@@ -12,12 +12,12 @@
 	extern int yyleng;
 
 
-	is_program* myprogram;
+	is_Prog* myprogram;
 %}
 
 %union {
 	char *str;
-	is_program* p;
+	is_Prog* p;
 }
 
 %token ASSIGN
@@ -78,7 +78,7 @@
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT 							{insert_Prog();myprogram=$$;}
+	ProgHeading SEMIC ProgBlock DOT 							{$$=insert_Prog();myprogram=$$;}
 	;
 
 ProgHeading:
