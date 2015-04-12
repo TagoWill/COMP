@@ -8,6 +8,8 @@
 	extern char *yytext;
 	extern int yyleng;
 
+
+	is_program* myprogram;
 %}
 
 %union {
@@ -72,7 +74,7 @@
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT 							{}
+	ProgHeading SEMIC ProgBlock DOT 							{insert_Prog();myprogram=$$;}
 	;
 
 ProgHeading:
@@ -168,56 +170,56 @@ Stat:
 	| WHILE Expr DO Stat 										{}
 	| REPEAT StatList UNTIL Expr 								{}
 	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{}
-	| Stat2 							{}
-	| WRITELN WritelnPList 				{}
-	| WRITELN 							{}
+	| Stat2 													{}
+	| WRITELN WritelnPList 										{}
+	| WRITELN 													{}
 	;
 
 Stat2:
-	ID ASSIGN Expr 						{}
+	ID ASSIGN Expr 												{}
 	|
 	;
 
 WritelnPList:
-	LBRAC Expr RBRAC WritelnPList2 		{}
-	| LBRAC STRING RBRAC WritelnPList2 	{}
+	LBRAC Expr RBRAC WritelnPList2 								{}
+	| LBRAC STRING RBRAC WritelnPList2						 	{}
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2 			{}
-	|COMMA Expr WritelnPList2 			{}
+	COMMA STRING WritelnPList2 									{}
+	|COMMA Expr WritelnPList2 									{}
 	|
 	;
 
 Expr:
-	Expr PLUS Expr 						{}
-	| Expr MINUS Expr 					{}
-	| Expr AND Expr 					{}
-	| Expr OR Expr 						{}
-	| Expr MULT Expr 					{}
-	| Expr DIV Expr 					{}
-	| Expr MOD Expr	 					{}
-	| Expr GREATER Expr 				{}
-	| Expr LESS Expr 					{}
-	| Expr GEQUAL Expr 					{}
-	| Expr EQUALS Expr 					{}
-	| Expr DIFFERENT Expr 				{}
-	| AND Expr 							{}
-	| MINUS Expr 						{}
-	| NOT Expr 							{}
-	| LBRAC Expr RBRAC 					{}
-	| INTLIT 							{}
-	| REALLIT 							{}
-	| ID ParamList 						{}
-	| ID 								{}
+	Expr PLUS Expr 												{}
+	| Expr MINUS Expr 											{}
+	| Expr AND Expr 											{}
+	| Expr OR Expr 												{}
+	| Expr MULT Expr 											{}
+	| Expr DIV Expr 											{}
+	| Expr MOD Expr	 											{}
+	| Expr GREATER Expr 										{}
+	| Expr LESS Expr 											{}
+	| Expr GEQUAL Expr 											{}
+	| Expr EQUALS Expr 											{}
+	| Expr DIFFERENT Expr 										{}
+	| AND Expr 													{}
+	| MINUS Expr 												{}
+	| NOT Expr 													{}
+	| LBRAC Expr RBRAC 											{}
+	| INTLIT 													{}
+	| REALLIT 													{}
+	| ID ParamList 												{}
+	| ID 														{}
 	;
 
 ParamList:
-	LBRAC Expr ParamList2 RBRAC			{}
+	LBRAC Expr ParamList2 RBRAC									{}
 	;
 
 ParamList2:
-	COMMA Expr ParamList2				{}
+	COMMA Expr ParamList2										{}
 	|
 	;
 
@@ -236,5 +238,6 @@ int yyerror (char *s)
 int main()
 {
 	yyparse();
+	show_prog(myprogram);
 	return 0;
 }
