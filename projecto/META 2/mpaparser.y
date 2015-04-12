@@ -14,6 +14,7 @@
 
 %union {
 	char *str;
+	is_program* p;
 }
 
 %token ASSIGN
@@ -70,7 +71,7 @@
 %left	THEN
 %left   ELSE
 
-
+%type <p> Prog
 
 %%
 Prog: 
