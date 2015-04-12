@@ -1,10 +1,10 @@
 %{
 	#include "structures.h"
-	#include "y.tab.h"
 	#include "functions.h"
 	#include "shows.h"
 	#include <stdio.h>
 	#include <string.h>
+	#include "y.tab.h"
 	
 	extern int line;
 	extern int col;
