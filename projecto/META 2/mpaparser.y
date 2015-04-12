@@ -1,5 +1,8 @@
 %{
 	#include "y.tab.h"
+	#include "structures.h"
+	#include "functions.h"
+	#include "shows.h"
 	#include <stdio.h>
 	#include <string.h>
 	
