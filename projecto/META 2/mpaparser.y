@@ -12,7 +12,7 @@
 	extern int yyleng;
 
 
-	is_Prog* myprogram;
+	is_Prog* myprogram = NULL;
 %}
 
 %union {
@@ -78,7 +78,7 @@
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT 							{$$=insert_Prog();myprogram=$$;}
+	ProgHeading SEMIC ProgBlock DOT 							{$$=insert_Prog();	myprogram=$$;}
 	;
 
 ProgHeading:
