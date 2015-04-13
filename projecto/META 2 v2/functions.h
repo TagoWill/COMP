@@ -1,22 +1,18 @@
 #include "structures.h"
 
 
-is_Prog *insert_Prog(ProgHeading SEMIC ProgBlock DOT);
+is_Prog *insert_Prog(is_ProgHeading *iph, is_ProgBlock *ipb);
 
-is_ProgHeading *insert_ProgHeading(PROGRAM ID LBRAC OUTPUT RBRAC);
+is_ProgHeading *insert_ProgHeading(char *valor);
 
-is_ProgBlock *insert_ProgBlock(VarPart FuncPart StatPart);
+is_ProgBlock *insert_ProgBlock(is_VarPart_List *ivp, is_FuncPart_List *ifpl, is_StatPart *isp);
 
-is_VarPart *insert_VarPart(VAR VarDeclaration SEMIC VarPart2);
+is_VarPart_List *insert_VarPart(is_VarDeclaration *ivd, is_VarPart_List *list);
 
-is_VarPart2 *insert_VarPart2(VarDeclaration SEMIC VarPart2);
+is_VarDeclaration *insert_VarDeclaration(is_IDList_List *iIDlist, char *value);
 
-is_VarDeclaration *insert_VarDeclaration(IDList COLON ID);
-
-is_IDList *insert_IDList(ID IDList2);
-
-is_IDList2 *insert_IDList2(COMMA ID IDList2);
-
+is_IDList_List *insert_IDList(char *value, is_IDList_List *list);
+/*
 is_FuncPart *insert_FuncPart(FuncDeclaration SEMIC FuncPart);
 
 is_FuncDeclaration *insert_FuncDeclaration(FuncHeading SEMIC FORWARD		FuncIdent SEMIC FuncBlock 			FuncHeading SEMIC FuncBlock);
@@ -69,3 +65,4 @@ is_ParamList *insert_ParamList(LBRAC Expr ParamList2 RBRAC);
 
 is_ParamList2 *insert_ParamList2(COMMA Expr ParamList2);
 
+*/

@@ -5,56 +5,72 @@
 #include <string.h>
 #include <ctype.h>
 
-is_Prog *insert_Prog()
+is_Prog *insert_Prog(is_ProgHeading *iph, is_ProgBlock *ipb)
 {
 	is_Prog *p=(is_Prog*)malloc(sizeof(is_Prog));
-	p->teste = 25;
-	p->next = NULL;
-	return ip;
+	p->ph = iph;
+	p->pb = ipb;
+	return p;
 }
 
-is_ProgHeading *insert_ProgHeading()
+is_ProgHeading *insert_ProgHeading(char *valor)
 {
 	is_ProgHeading *ph=(is_ProgHeading*)malloc(sizeof(is_ProgHeading));
+	ph->id = valor;
 	return ph;
 }
 
-is_ProgBlock *insert_ProgBlock()
+is_ProgBlock *insert_ProgBlock(is_VarPart_List *ivp, is_FuncPart_List *ifpl, is_StatPart *isp)
 {
 	is_ProgBlock *pb=(is_ProgBlock*)malloc(sizeof(is_ProgBlock));
+	pb->vp = ivp;
+	pb->fpl = ifpl;
+	pb->sp = isp;
 	return pb;
 }
 
-is_VarPart *insert_VarPart()
+is_VarPart_List *insert_VarPart(is_VarDeclaration *ivd, is_VarPart_List *list)
 {
-	is_VarPart *vp=(is_VarPart*)malloc(sizeof(is_VarPart));
-	return vp;
+	is_VarPart_List *vp=(is_VarPart_List*)malloc(sizeof(is_VarPart_List));
+	vp->vd = ivd;
+
+
+	if(list == NULL)
+		return vp;
+
+	is_VarPart_List *aux;
+	for(aux = list; aux->next != NULL; aux=aux->next);
+		aux->next = vp;
+
+	return list;
+
 }
 
-is_VarPart2 *insert_VarPart2()
-{
-	is_VarPart2 *vp2=(is_VarPart2*)malloc(sizeof(is_VarPart2));
-	return vp2;
-}
-
-is_VarDeclaration *insert_VarDeclaration()
+is_VarDeclaration *insert_VarDeclaration(is_IDList_List *iIDlist, char *value)
 {
 	is_VarDeclaration *vd=(is_VarDeclaration*)malloc(sizeof(is_VarDeclaration));
+
+	vd->idlist = iIDlist; 
+	vd->id = value;
+
 	return vd;
 }
 
-is_IDList *insert_IDList()
+is_IDList_List *insert_IDList(char *value, is_IDList_List *list)
 {
-	is_IDList *il=(is_IDList*)malloc(sizeof(is_IDList));
-	return il;
-}
+	is_IDList_List *il=(is_IDList_List*)malloc(sizeof(is_IDList_List));
+	il->id = value;
+	
+	if(list == NULL)
+		return il;
 
-is_IDList2 *insert_IDList2()
-{
-	is_IDList2 *il2=(is_IDList2*)malloc(sizeof(is_IDList2));
-	return il2;
-}
+	is_IDList_List *aux;
+	for(aux=list;aux->next != NULL; aux=aux->next);
+		aux->next = il;
 
+	return list;
+}
+/*
 is_FuncPart *insert_FuncPart()
 {
 	is_FuncPart *fp=(is_FuncPart*)malloc(sizeof(is_FuncPart));
@@ -210,3 +226,4 @@ is_ParamList2 *insert_ParamList2()
 	is_ParamList2 *pl2=(is_ParamList2)malloc(sizeof(is_ParamList2));
 	return pl2;
 }
+*/
