@@ -12,15 +12,17 @@ is_VarPart_List *insert_VarPart(is_VarDeclaration *ivd, is_VarPart_List *list);
 is_VarDeclaration *insert_VarDeclaration(is_IDList_List *iIDlist, char *value);
 
 is_IDList_List *insert_IDList(char *value, is_IDList_List *list);
+
+is_FuncPart_List *insert_FuncPart(is_FuncDeclaration *ifd, is_FuncPart_List *list);
+
+is_FuncDeclaration *insert_FuncDeclarationH(is_FuncHeading *ifh,is_FuncBlock *ifb);
+
+is_FuncDeclaration *insert_FuncDeclarationI(is_FuncIdent *ifi,is_FuncBlock *ifb);
 /*
-is_FuncPart *insert_FuncPart(FuncDeclaration SEMIC FuncPart);
-
-is_FuncDeclaration *insert_FuncDeclaration(FuncHeading SEMIC FORWARD		FuncIdent SEMIC FuncBlock 			FuncHeading SEMIC FuncBlock);
-
 is_FuncHeading *insert_FuncHeading(FUNCTION ID FormalParamList COLON ID 			FUNCTION ID COLON ID);
-
-is_FuncIdent *insert_FuncIdent(FUNCTION ID);
-
+*/
+is_FuncIdent *insert_FuncIdent(char *value);
+/*
 is_FormalParamList *insert_FormalParamList(LBRAC FormalParams2 FormalParams RBRAC);
 
 is_FormalParams *insert_FormalParams(SEMIC FormalParams2 FormalParams);

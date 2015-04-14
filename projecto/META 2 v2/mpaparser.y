@@ -10,6 +10,7 @@
 	extern int col;
 	extern char *yytext;
 	extern int yyleng;
+	int erros = 0;
 
 
 	is_Prog* myprogram = NULL;
@@ -25,9 +26,11 @@
 	is_StatPart *sp;
 	is_VarDeclaration *vd;
 	is_IDList_List *il;
-	/*is_FuncDeclaration *fd;
-	is_FuncHeading *fh;
+	is_FuncDeclaration *fd;
+	/*is_FuncHeading *fh;
+	*/
 	is_FuncIdent *fi;
+	/*
 	is_FormalParamList *fpl;
 	is_FormalParams *fps;
 	is_FormalParams2 *fps2;
@@ -115,6 +118,10 @@
 %type <vd> VarDeclaration
 %type <il> IDList
 %type <il> IDList2
+%type <fd> FuncDeclaration
+
+%type <fi> FuncIdent
+
 
 %%
 Prog: 
@@ -126,7 +133,7 @@ ProgHeading:
 	;
 
 ProgBlock:
-	VarPart FuncPart StatPart 									{$$=insert_ProgBlock($1, NULL, NULL);}
+	VarPart FuncPart StatPart 									{$$=insert_ProgBlock($1, $2, NULL);}
 	;
 
 VarPart:
@@ -153,14 +160,14 @@ IDList2:
 	;
 
 FuncPart:
-	FuncDeclaration SEMIC FuncPart 								{/*$$=insert_FuncPart($1, $3);*/}
-	| 															{/*$$=insert_FuncPart(null, null;*/}
+	FuncDeclaration SEMIC FuncPart 								{$$=insert_FuncPart($1, $3);}
+	| 															{$$=insert_FuncPart(NULL, NULL);}
 	;
 
 FuncDeclaration:
-	FuncHeading SEMIC FORWARD 									{/*$$=insert_FuncDeclaration($1, $3);*/}
-	| FuncIdent SEMIC FuncBlock 								{/*$$=insert_FuncDeclaration($1, $3);*/}
-	| FuncHeading SEMIC FuncBlock 								{/*$$=insert_FuncDeclaration($1, $3);*/}
+	FuncHeading SEMIC FORWARD 									{$$=insert_FuncDeclarationH(NULL, NULL);}
+	| FuncIdent SEMIC FuncBlock 								{$$=insert_FuncDeclarationI($1, NULL);}
+	| FuncHeading SEMIC FuncBlock 								{$$=insert_FuncDeclarationH(NULL, NULL);}
 	;
 
 FuncHeading:
@@ -169,7 +176,7 @@ FuncHeading:
 	;
 
 FuncIdent:
-	FUNCTION ID 												{/*$$=insert_FuncIdent($1, $2);*/}
+	FUNCTION ID 												{$$=insert_FuncIdent($2);}
 	;
 
 FormalParamList:
@@ -276,12 +283,14 @@ int yyerror (char *s)
 	} else {
 		printf ("Line %d, col %d: %s: %s\n", line, (col-yyleng), s, yytext);
 	}
+	erros=1;
 	return 1;
 }
 
 int main()
 {
 	yyparse();
-	show_prog(myprogram);
+	if(erros != 1)
+		show_prog(myprogram);
 	return 0;
 }

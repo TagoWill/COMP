@@ -70,31 +70,56 @@ is_IDList_List *insert_IDList(char *value, is_IDList_List *list)
 
 	return list;
 }
-/*
-is_FuncPart *insert_FuncPart()
+
+is_FuncPart_List *insert_FuncPart(is_FuncDeclaration *ifd, is_FuncPart_List *list)
 {
-	is_FuncPart *fp=(is_FuncPart*)malloc(sizeof(is_FuncPart));
-	return fp;
+	is_FuncPart_List *fp=(is_FuncPart_List*)malloc(sizeof(is_FuncPart_List));
+	fp->fd = ifd;
+
+	if(list == NULL)
+		return fp;
+
+	is_FuncPart_List *aux;
+	for(aux=list;aux->next != NULL; aux=aux->next);
+		aux->next = fp;
+	return list;
 }
 
-is_FuncDeclaration *insert_FuncDeclaration()
+is_FuncDeclaration *insert_FuncDeclarationH(is_FuncHeading *ifh,is_FuncBlock *ifb)
 {
-	is_FuncDeclaration1 *fd=(is_FuncDeclaration1*)malloc(sizeof(is_FuncDeclaration1));
+	is_FuncDeclaration *fd=(is_FuncDeclaration*)malloc(sizeof(is_FuncDeclaration));
+	fd->tf=tipo_funcHeading;
+	fd->data_funcdeclaration.fh=(struct is_FuncHeading*) ifh;
+
+	fd->fb = ifb;
+
 	return fd;
 }
 
+is_FuncDeclaration *insert_FuncDeclarationI(is_FuncIdent *ifi,is_FuncBlock *ifb)
+{
+	is_FuncDeclaration *fd=(is_FuncDeclaration*)malloc(sizeof(is_FuncDeclaration));
+	fd->tf=tipo_funcident;
+	fd->data_funcdeclaration.fi=(struct is_FuncIdent*) ifi;
+
+	fd->fb = ifb;
+
+	return fd;
+}
+/*
 is_FuncHeading *insert_FuncHeading()
 {
 	is_FuncHeading *fh=(is_FuncHeading*)malloc(sizeof(is_FuncHeading));	
 	return fh;
 }
-
-is_FuncIdent *insert_FuncIdent()
+*/
+is_FuncIdent *insert_FuncIdent(char *value)
 {
 	is_FuncIdent *fi=(is_FuncIdent*)malloc(sizeof(is_FuncIdent));
+	fi->id = value;
 	return fi;
 }
-
+/*
 is_FormalParamList *insert_FormalParamList()
 {
 	is_FormalParamList *fpl=(is_FormalParamList*)malloc(sizeof(is_FormalParamList));

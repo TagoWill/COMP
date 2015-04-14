@@ -1,6 +1,34 @@
 #ifndef _STRUCTURES_
 #define _STRUCTURES_
 
+typedef enum{tipo_funcHeading, tipo_funcident} tipos_funcdeclaration;
+
+typedef struct _a14
+{
+	int apagar;
+}is_FuncBlock;
+
+typedef struct _a13
+{
+	char *id;
+}is_FuncIdent;
+
+typedef struct _a12
+{
+	int apgar;
+}is_FuncHeading;
+
+typedef struct _a11
+{
+	tipos_funcdeclaration tf;
+	union{
+		struct is_FuncHeading *fh;
+		struct is_FuncIdent *fi;
+	}data_funcdeclaration;
+	is_FuncBlock *fb;
+
+}is_FuncDeclaration;
+
 typedef struct _a10
 {
 	char *id;
@@ -22,9 +50,9 @@ typedef struct _a7
 
 typedef struct _a6
 {
-	int apaggar;
+	is_FuncDeclaration *fd;
 	struct _a6 *next;
-	/* data */
+	
 }is_FuncPart_List;
 
 typedef struct _a5

@@ -36,8 +36,37 @@ void show_statpart(is_StatPart *sp, int tamanho){
 
 }
 
-void show_funcpart(is_FuncPart_List *fpl, int tamanho){
+void show_funcident(is_FuncIdent *fi, int tamanho){
+	if(fi != NULL){
+		espacamento(tamanho);
+		char *value = fi->id;
+		printf("Id(%s)\n", value);
+	}
+}
 
+void show_funcdeclaration(is_FuncDeclaration *fd, int tamanho){
+	if(fd != NULL){
+		espacamento(tamanho-1);
+		printf("FuncDecl\n");
+		if(fd->tf == tipo_funcident){
+			show_funcident((is_FuncIdent*)fd->data_funcdeclaration.fi, tamanho);
+		}
+	}
+	/*NAO ACABADO*/
+/*
+	tipos_funcdeclaration tf;
+	union{
+		struct is_FuncHeading *fh;
+		struct is_FuncIdent *fi;
+	}data_funcdeclaration;
+	is_FuncBlock *fb;*/
+}
+
+void show_funcpart(is_FuncPart_List *fpl, int tamanho){
+	if(fpl != NULL){
+		show_funcpart(fpl->next, tamanho);
+		show_funcdeclaration(fpl->fd, tamanho+1);
+	}
 }
 
 void show_varpart(is_VarPart_List *vp, int tamanho){
