@@ -18,29 +18,25 @@ is_FuncPart_List *insert_FuncPart(is_FuncDeclaration *ifd, is_FuncPart_List *lis
 is_FuncDeclaration *insert_FuncDeclarationH(is_FuncHeading *ifh,is_FuncBlock *ifb);
 
 is_FuncDeclaration *insert_FuncDeclarationI(is_FuncIdent *ifi,is_FuncBlock *ifb);
-/*
-is_FuncHeading *insert_FuncHeading(FUNCTION ID FormalParamList COLON ID 			FUNCTION ID COLON ID);
-*/
+
+is_FuncHeading *insert_FuncHeading(char *value1, is_FormalParamList * ifpl, char *value2);
+
 is_FuncIdent *insert_FuncIdent(char *value);
-/*
-is_FormalParamList *insert_FormalParamList(LBRAC FormalParams2 FormalParams RBRAC);
 
-is_FormalParams *insert_FormalParams(SEMIC FormalParams2 FormalParams);
+is_FormalParamList *insert_FormalParamList(is_FormalParams *ifp,is_FormalParamList *list);
 
-is_FormalParams2 *insert_FormalParams2(VAR IDList COLON ID 					IDList COLON ID);
+is_FormalParams *insert_FormalParams(is_IDList_List *list, char *value);
 
-is_FuncBlock *insert_FuncBlock(VarPart StatPart);
+is_FuncBlock *insert_FuncBlock(is_VarPart_List *vp, is_StatPart *sp);
 
-is_StatPart *insert_StatPart(CompStat);
+is_StatPart *insert_StatPart(is_CompStat *ics);
 
-is_CompStat *insert_CompStat(BEG StatList END);
+is_CompStat *insert_CompStat(is_StatList_List *isl);
 
-is_StatList *insert_StatList(Stat StatList2);
-
-is_StatList2 *insert_StatList2(SEMIC Stat StatList2);
+is_StatList_List *insert_StatList(is_Stat *is, is_StatList_List *list);
 
 is_Stat *insert_Stat(CompStat 		Stat2 			WRITELN);
-
+/*
 is_Stat2 *insert_Stat2(ID ASSIGN Expr);
 
 is_StatITE *insert_StatITE(IF Expr THEN Stat ELSE Stat);

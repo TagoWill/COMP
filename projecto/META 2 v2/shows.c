@@ -32,8 +32,20 @@ void show_vardeclaration(is_VarDeclaration *vd, int tamanho){
 	}
 }
 
-void show_statpart(is_StatPart *sp, int tamanho){
+void show_statlist(is_StatList_List *sl, int tamanho){
+	if(sl != NULL){
+		show_statlist(sl->next, tamanho);
+		if(sl->s != NULL){
+			//showsomething
+		}
+	}
+}
 
+void show_statpart(is_StatPart *sp, int tamanho){
+	if(sp !=  NULL){
+		is_StatList_List *aux = sp->cs->sl;
+		show_statlist(aux, tamanho);
+	}
 }
 
 void show_funcident(is_FuncIdent *fi, int tamanho){
@@ -44,22 +56,29 @@ void show_funcident(is_FuncIdent *fi, int tamanho){
 	}
 }
 
-void show_funcdeclaration(is_FuncDeclaration *fd, int tamanho){
-	if(fd != NULL){
-		espacamento(tamanho-1);
-		printf("FuncDecl\n");
-		if(fd->tf == tipo_funcident){
-			show_funcident((is_FuncIdent*)fd->data_funcdeclaration.fi, tamanho);
+void show_formalparamlist(is_FormalParamList *fpl, int tamanho){
+	if(fpl != NULL){
+		show_formalparamlist(fpl->next, tamanho);
+		if(fpl->fp != NULL){
+			is_FormalParams *aux;
+			aux = fpl->fp;
+			show_idlist(aux->idlist, tamanho);
+			espacamento(tamanho);
+			printf("Id(%s)\n", aux->id);
 		}
 	}
-	/*NAO ACABADO*/
-/*
-	tipos_funcdeclaration tf;
-	union{
-		struct is_FuncHeading *fh;
-		struct is_FuncIdent *fi;
-	}data_funcdeclaration;
-	is_FuncBlock *fb;*/
+}
+
+void show_funcheading(is_FuncHeading *fh, int tamanho){
+	if(fh != NULL){
+		espacamento(tamanho);
+		printf("Id(%s)\n", fh->id1);
+		espacamento(tamanho);
+		printf("FuncParams\n");
+		show_formalparamlist(fh->fpl, tamanho+1);
+		espacamento(tamanho);
+		printf("Id(%s)\n", fh->id2);
+	}
 }
 
 void show_funcpart(is_FuncPart_List *fpl, int tamanho){
@@ -74,7 +93,29 @@ void show_varpart(is_VarPart_List *vp, int tamanho){
 	if(vp != NULL){
 		show_varpart(vp->next, tamanho);
 		show_vardeclaration(vp->vd, tamanho+1);
-		
+	}
+}
+
+void show_funcblock(is_FuncBlock *fb, int tamanho){
+
+	if(fb != NULL){
+		espacamento(tamanho-1);
+		printf("FuncBlock\n");
+		show_varpart(fb->vp, tamanho);
+	}
+	/*NAO ACABADO*/
+}
+
+void show_funcdeclaration(is_FuncDeclaration *fd, int tamanho){
+	if(fd != NULL){
+		espacamento(tamanho-1);
+		printf("FuncDecl\n");
+		if(fd->tf == tipo_funcident){
+			show_funcident((is_FuncIdent*)fd->data_funcdeclaration.fi, tamanho);
+		}else{
+			show_funcheading((is_FuncHeading*)fd->data_funcdeclaration.fh, tamanho);
+		}
+		show_funcblock(fd->fb, tamanho);
 	}
 }
 

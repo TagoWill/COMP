@@ -106,101 +106,118 @@ is_FuncDeclaration *insert_FuncDeclarationI(is_FuncIdent *ifi,is_FuncBlock *ifb)
 
 	return fd;
 }
-/*
-is_FuncHeading *insert_FuncHeading()
+
+is_FuncHeading *insert_FuncHeading(char *value1, is_FormalParamList * ifpl, char *value2)
 {
-	is_FuncHeading *fh=(is_FuncHeading*)malloc(sizeof(is_FuncHeading));	
+	is_FuncHeading *fh=(is_FuncHeading*)malloc(sizeof(is_FuncHeading));
+	fh->id1 = value1;
+	fh->fpl = ifpl;
+	fh->id2 = value2;
 	return fh;
 }
-*/
+
 is_FuncIdent *insert_FuncIdent(char *value)
 {
 	is_FuncIdent *fi=(is_FuncIdent*)malloc(sizeof(is_FuncIdent));
 	fi->id = value;
 	return fi;
 }
-/*
-is_FormalParamList *insert_FormalParamList()
+
+is_FormalParamList *insert_FormalParamList(is_FormalParams *ifp,is_FormalParamList *list)
 {
 	is_FormalParamList *fpl=(is_FormalParamList*)malloc(sizeof(is_FormalParamList));
-	return fp1;
+
+	fpl->fp = ifp;
+
+	if(list == NULL)
+		return fpl;
+
+	is_FormalParamList *aux;
+	for(aux=list;aux->next != NULL; aux=aux->next);
+		aux->next = fpl;
+	
+	return list;
 }
 
-is_FormalParams *insert_FormalParams()
+is_FormalParams *insert_FormalParams(is_IDList_List *list, char *value)
 {
 	is_FormalParams *fps=(is_FormalParams*)malloc(sizeof(is_FormalParams));
+	fps->idlist = list;
+	fps->id = value;
+
 	return fps;
 }
 
-is_FormalParams2 *insert_FormalParams2()
-{
-	is_FormalParams2 *fps2=(is_FormalParams2*)malloc(sizeof(is_FormalParams2));
-	return fps2;
-}
-
-is_FuncBlock *insert_FuncBlock()
+is_FuncBlock *insert_FuncBlock(is_VarPart_List *vp, is_StatPart *sp)
 {
 	is_FuncBlock *fb=(is_FuncBlock*)malloc(sizeof(is_FuncBlock));
+	fb->vp = vp;
+	fb->sp = sp;
 	return fb;
 }
 
-is_StatPart *insert_StatPart()
+is_StatPart *insert_StatPart(is_CompStat *ics)
 {
 	is_StatPart *sp=(is_StatPart*)malloc(sizeof(is_StatPart));
+	sp->cs = ics;
 	return sp;
 }
 
-is_CompStat *insert_CompStat()
+is_CompStat *insert_CompStat(is_StatList_List *isl)
 {
 	is_CompStat *cs=(is_CompStat*)malloc(sizeof(is_CompStat));
+	cs->sl = isl;
 	return cs;
 }
 
-is_StatList *insert_StatList()
+is_StatList_List *insert_StatList(is_Stat *is, is_StatList_List *list)
 {
-	is_StatList *sl=(is_StatList*)malloc(sizeof(is_StatList));	
-	return sl;
+	is_StatList_List *sl=(is_StatList_List*)malloc(sizeof(is_StatList_List));
+	sl->s = is;
+
+	if(list == NULL)
+		return sl;
+
+	is_StatList_List *aux;
+	for(aux=list;aux->next != NULL; aux=aux->next);
+		aux->next = sl;
+	
+	return list;
 }
 
-is_StatList2 *insert_StatList2()
-{
-	is_StatList2 *sl2=(is_StatList2*)malloc(sizeof(is_StatList2));	
-	return sl2;
-}
-
-is_Stat1 *insert_Stat1()
+is_Stat *insert_Stat1()
 {
 	is_Stat1 *st1=(is_Stat1*)malloc(sizeof(is_Stat1));
 	return st1;
 }
-
-is_Stat2 *insert_Stat2()
+/*
+is_Stat *insert_Stat2()
 {
-	is_Stat2 *st2=(is_Stat2*)malloc(sizeof(is_Stat2));
+	is_Stat *st2=(is_Stat*)malloc(sizeof(is_Stat));
 	return st2;
 }
 
-is_StatITE *insert_StatITE()
+is_Stat *insert_StatITE()
 {
-	is_StatITE *stITE=(is_StatITE*)malloc(sizeof(is_StatITE));
+	is_Stat *stITE=(is_Stat*)malloc(sizeof(is_Stat));
 	return stITE;
 }
 
-is_StatIWR *insert_StatIWR()
+is_Stat *insert_StatIWR()
 {
-	is_StatIWR *stIWR=(is_StatIWR*)malloc(sizeof(is_StatIWR));
+	is_Stat *stIWR=(is_Stat*)malloc(sizeof(is_Stat));
 	return stIWR;
 }
 
-is_StatV *insert_StatV()
+is_Stat *insert_StatV()
 {
-	is_StatV *stV=(is_StatV*)malloc(sizeof(is_StatV));
+	is_Stat *stV=(is_Stat*)malloc(sizeof(is_Stat));
 	return stV;
 }
 
-is_StatWR *insert_StatWR()
+is_Stat *insert_StatWR()
 {
-	is_StatWR *stWR=(is_StatWR*)malloc(sizeof(is_StatWR));
+	is_Stat *stWR=(is_Stat*)malloc(sizeof(is_Stat));
 	return stWR;
 }
 

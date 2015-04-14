@@ -27,20 +27,16 @@
 	is_VarDeclaration *vd;
 	is_IDList_List *il;
 	is_FuncDeclaration *fd;
-	/*is_FuncHeading *fh;
-	*/
+	is_FuncHeading *fh;
 	is_FuncIdent *fi;
-	/*
-	is_FormalParamList *fpl;
+	is_FormalParamList *fpll;
 	is_FormalParams *fps;
-	is_FormalParams2 *fps2;
 	is_FuncBlock *fb;
 	is_CompStat *cs;
-	is_StatList *sl;
-	is_StatList2 *sl2;
-	is_Stat1 *st1;
-	is_Stat2 *st2;
-	is_StatITE *stITE;
+	is_StatList_List *sl;
+	is_Stat *st1;
+	is_Stat *st2;
+	/*is_StatITE *stITE;
 	is_StatIWR *stIWR;
 	is_StatV *stV;
 	is_StatWR *stWR;
@@ -119,9 +115,17 @@
 %type <il> IDList
 %type <il> IDList2
 %type <fd> FuncDeclaration
-
+%type <fh> FuncHeading
 %type <fi> FuncIdent
-
+%type <fpll> FormalParamList
+%type <fpll> FormalParams
+%type <fps>	FormalParams2
+%type <fb> FuncBlock
+%type <cs> CompStat
+%type <sl> StatList
+%type <sl> StatList2
+%type <st1> Stat
+%type <st2> Stat
 
 %%
 Prog: 
@@ -133,7 +137,7 @@ ProgHeading:
 	;
 
 ProgBlock:
-	VarPart FuncPart StatPart 									{$$=insert_ProgBlock($1, $2, NULL);}
+	VarPart FuncPart StatPart 									{$$=insert_ProgBlock($1, $2, $3);}
 	;
 
 VarPart:
@@ -165,14 +169,14 @@ FuncPart:
 	;
 
 FuncDeclaration:
-	FuncHeading SEMIC FORWARD 									{$$=insert_FuncDeclarationH(NULL, NULL);}
-	| FuncIdent SEMIC FuncBlock 								{$$=insert_FuncDeclarationI($1, NULL);}
-	| FuncHeading SEMIC FuncBlock 								{$$=insert_FuncDeclarationH(NULL, NULL);}
+	FuncHeading SEMIC FORWARD 									{$$=insert_FuncDeclarationH($1, NULL);}
+	| FuncIdent SEMIC FuncBlock 								{$$=insert_FuncDeclarationI($1, $3);}
+	| FuncHeading SEMIC FuncBlock 								{$$=insert_FuncDeclarationH($1, $3);}
 	;
 
 FuncHeading:
-	FUNCTION ID FormalParamList COLON ID 						{/*$$=insert_FuncHeading($2, $3, $4, $6);*/}
-	| FUNCTION ID COLON ID 										{/*$$=insert_FuncHeading($2, $4);*/}
+	FUNCTION ID FormalParamList COLON ID 						{$$=insert_FuncHeading($2, $3, $5);}
+	| FUNCTION ID COLON ID 										{$$=insert_FuncHeading($2, NULL, $4);}
 	;
 
 FuncIdent:
@@ -180,38 +184,38 @@ FuncIdent:
 	;
 
 FormalParamList:
-	LBRAC FormalParams2 FormalParams RBRAC 						{/*$$=insert_FormalParamList($2, $3);*/}
+	LBRAC FormalParams2 FormalParams RBRAC 						{$$=insert_FormalParamList($2, $3);}
 	;
 
 FormalParams:
-	SEMIC FormalParams2 FormalParams 							{/*$$=insert_FormalParams($2, $3);*/}
-	| 
+	SEMIC FormalParams2 FormalParams 							{$$=insert_FormalParamList($2, $3);}
+	| 															{$$=insert_FormalParamList(NULL, NULL);}
 	;
 
 FormalParams2:
-	VAR IDList COLON ID 										{/*$$=insert_FormalParams2($1, $2, $4);*/}
-	| IDList COLON ID 											{/*$$=insert_FormalParams2($1, $3);*/}
+	VAR IDList COLON ID 										{$$=insert_FormalParams($2, $4);}
+	| IDList COLON ID 											{$$=insert_FormalParams($1, $3);}
 	;
 
 FuncBlock:
-	VarPart StatPart 											{/*$$=insert_FuncBlock($1, $2);*/}
+	VarPart StatPart 											{$$=insert_FuncBlock($1, $2);}
 	;
 
 StatPart:
-	CompStat 													{/*$$=insert_StatPart($1);*/}
+	CompStat 													{$$=insert_StatPart($1);}
 	;
 
 CompStat:
-	BEG StatList END 											{/*$$=insert_CompStat($1, $2);*/}
+	BEG StatList END 											{$$=insert_CompStat($2);}
 	;
 
 StatList:
-	Stat StatList2 												{/*$$=insert_StatList($1, $2);*/}
+	Stat StatList2 												{$$=insert_StatList(NULL, $2);}
 	;
 
 StatList2:
-	SEMIC Stat StatList2 										{/*$$=insert_StatList2($2, $3);*/}
-	|
+	SEMIC Stat StatList2 										{$$=insert_StatList(NULL, $3);}
+	|															{$$=insert_StatList(NULL, NULL);}
 	;
 
 Stat:
