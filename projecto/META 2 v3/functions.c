@@ -221,18 +221,6 @@ is_Stat *insert_StatWR()
 	return stWR;
 }
 
-is_WritelnPList *insert_WritelnPList()
-{
-	is_WritelnPList *wl=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
-	return wl;
-}
-
-is_WritelnPList2 *insert_WritelnPList2()
-{
-	is_WritelnPList2 *wl2=(is_WritelnPList2*)malloc(sizeof(is_WritelnPList2));
-	return wl2;
-}
-
 is_Expr *insert_Expr()
 {
 	is_Expr *ex=(is_Expr*)malloc(sizeof(is_Expr));	
@@ -257,6 +245,33 @@ is_ExprI *insert_ExprI()
 	return exI;
 }
 */
+
+is_WritelnPList *insert_WritelnPList(is_Expr *iex, is_WritelnPList *iwl)
+{
+	is_WritelnPList *wl=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
+	wl->ex = iex;
+	if(iwl == NULL)
+		return wl;
+
+	is_WritelnPList *aux;
+	for(aux=iwl; aux->next != NULL; aux=aux->next);
+		aux->next = wl;
+	return iwl;
+}
+
+is_WritelnPList *insert_WritelnPList2(char *string, is_WritelnPList *iwl)
+{
+	is_WritelnPList *wl2=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
+	wl2->string = string;
+
+	if(iwl == NULL)
+		return wl2;
+
+	is_WritelnPList *aux;
+	for(aux=iwl; aux->next != NULL; aux=aux->next);
+		aux->next = wl2;
+	return iwl;
+}
 
 is_Expr *insert_Expr(is_Expr *iex1)
 {

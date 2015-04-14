@@ -26,7 +26,12 @@ typedef struct _a30
 	struct _a30 *next;
 }is_ParamList;
 
-
+typedef struct _a28
+{
+	char *string;
+	is_Expr *ex;
+	struct _a28 *next;
+}is_WritelnPList;
 
 
 typedef struct _a10

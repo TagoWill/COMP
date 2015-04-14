@@ -46,6 +46,7 @@
 	is_ExprI *exI;
 	*/
 
+	is_WritelnPList *wl;
 	is_Expr *exo;
 	is_ParamList *pl;
 }
@@ -125,6 +126,8 @@
 %type <sl> StatList
 %type <sl> StatList2
 
+%type <wl> WritelnPList
+%type <wl> WritelnPList2
 %type <exo> Expr
 %type <pl> ParamList
 %type <pl> ParamList2
@@ -238,14 +241,14 @@ Stat2:
 	;
 
 WritelnPList:
-	LBRAC Expr RBRAC WritelnPList2 								{/*$$=insert_WritelnPList($2, $4);*/}
-	| LBRAC STRING RBRAC WritelnPList2						 	{/*$$=insert_WritelnPList($2, $4);*/}
+	LBRAC Expr RBRAC WritelnPList2 								{$$=insert_WritelnPList($2, $4);}
+	| LBRAC STRING RBRAC WritelnPList2						 	{$$=insert_WritelnPList2($2, $4);}
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2 									{/*$$=insert_WritelnPList2($2, $3);*/}
-	| COMMA Expr WritelnPList2 									{/*$$=insert_WritelnPList2($2, $3);*/}
-	|
+	COMMA STRING WritelnPList2 									{$$=insert_WritelnPList2($2, $3);}
+	| COMMA Expr WritelnPList2 									{$$=insert_WritelnPList($2, $3);}
+	|															{$$=insert_WritelnPList(NULL, NULL);}
 	;
 
 Expr:

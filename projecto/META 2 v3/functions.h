@@ -47,13 +47,11 @@ is_StatV *insert_StatV(VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC);
 
 is_StatWR *insert_StatWR(WRITELN WritelnPList);
 
-is_WritelnPList *insert_WritelnPList(LBRAC Expr RBRAC WritelnPList2 			LBRAC STRING RBRAC WritelnPList2);
-
-is_WritelnPList2 *insert_WritelnPList2(COMMA STRING WritelnPList2 			COMMA Expr WritelnPList2);
-
 is_ExprA *insert_ExprAMN(AND Expr 		MINUS Expr 			NOT Expr);
 */
 
+is_WritelnPList *insert_WritelnPList(is_Expr *iex, is_WritelnPList *iwl);
+is_WritelnPList *insert_WritelnPList2(char *string, is_WritelnPList *iwl);
 
 is_Expr *insert_Expr(is_Expr *iex1);
 is_Expr *insert_ExprI(char *intrealid, is_ParamList *ipl);
