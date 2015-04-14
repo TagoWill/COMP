@@ -32,10 +32,10 @@ void show_vardeclaration(is_VarDeclaration *vd, int tamanho){
 	}
 }
 
-void show_statlist(is_StatList_List *sl, int tamanho){
+void show_statlist(is_Stat *sl, int tamanho){
 	if(sl != NULL){
 		show_statlist(sl->next, tamanho);
-		if(sl->s != NULL){
+		if(sl->statlist != NULL){
 			//showsomething
 		}
 	}
@@ -43,7 +43,7 @@ void show_statlist(is_StatList_List *sl, int tamanho){
 
 void show_statpart(is_StatPart *sp, int tamanho){
 	if(sp !=  NULL){
-		is_StatList_List *aux = sp->cs->sl;
+		is_Stat *aux = sp->cs->statlist;
 		show_statlist(aux, tamanho);
 	}
 }

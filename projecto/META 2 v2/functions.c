@@ -156,83 +156,114 @@ is_FuncBlock *insert_FuncBlock(is_VarPart_List *vp, is_StatPart *sp)
 	return fb;
 }
 
-is_StatPart *insert_StatPart(is_CompStat *ics)
+is_StatPart *insert_StatPart(is_Stat *ics)
 {
 	is_StatPart *sp=(is_StatPart*)malloc(sizeof(is_StatPart));
 	sp->cs = ics;
 	return sp;
 }
 
-is_CompStat *insert_CompStat(is_StatList_List *isl)
+is_Stat *insert_CompStat(is_Stat *isl)
 {
-	is_CompStat *cs=(is_CompStat*)malloc(sizeof(is_CompStat));
-	cs->sl = isl;
+	is_Stat *cs=(is_Stat*)malloc(sizeof(is_Stat));
+	cs->queraioeisto = tipo_statlist;
+	cs->statlist = isl;
 	return cs;
 }
 
-is_StatList_List *insert_StatList(is_Stat *is, is_StatList_List *list)
+is_Stat *insert_StatList(is_Stat *is, is_Stat *list)
 {
-	is_StatList_List *sl=(is_StatList_List*)malloc(sizeof(is_StatList_List));
-	sl->s = is;
+	is_Stat *sl=(is_Stat*)malloc(sizeof(is_Stat));
+	sl->queraioeisto = tipo_statlist;
+	sl->statlist = is;
 
 	if(list == NULL)
 		return sl;
 
-	is_StatList_List *aux;
+	is_Stat *aux;
 	for(aux=list;aux->next != NULL; aux=aux->next);
 		aux->next = sl;
 	
 	return list;
 }
 
-is_Stat *insert_Stat1()
+is_Stat *insert_Stat1(is_Stat *ics)
 {
-	is_Stat1 *st1=(is_Stat1*)malloc(sizeof(is_Stat1));
+	is_Stat *st1=(is_Stat*)malloc(sizeof(is_Stat));
+	st1->queraioeisto = tipo_comp;
+	st1->cs = ics;
+
 	return st1;
 }
-/*
-is_Stat *insert_Stat2()
+
+is_Stat *insert_Stat2(char *value, is_Expr *iexpr)
 {
 	is_Stat *st2=(is_Stat*)malloc(sizeof(is_Stat));
+	st2->queraioeisto = tipo_assign;
+	st2->id= value;
+	st2->expr = iexpr;
+
 	return st2;
 }
 
-is_Stat *insert_StatITE()
+is_Stat *insert_StatITE(is_Expr *iexpr, is_Stat *istat1, is_Stat *istat2)
 {
 	is_Stat *stITE=(is_Stat*)malloc(sizeof(is_Stat));
+	stITE->queraioeisto = tipo_ifthenelse;
+	stITE->expr = iexpr;
+	stITE->stat1 = istat1;
+	stITE->stat2 = istat2;
+
 	return stITE;
 }
 
-is_Stat *insert_StatIWR()
+is_Stat *insert_StatIT(is_Expr *iexpr, is_Stat *istat1)
+{
+	is_Stat *stITE=(is_Stat*)malloc(sizeof(is_Stat));
+	stITE->queraioeisto = tipo_ifthen;
+	stITE->expr = iexpr;
+	stITE->stat1 = istat1;
+	return stITE;
+}
+
+is_Stat *insert_StatIWR(is_Expr *iexpr, is_Stat *istat1)
 {
 	is_Stat *stIWR=(is_Stat*)malloc(sizeof(is_Stat));
+	stIWR->queraioeisto = tipo_while;
+	stIWR->expr = iexpr;
+	stIWR->stat1 = istat1;
 	return stIWR;
 }
 
-is_Stat *insert_StatV()
+is_Stat *insert_StatIRU(is_Stat *list, is_Expr *iexpr)
+{
+	is_Stat *stIWR=(is_Stat*)malloc(sizeof(is_Stat));
+	stIWR->queraioeisto = tipo_repeat;
+	stIWR->expr = iexpr;
+	stIWR->statlist = list;
+	return stIWR;
+}
+
+is_Stat *insert_StatV(is_Expr *iexpr, char *value)
 {
 	is_Stat *stV=(is_Stat*)malloc(sizeof(is_Stat));
+	stV->queraioeisto = tipo_val;
+	stV->expr = iexpr;
+	stV->id = value;
+
+
 	return stV;
 }
 
-is_Stat *insert_StatWR()
+is_Stat *insert_WritelnPList()
 {
-	is_Stat *stWR=(is_Stat*)malloc(sizeof(is_Stat));
-	return stWR;
+	/*is_Stat *wl=(is_Stat*)malloc(sizeof(is_Stat));
+	wl->queraioeisto = tipo_writelnlist;
+	wl->expr = iexpr;
+	wl->id = value;
+	return wl;*/
 }
-
-is_WritelnPList *insert_WritelnPList()
-{
-	is_WritelnPList *wl=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
-	return wl;
-}
-
-is_WritelnPList2 *insert_WritelnPList2()
-{
-	is_WritelnPList2 *wl2=(is_WritelnPList2*)malloc(sizeof(is_WritelnPList2));
-	return wl2;
-}
-
+/*
 is_Expr *insert_Expr()
 {
 	is_Expr *ex=(is_Expr*)malloc(sizeof(is_Expr));	

@@ -29,28 +29,28 @@ is_FormalParams *insert_FormalParams(is_IDList_List *list, char *value);
 
 is_FuncBlock *insert_FuncBlock(is_VarPart_List *vp, is_StatPart *sp);
 
-is_StatPart *insert_StatPart(is_CompStat *ics);
+is_StatPart *insert_StatPart(is_Stat *ics);
 
-is_CompStat *insert_CompStat(is_StatList_List *isl);
+is_Stat *insert_CompStat(is_Stat *isl);
 
-is_StatList_List *insert_StatList(is_Stat *is, is_StatList_List *list);
+is_Stat *insert_StatList(is_Stat *is, is_Stat *list);
 
-is_Stat *insert_Stat(CompStat 		Stat2 			WRITELN);
+is_Stat *insert_Stat1(is_Stat *ics);
+
+is_Stat *insert_Stat2(char *value, is_Expr *iexpr);
+
+is_Stat *insert_StatITE(is_Expr *iexpr, is_Stat *istat1, is_Stat *istat2);
+
+is_Stat *insert_StatIT(is_Expr *iexpr, is_Stat *istat1);
+
+is_Stat *insert_StatIWR(is_Expr *iexpr, is_Stat *istat1);
+
+is_Stat *insert_StatIRU(is_Stat *list, is_Expr *iexpr);
+
+is_Stat *insert_StatV(is_Expr *iexpr, char *value);
+
+is_Stat *insert_WritelnPList();
 /*
-is_Stat2 *insert_Stat2(ID ASSIGN Expr);
-
-is_StatITE *insert_StatITE(IF Expr THEN Stat ELSE Stat);
-
-is_StatIWR *insert_StatIWR(IF Expr THEN Stat 			WHILE Expr DO Stat 			REPEAT StatList UNTIL Expr);
-
-is_StatV *insert_StatV(VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC);
-
-is_StatWR *insert_StatWR(WRITELN WritelnPList);
-
-is_WritelnPList *insert_WritelnPList(LBRAC Expr RBRAC WritelnPList2 			LBRAC STRING RBRAC WritelnPList2);
-
-is_WritelnPList2 *insert_WritelnPList2(COMMA STRING WritelnPList2 			COMMA Expr WritelnPList2);
-
 is_Expr *insert_Expr(LBRAC Expr RBRAC 			INTLIT 				REALLIT 			ID);
 
 is_ExprO *insert_ExprO(Expr PLUS Expr 	Expr MINUS Expr 		Expr AND Expr 		Expr OR Expr 			Expr MULT Expr 			Expr DIV Expr 		Expr MOD Expr 		xpr GREATER Expr 		Expr LESS Expr 			Expr GEQUAL Expr 		Expr EQUALS Expr 		Expr DIFFERENT Expr);

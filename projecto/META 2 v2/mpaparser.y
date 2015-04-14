@@ -32,18 +32,12 @@
 	is_FormalParamList *fpll;
 	is_FormalParams *fps;
 	is_FuncBlock *fb;
-	is_CompStat *cs;
-	is_StatList_List *sl;
 	is_Stat *st1;
-	is_Stat *st2;
-	/*is_StatITE *stITE;
-	is_StatIWR *stIWR;
-	is_StatV *stV;
-	is_StatWR *stWR;
+	/*
 	is_WritelnPList *wl;
-	is_WritelnPList2 *wl2;
-	is_Expr *ex;
-	is_ExprO *exO;
+	is_WritelnPList2 *wl2;*/
+	is_Expr *exo;
+	/*is_ExprO *exO;
 	is_ExprAMN *exAMN;
 	is_ExprI *exI;
 	is_ParamList *pl;
@@ -121,11 +115,12 @@
 %type <fpll> FormalParams
 %type <fps>	FormalParams2
 %type <fb> FuncBlock
-%type <cs> CompStat
-%type <sl> StatList
-%type <sl> StatList2
+%type <st1> CompStat
+%type <st1> StatList
+%type <st1> StatList2
 %type <st1> Stat
-%type <st2> Stat
+
+%type <exo> Expr
 
 %%
 Prog: 
@@ -219,25 +214,21 @@ StatList2:
 	;
 
 Stat:
-	CompStat 													{/*$$=insert_Stat($1);*/}
-	| IF Expr THEN Stat ELSE Stat  								{/*$$=insert_StatITE($2, $4, $6);*/}
-	| IF Expr THEN Stat  										{/*$$=insert_StatIWR($2, $4);*/}
-	| WHILE Expr DO Stat 										{/*$$=insert_StatIWR($2, $4);*/}
-	| REPEAT StatList UNTIL Expr 								{/*$$=insert_StatIWR($2, $4);*/}
-	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{/*$$=insert_StatV($1, $3, $5, $8);*/}
-	| Stat2 													{/*$$=insert_Stat($1);*/}
-	| WRITELN WritelnPList 										{/*$$=insert_StatWR2($1, $2);*/}
-	| WRITELN 													{/*$$=insert_Stat($1);*/}
-	;
-
-Stat2:
-	ID ASSIGN Expr 												{/*$$=insert_Stat2($1, $3);*/}
-	|
+	CompStat 													{$$=insert_Stat1($1);}
+	| IF Expr THEN Stat ELSE Stat  								{$$=insert_StatITE($2, $4, $6);}
+	| IF Expr THEN Stat  										{$$=insert_StatIT($2, $4);}
+	| WHILE Expr DO Stat 										{$$=insert_StatIWR($2, $4);}
+	| REPEAT StatList UNTIL Expr 								{$$=insert_StatIRU($2, $4);}
+	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{$$=insert_StatV($5, $8);}
+	| ID ASSIGN Expr 											{$$=insert_Stat2($1, $3);}
+	| WRITELN WritelnPList 										{$$=insert_WritelnPList(NULL);}
+	| WRITELN 													{$$=insert_WritelnPList(NULL);}
+	|															{$$=insert_Stat1(NULL);}
 	;
 
 WritelnPList:
-	LBRAC Expr RBRAC WritelnPList2 								{/*$$=insert_WritelnPList($2, $4);*/}
-	| LBRAC STRING RBRAC WritelnPList2						 	{/*$$=insert_WritelnPList($2, $4);*/}
+	LBRAC Expr WritelnPList2 RBRAC								{/*$$=insert_WritelnPList2($2, $4);*/}
+	| LBRAC STRING WritelnPList2 RBRAC						 	{/*$$=insert_WritelnPList2($2, $4);*/}
 	;
 
 WritelnPList2:

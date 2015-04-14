@@ -3,7 +3,7 @@
 
 typedef enum{tipo_funcHeading, tipo_funcident} tipos_funcdeclaration;
 
-typedef enum{tipo_comp, tipo_ifthenelse, tipo_ifthen, tipo_while, tipo_repeat, tipo_val, tipo_stat2, tipo_writelnlist, tipo_writeln, tipo_assign} tipos_stat;
+typedef enum{tipo_comp, tipo_ifthenelse, tipo_ifthen, tipo_while, tipo_repeat, tipo_val, tipo_stat2, tipo_writelnlist, tipo_writeln, tipo_assign, tipo_statlist} tipos_stat;
 
 typedef struct _a10
 {
@@ -40,34 +40,35 @@ typedef struct _a9
 	char *id;
 }is_VarDeclaration;
 
+typedef struct _a20
+{
+	/* data */
+}is_Expr;
+
+typedef struct _a21
+{
+	/* data */
+}is_WritelnPList;
+
 typedef struct _a19
 {
 	tipos_stat queraioeisto;
 
-	is_CompStat *cs;
+	struct _a19 *cs;
 	is_Expr *expr;
-	is_Stat *stat1;
-	is_Stat *stat2;
-	is_StatList_List *statlist;
+	struct _a19 *stat1;
+	struct _a19 *stat2;
+	struct _a19 *statlist;
 	char *id;
 	is_WritelnPList *writeln;
+
+	struct _a19 *next;
 	
 }is_Stat;
 
-typedef struct _a18
-{
-	is_Stat *s;
-	struct _a18 *next;
-}is_StatList_List;
-
-typedef struct _a17
-{
-	is_StatList_List *sl;
-}is_CompStat;
-
 typedef struct _a7
 {
-	is_CompStat *cs;
+	is_Stat *cs;
 }is_StatPart;
 
 typedef struct _a5
@@ -82,7 +83,6 @@ typedef struct _a14
 	is_VarPart_List *vp;
 	is_StatPart *sp;
 }is_FuncBlock;
-
 
 typedef struct _a11
 {
