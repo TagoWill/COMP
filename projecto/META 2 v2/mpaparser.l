@@ -1,5 +1,5 @@
 %{
-	#include "structures.h"
+    #include "structures.h"
     #include "y.tab.h"
     int col = 1;
     int line = 1;
