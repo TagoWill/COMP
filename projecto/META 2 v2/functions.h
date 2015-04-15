@@ -49,18 +49,12 @@ is_Stat *insert_StatIRU(is_Stat *list, is_Expr *iexpr);
 
 is_Stat *insert_StatV(is_Expr *iexpr, char *value);
 
-is_Stat *insert_WritelnPList();
-/*
-is_Expr *insert_Expr(LBRAC Expr RBRAC 			INTLIT 				REALLIT 			ID);
+is_Stat *insert_WPL(is_WritelnPList *iwlp);
 
-is_ExprO *insert_ExprO(Expr PLUS Expr 	Expr MINUS Expr 		Expr AND Expr 		Expr OR Expr 			Expr MULT Expr 			Expr DIV Expr 		Expr MOD Expr 		xpr GREATER Expr 		Expr LESS Expr 			Expr GEQUAL Expr 		Expr EQUALS Expr 		Expr DIFFERENT Expr);
+is_WritelnPList *insert_WritelnPList(is_Expr *iex, is_WritelnPList *iwl);
+is_WritelnPList *insert_WritelnPList2(char *string, is_WritelnPList *iwl);
 
-is_ExprA *insert_ExprAMN(AND Expr 		MINUS Expr 			NOT Expr);
-
-is_ExprI *insert_ExprI(ID ParamList);
-
-is_ParamList *insert_ParamList(LBRAC Expr ParamList2 RBRAC);
-
-is_ParamList2 *insert_ParamList2(COMMA Expr ParamList2);
-
-*/
+is_Expr *insert_Expr(tipos_expr te,is_Expr *iex1);
+is_Expr *insert_ExprI(tipos_expr te, char *intrealid, is_ParamList *ipl);
+is_Expr *insert_ExprO(is_Expr *iex1, tipos_expr te, is_Expr *iex2);
+is_ParamList *insert_ParamList(is_Expr *iex, is_ParamList *lista);

@@ -2,6 +2,9 @@
 
 
 void espacamento(int tamanho);
+void show_writelnplist(is_WritelnPList *iwl, int tamanho);
+void show_expr(is_Expr *iex, int tamanho);
+void show_paramlist(is_ParamList *ipl, int tamanho);
 void show_idlist(is_IDList_List *idlist, int tamanho);
 void show_vardeclaration(is_VarDeclaration *vd, int tamanho);
 void show_statlist(is_Stat *sl, int tamanho);

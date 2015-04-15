@@ -33,15 +33,9 @@
 	is_FormalParams *fps;
 	is_FuncBlock *fb;
 	is_Stat *st1;
-	/*
 	is_WritelnPList *wl;
-	is_WritelnPList2 *wl2;*/
 	is_Expr *exo;
-	/*is_ExprO *exO;
-	is_ExprAMN *exAMN;
-	is_ExprI *exI;
 	is_ParamList *pl;
-	is_ParamList2 *pl2;*/
 }
 
 %token ASSIGN
@@ -81,6 +75,7 @@
 %token MINUS
 %token MULT
 %token DIV
+%token REALDIV
 %token MOD
 %token <str> RESERVED
 %token <str> ID
@@ -90,10 +85,10 @@
 
 
 
-%left 	MULT DIV MOD AND
-%left	PLUS MINUS OR
+%left 	MULT REALDIV DIV MOD AND
+%right	PLUS MINUS OR
 %left	GREATER LESS GEQUAL LEQUAL EQUALS DIFFERENT
-%left 	NOT
+%right 	NOT
 %left 	IF
 %left	THEN
 %left   ELSE
@@ -119,8 +114,11 @@
 %type <st1> StatList
 %type <st1> StatList2
 %type <st1> Stat
-
+%type <wl> WritelnPList
+%type <wl> WritelnPList2
 %type <exo> Expr
+%type <pl> ParamList
+%type <pl> ParamList2
 
 %%
 Prog: 
@@ -205,11 +203,11 @@ CompStat:
 	;
 
 StatList:
-	Stat StatList2 												{$$=insert_StatList(NULL, $2);}
+	Stat StatList2 												{$$=insert_StatList($1, $2);}
 	;
 
 StatList2:
-	SEMIC Stat StatList2 										{$$=insert_StatList(NULL, $3);}
+	SEMIC Stat StatList2 										{$$=insert_StatList($2, $3);}
 	|															{$$=insert_StatList(NULL, NULL);}
 	;
 
@@ -221,52 +219,53 @@ Stat:
 	| REPEAT StatList UNTIL Expr 								{$$=insert_StatIRU($2, $4);}
 	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{$$=insert_StatV($5, $8);}
 	| ID ASSIGN Expr 											{$$=insert_Stat2($1, $3);}
-	| WRITELN WritelnPList 										{$$=insert_WritelnPList(NULL);}
-	| WRITELN 													{$$=insert_WritelnPList(NULL);}
+	| WRITELN WritelnPList 										{$$=insert_WPL($2);}
+	| WRITELN 													{$$=insert_WPL(NULL);}
 	|															{$$=insert_Stat1(NULL);}
 	;
 
 WritelnPList:
-	LBRAC Expr WritelnPList2 RBRAC								{/*$$=insert_WritelnPList2($2, $4);*/}
-	| LBRAC STRING WritelnPList2 RBRAC						 	{/*$$=insert_WritelnPList2($2, $4);*/}
+	LBRAC Expr RBRAC WritelnPList2 								{$$=insert_WritelnPList($2, $4);}
+	| LBRAC STRING RBRAC WritelnPList2						 	{$$=insert_WritelnPList2($2, $4);}
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2 									{/*$$=insert_WritelnPList2($2, $3);*/}
-	| COMMA Expr WritelnPList2 									{/*$$=insert_WritelnPList2($2, $3);*/}
-	|
+	COMMA STRING WritelnPList2 									{$$=insert_WritelnPList2($2, $3);}
+	| COMMA Expr WritelnPList2 									{$$=insert_WritelnPList($2, $3);}
+	|															{$$=insert_WritelnPList(NULL, NULL);}
 	;
 
 Expr:
-	Expr PLUS Expr 												{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr MINUS Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr AND Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr OR Expr 												{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr MULT Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr DIV Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr MOD Expr	 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr GREATER Expr 										{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr LESS Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr GEQUAL Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr EQUALS Expr 											{/*$$=insert_ExprO($1, $2, $3);*/}
-	| Expr DIFFERENT Expr 										{/*$$=insert_ExprO($1, $2, $3);*/}
-	| AND Expr 													{/*$$=insert_ExprAMN($1, $2);*/}
-	| MINUS Expr 												{/*$$=insert_ExprAMN($1, $2);*/}
-	| NOT Expr 													{/*$$=insert_ExprAMN($1, $2);*/}
-	| LBRAC Expr RBRAC 											{/*$$=insert_Expr($2);*/}
-	| INTLIT 													{/*$$=insert_Expr($1);*/}
-	| REALLIT 													{/*$$=insert_Expr($1);*/}
-	| ID ParamList 												{/*$$=insert_ExprI($1, $2);*/}
-	| ID 														{/*$$=insert_Expr($1);*/}
+	Expr PLUS Expr 												{$$=insert_ExprO($1, is_PLUS, $3);}
+	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_REALDIV, $3);}
+	| Expr REALDIV Expr 										{$$=insert_ExprO($1, is_SUB, $3);}
+	| Expr AND Expr 											{$$=insert_ExprO($1, is_AND, $3);}
+	| Expr OR Expr 												{$$=insert_ExprO($1, is_OR, $3);}
+	| Expr MULT Expr 											{$$=insert_ExprO($1, is_MULT, $3);}
+	| Expr DIV Expr 											{$$=insert_ExprO($1, is_DIV, $3);}
+	| Expr MOD Expr	 											{$$=insert_ExprO($1, is_MOD, $3);}
+	| Expr GREATER Expr 										{$$=insert_ExprO($1, is_GREATER, $3);}
+	| Expr LESS Expr 											{$$=insert_ExprO($1, is_LESS, $3);}
+	| Expr GEQUAL Expr 											{$$=insert_ExprO($1, is_GEQUAL, $3);}
+	| Expr EQUALS Expr 											{$$=insert_ExprO($1, is_EQUALS, $3);}
+	| Expr DIFFERENT Expr 										{$$=insert_ExprO($1, is_DIFFERENT, $3);}
+	| AND Expr 													{$$=insert_ExprO(NULL, is_AND, $2);}
+	| MINUS Expr 												{$$=insert_ExprO(NULL, is_MINUS, $2);}
+	| NOT Expr 													{$$=insert_ExprO(NULL, is_NOT, $2);}
+	| LBRAC Expr RBRAC 											{$$=insert_Expr(is_EXO, $2);}
+	| INTLIT 													{$$=insert_ExprI(is_INTLIT, $1, NULL);}
+	| REALLIT 													{$$=insert_ExprI(is_REALLIT, $1, NULL);}
+	| ID ParamList 												{$$=insert_ExprI(is_ID, $1, $2);}
+	| ID 														{$$=insert_ExprI(is_ID, $1, NULL);}
 	;
 
 ParamList:
-	LBRAC Expr ParamList2 RBRAC									{/*$$=insert_ParamList($2, $3);*/}
+	LBRAC Expr ParamList2 RBRAC									{$$=insert_ParamList($2, $3);}
 	;
 
 ParamList2:
-	COMMA Expr ParamList2										{/*$$=insert_ParamList2($2, $3);*/}
-	|
+	COMMA Expr ParamList2										{$$=insert_ParamList($2, $3);}
+	|															{$$=insert_ParamList(NULL, NULL);}
 	;
 
 %%
