@@ -81,12 +81,12 @@ ENDCOMMENT                          "*)"|"}"
 {WRITELN}                                                       {col +=yyleng;return WRITELN;}
 and 															{col += yyleng; return(AND);}
 or 																{col += yyleng; return(OR);}
-"<"																{col += yyleng; return(GREATER);}
-">"																{col += yyleng; return(LESS);}
+"<"																{col += yyleng; return(LESS);}
+">"																{col += yyleng; return(GREATER);}
 "="																{col += yyleng; return(EQUALS);}
 "<>"															{col += yyleng; return(DIFFERENT);}
-"<="															{col += yyleng; return(GEQUAL);}
-">="															{col += yyleng; return(LEQUAL);}
+"<="															{col += yyleng; return(LEQUAL);}
+">="															{col += yyleng; return(GEQUAL);}
 "+"	 															{col += yyleng; return(PLUS);}
 "-"	 															{col += yyleng; return(MINUS);}
 "*"																{col += yyleng; return(MULT);}

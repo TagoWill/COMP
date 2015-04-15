@@ -255,48 +255,77 @@ is_Stat *insert_StatV(is_Expr *iexpr, char *value)
 	return stV;
 }
 
-is_Stat *insert_WritelnPList()
+is_Stat *insert_WPL(is_WritelnPList *iwlp)
 {
-	/*is_Stat *wl=(is_Stat*)malloc(sizeof(is_Stat));
+	is_Stat *wl=(is_Stat*)malloc(sizeof(is_Stat));
 	wl->queraioeisto = tipo_writelnlist;
-	wl->expr = iexpr;
-	wl->id = value;
-	return wl;*/
+	wl->writeln = iwlp;
+	return wl;
 }
-/*
-is_Expr *insert_Expr()
+is_WritelnPList *insert_WritelnPList(is_Expr *iex, is_WritelnPList *iwl)
+{
+	is_WritelnPList *wl=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
+	wl->ex = iex;
+	if(iwl == NULL)
+		return wl;
+
+	is_WritelnPList *aux;
+	for(aux=iwl; aux->next != NULL; aux=aux->next);
+		aux->next = wl;
+	return iwl;
+}
+
+is_WritelnPList *insert_WritelnPList2(char *string, is_WritelnPList *iwl)
+{
+	is_WritelnPList *wl2=(is_WritelnPList*)malloc(sizeof(is_WritelnPList));
+	wl2->string = string;
+
+	if(iwl == NULL)
+		return wl2;
+
+	is_WritelnPList *aux;
+	for(aux=iwl; aux->next != NULL; aux=aux->next);
+		aux->next = wl2;
+	return iwl;
+}
+
+is_Expr *insert_Expr(tipos_expr te,is_Expr *iex1)
 {
 	is_Expr *ex=(is_Expr*)malloc(sizeof(is_Expr));	
+	ex->te = te;
+	ex->ex1 = iex1;
 	return ex;
 }
 
-is_ExprO *insert_ExprO()
+is_Expr *insert_ExprO(is_Expr *iex1, tipos_expr te, is_Expr *iex2)
 {
-	is_ExprO *exO=(is_ExprO*)malloc(sizeof(is_ExprO));
-	return exO;
+	is_Expr *exo=(is_Expr*)malloc(sizeof(is_Expr));	
+	exo->ex1 = iex1;
+	exo->te = te;
+	exo->ex2 = iex2;
+	return exo;
 }
 
-is_ExprAMN *insert_ExprAMN()
+is_Expr *insert_ExprI(tipos_expr te, char *intrealid, is_ParamList *ipl)
 {
-	is_ExprAMN *exAMN=(is_ExprAMN*)malloc(sizeof(is_ExprAMN));
-	return exAMN;	
+	is_Expr *exi=(is_Expr*)malloc(sizeof(is_Expr));	
+	exi->te = te;
+	exi->intrealid = intrealid;
+	exi->ipl = ipl;
+	return exi;
 }
 
-is_ExprI *insert_ExprI()
+is_ParamList *insert_ParamList(is_Expr *iex, is_ParamList *lista)
 {
-	is_ExprI *exI=(is_ExprI*)malloc(sizeof(is_ExprI));
-	return exI;
-}
+	is_ParamList *ipl=(is_ParamList*)malloc(sizeof(is_ParamList));
+	ipl->iex = iex;
 
-is_ParamList *insert_ParamList()
-{
-	is_ParamList *ipl=(is_ParamList)malloc(sizeof(is_ParamList));
-	return ipl;
-}
+	if(lista == NULL)
+		return ipl;
 
-is_ParamList2 *insert_ParamList2()
-{
-	is_ParamList2 *pl2=(is_ParamList2)malloc(sizeof(is_ParamList2));
-	return pl2;
+	is_ParamList *aux;
+	for(aux=lista; aux->next != NULL; aux=aux->next);
+		aux->next = ipl;
+	
+	return lista;
 }
-*/

@@ -5,6 +5,32 @@ typedef enum{tipo_funcHeading, tipo_funcident} tipos_funcdeclaration;
 
 typedef enum{tipo_comp, tipo_ifthenelse, tipo_ifthen, tipo_while, tipo_repeat, tipo_val, tipo_stat2, tipo_writelnlist, tipo_writeln, tipo_assign, tipo_statlist} tipos_stat;
 
+typedef enum{is_PLUS, is_MINUS, is_AND, is_OR, is_MULT, is_DIV, is_MOD, is_GREATER, is_LESS, is_GEQUAL, is_EQUALS, is_DIFFERENT, is_NOT, is_INTLIT, is_REALLIT, is_ID, is_EXO, is_SUB} tipos_expr;
+
+struct _a30;
+
+typedef struct _a29
+{
+	struct _a29 *ex1;
+	struct _a29 *ex2;
+	tipos_expr te;
+	char *intrealid;
+	struct _a30 *ipl;
+}is_Expr;
+
+typedef struct _a30
+{
+	is_Expr *iex;
+	struct _a30 *next;
+}is_ParamList;
+
+typedef struct _a28
+{
+	char *string;
+	is_Expr *ex;
+	struct _a28 *next;
+}is_WritelnPList;
+
 typedef struct _a10
 {
 	char *id;
@@ -39,16 +65,6 @@ typedef struct _a9
 	is_IDList_List *idlist; 
 	char *id;
 }is_VarDeclaration;
-
-typedef struct _a20
-{
-	/* data */
-}is_Expr;
-
-typedef struct _a21
-{
-	/* data */
-}is_WritelnPList;
 
 typedef struct _a19
 {
