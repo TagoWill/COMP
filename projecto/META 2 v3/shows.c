@@ -10,6 +10,21 @@ void espacamento(int tamanho){
 	}
 }
 
+void show_writelnplist(is_WritelnPList *iwl, int tamanho)
+{
+	if(iwl != NULL){
+		espacamento(tamanho-1);
+		printf("WritelnPList\n");
+		show_writelnplist(iwl->next, tamanho);
+		if(iwl->ex != NULL){
+			show_expr(iwl->ex, tamanho);
+		}
+		if(iwl->string != NULL){
+			printf("String (%s)\n", iwl->string);
+		}
+	}
+}
+
 void show_expr(is_Expr *iex, int tamanho)
 {
 	if(iex != NULL){
