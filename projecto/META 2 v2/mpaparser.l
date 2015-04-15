@@ -90,7 +90,7 @@ or 																{col += yyleng; return(OR);}
 "+"	 															{col += yyleng; return(PLUS);}
 "-"	 															{col += yyleng; return(MINUS);}
 "*"																{col += yyleng; return(MULT);}
-"/"																{col += yyleng; return(DIV);}
+"/"																{col += yyleng; return(REALDIV);}
 mod																{col += yyleng; return(MOD);}
 div																{col += yyleng; return(DIV);}
 

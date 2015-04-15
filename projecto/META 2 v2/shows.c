@@ -31,7 +31,7 @@ void show_expr(is_Expr *iex, int tamanho)
 		}
 		if(iex->te == is_PLUS || iex->te == is_MINUS || iex->te == is_AND || iex->te == is_OR ||iex->te == is_MULT ||
 			iex->te == is_DIV ||iex->te == is_GREATER ||iex->te == is_LESS ||iex->te == is_GEQUAL ||iex->te == is_EQUALS ||
-			iex->te == is_DIFFERENT || iex->te == is_NOT || iex->te == is_SUB){
+			iex->te == is_DIFFERENT || iex->te == is_NOT || iex->te == is_SUB || iex->te == is_REALDIV){
 			switch(iex->te){
 				case is_PLUS:
 					espacamento(tamanho);
@@ -84,6 +84,10 @@ void show_expr(is_Expr *iex, int tamanho)
 				case is_SUB:
 					espacamento(tamanho);
 					printf("Sub\n");
+					break;
+				case is_REALDIV:
+					espacamento(tamanho);
+					printf("RealDiv\n");
 					break;
 			}
 			show_expr(iex->ex1, tamanho+1);

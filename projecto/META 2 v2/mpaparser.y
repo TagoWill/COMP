@@ -75,6 +75,7 @@
 %token MINUS
 %token MULT
 %token DIV
+%token REALDIV
 %token MOD
 %token <str> RESERVED
 %token <str> ID
@@ -84,7 +85,7 @@
 
 
 
-%left 	MULT DIV MOD AND
+%left 	MULT REALDIV DIV MOD AND
 %right	PLUS MINUS OR
 %left	GREATER LESS GEQUAL LEQUAL EQUALS DIFFERENT
 %right 	NOT
@@ -236,7 +237,8 @@ WritelnPList2:
 
 Expr:
 	Expr PLUS Expr 												{$$=insert_ExprO($1, is_PLUS, $3);}
-	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_SUB, $3);}
+	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_REALDIV, $3);}
+	| Expr REALDIV Expr 										{$$=insert_ExprO($1, is_SUB, $3);}
 	| Expr AND Expr 											{$$=insert_ExprO($1, is_AND, $3);}
 	| Expr OR Expr 												{$$=insert_ExprO($1, is_OR, $3);}
 	| Expr MULT Expr 											{$$=insert_ExprO($1, is_MULT, $3);}
