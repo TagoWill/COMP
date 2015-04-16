@@ -5,7 +5,7 @@ typedef enum{tipo_funcHeading, tipo_funcident} tipos_funcdeclaration;
 
 typedef enum{tipo_comp, tipo_ifthenelse, tipo_ifthen, tipo_while, tipo_repeat, tipo_val, tipo_stat2, tipo_writelnlist, tipo_writeln, tipo_assign, tipo_statlist} tipos_stat;
 
-typedef enum{is_PLUS, is_MINUS, is_AND, is_OR, is_MULT, is_DIV, is_MOD, is_GREATER, is_LESS, is_GEQUAL, is_EQUALS, is_DIFFERENT, is_NOT, is_INTLIT, is_REALLIT, is_ID, is_EXO, is_SUB, is_REALDIV} tipos_expr;
+typedef enum{is_PLUS, is_MINUS, is_AND, is_OR, is_MULT, is_DIV, is_MOD, is_GREATER, is_LESS, is_GEQUAL, is_LEQUAL, is_EQUALS, is_DIFFERENT, is_NOT, is_INTLIT, is_REALLIT, is_ID, is_EXO, is_SUB, is_REALDIV} tipos_expr;
 
 struct _a30;
 

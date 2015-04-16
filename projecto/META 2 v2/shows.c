@@ -89,6 +89,10 @@ void show_expr(is_Expr *iex, int tamanho)
 					espacamento(tamanho);
 					printf("RealDiv\n");
 					break;
+				case is_LEQUAL:
+					espacamento(tamanho);
+					printf("Leq\n");
+					break;
 			}
 			show_expr(iex->ex1, tamanho+1);
 			show_expr(iex->ex2, tamanho+1);
@@ -150,9 +154,17 @@ void show_statcomplicado(is_Stat *list, int tamanho){
 				show_statcomplicado(list->statlist, tamanho);
 			}
 		}
+		/*caso geral -> o comp se tiver mais que uma statlist e criado
+			caso especifico -> e necessario criar o statlist caso do while*/
 		if(list->queraioeisto == tipo_comp){
-			espacamento(tamanho);
-			printf("StatList\n");
+			if(list->cs !=NULL){
+				if(list->cs->statlist != NULL){
+					if(list->cs->statlist->next != NULL){
+						espacamento(tamanho-1);
+						printf("StatList\n");
+					}
+				}
+			}
 			show_statcomplicado(list->cs,tamanho+1);
 		}
 		if(list->queraioeisto == tipo_ifthenelse){

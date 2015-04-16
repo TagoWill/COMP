@@ -83,13 +83,13 @@
 %token <str> REALLIT
 %token <str> STRING
 
-%left	PLUS MINUS OR
 %left 	MULT REALDIV DIV MOD AND
+%left	PLUS MINUS OR
 %left	GREATER LESS GEQUAL LEQUAL EQUALS DIFFERENT
-%left 	NOT ASSIGN
-%left 	IF
-%left	THEN
-%left   ELSE
+%right 	NOT ASSIGN
+
+%nonassoc	THEN
+%nonassoc   ELSE
 
 %type <p>  Prog
 %type <ph> ProgHeading
@@ -115,6 +115,9 @@
 %type <wl> WritelnPList
 %type <wl> WritelnPList2
 %type <exo> Expr
+%type <exo> Expr2
+%type <exo> Expr3
+%type <exo> Expr4
 %type <pl> ParamList
 %type <pl> ParamList2
 
@@ -234,23 +237,37 @@ WritelnPList2:
 	;
 
 Expr:
-	Expr PLUS Expr 												{$$=insert_ExprO($1, is_PLUS, $3);}
-	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_SUB, $3);}
-	| Expr AND Expr 											{$$=insert_ExprO($1, is_AND, $3);}
-	| Expr OR Expr 												{$$=insert_ExprO($1, is_OR, $3);}
-	| Expr MULT Expr 											{$$=insert_ExprO($1, is_MULT, $3);}
-	| Expr REALDIV Expr 										{$$=insert_ExprO($1, is_REALDIV, $3);}
-	| Expr DIV Expr 											{$$=insert_ExprO($1, is_DIV, $3);}
-	| Expr MOD Expr	 											{$$=insert_ExprO($1, is_MOD, $3);}
-	| Expr GREATER Expr 										{$$=insert_ExprO($1, is_GREATER, $3);}
-	| Expr LESS Expr 											{$$=insert_ExprO($1, is_LESS, $3);}
-	| Expr GEQUAL Expr 											{$$=insert_ExprO($1, is_GEQUAL, $3);}
-	| Expr EQUALS Expr 											{$$=insert_ExprO($1, is_EQUALS, $3);}
-	| Expr DIFFERENT Expr 										{$$=insert_ExprO($1, is_DIFFERENT, $3);}
-	| AND Expr 													{$$=insert_ExprO(NULL, is_AND, $2);}
-	| MINUS Expr 												{$$=insert_ExprO(NULL, is_MINUS, $2);}
-	| NOT Expr 													{$$=insert_ExprO(NULL, is_NOT, $2);}
-	| LBRAC Expr RBRAC 											{$$=insert_Expr(is_EXO, $2);}
+	Expr2 														{$$=insert_Expr(is_EXO, $1);}
+	| Expr2 GREATER Expr2 										{$$=insert_ExprO($1, is_GREATER, $3);}
+	| Expr2 LESS Expr2 											{$$=insert_ExprO($1, is_LESS, $3);}
+	| Expr2 GEQUAL Expr2 										{$$=insert_ExprO($1, is_GEQUAL, $3);}
+	| Expr2 EQUALS Expr2 										{$$=insert_ExprO($1, is_EQUALS, $3);}
+	| Expr2 LEQUAL Expr2 										{$$=insert_ExprO($1, is_LEQUAL, $3);}
+	| Expr2 DIFFERENT Expr2 									{$$=insert_ExprO($1, is_DIFFERENT, $3);}
+	;
+
+Expr2:
+	Expr3														{$$=insert_Expr(is_EXO, $1);}
+	| PLUS Expr3 												{$$=insert_ExprO(NULL, is_PLUS, $2);}
+	| MINUS Expr3 												{$$=insert_ExprO(NULL, is_MINUS, $2);}
+	| Expr2 MINUS Expr3 										{$$=insert_ExprO($1, is_SUB, $3);}
+	| Expr2 AND Expr3 											{$$=insert_ExprO($1, is_AND, $3);}
+	| Expr2 OR Expr3 											{$$=insert_ExprO($1, is_OR, $3);}
+	| Expr2 PLUS Expr3 											{$$=insert_ExprO($1, is_PLUS, $3);}
+	;
+
+Expr3:
+	Expr4														{$$=insert_Expr(is_EXO, $1);}
+	| Expr3 MULT Expr4 											{$$=insert_ExprO($1, is_MULT, $3);}
+	| Expr3 REALDIV Expr4 										{$$=insert_ExprO($1, is_REALDIV, $3);}
+	| Expr3 DIV Expr4 											{$$=insert_ExprO($1, is_DIV, $3);}
+	| Expr3 MOD Expr4	 										{$$=insert_ExprO($1, is_MOD, $3);}
+	;
+
+
+Expr4:
+	LBRAC Expr RBRAC 											{$$=insert_Expr(is_EXO, $2);}
+	| NOT Expr4 												{$$=insert_ExprO(NULL, is_NOT, $2);}
 	| INTLIT 													{$$=insert_ExprI(is_INTLIT, $1, NULL);}
 	| REALLIT 													{$$=insert_ExprI(is_REALLIT, $1, NULL);}
 	| ID ParamList 												{$$=insert_ExprI(is_ID, $1, $2);}
