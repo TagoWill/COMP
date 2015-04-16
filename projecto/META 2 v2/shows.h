@@ -8,6 +8,7 @@ void show_paramlist(is_ParamList *ipl, int tamanho);
 void show_idlist(is_IDList_List *idlist, int tamanho);
 void show_vardeclaration(is_VarDeclaration *vd, int tamanho);
 void show_statlist(is_Stat *sl, int tamanho);
+void show_compstat(is_Stat *cs, int tamanho);
 void show_statpart(is_StatPart *sp, int tamanho);
 void show_funcident(is_FuncIdent *fi, int tamanho);
 void show_formalparamlist(is_FormalParamList *fpl, int tamanho);

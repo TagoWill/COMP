@@ -136,12 +136,12 @@ ProgBlock:
 
 VarPart:
 	VAR VarDeclaration SEMIC VarPart2 							{$$=insert_VarPart($2, $4);}
-	|															{$$=insert_VarPart(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 VarPart2:
 	VarDeclaration SEMIC VarPart2 								{$$=insert_VarPart($1, $3);}
-	|															{$$=insert_VarPart(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 VarDeclaration:
@@ -154,12 +154,12 @@ IDList:
 
 IDList2:
 	COMMA ID IDList2 											{$$=insert_IDList($2, $3);}
-	|															{$$=insert_IDList(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 FuncPart:
 	FuncDeclaration SEMIC FuncPart 								{$$=insert_FuncPart($1, $3);}
-	| 															{$$=insert_FuncPart(NULL, NULL);}
+	| 															{$$=NULL;}
 	;
 
 FuncDeclaration:
@@ -183,7 +183,7 @@ FormalParamList:
 
 FormalParams:
 	SEMIC FormalParams2 FormalParams 							{$$=insert_FormalParamList($2, $3);}
-	| 															{$$=insert_FormalParamList(NULL, NULL);}
+	| 															{$$=NULL;}
 	;
 
 FormalParams2:
@@ -209,7 +209,7 @@ StatList:
 
 StatList2:
 	SEMIC Stat StatList2 										{$$=insert_StatList($2, $3);}
-	|															{$$=insert_StatList(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 Stat:
@@ -222,7 +222,7 @@ Stat:
 	| ID ASSIGN Expr 											{$$=insert_Stat2($1, $3);}
 	| WRITELN WritelnPList 										{$$=insert_WPL($2);}
 	| WRITELN 													{$$=insert_WPL(NULL);}
-	|															{$$=insert_Stat1(NULL);}
+	|															{$$=NULL;}
 	;
 
 WritelnPList:
@@ -233,7 +233,7 @@ WritelnPList:
 WritelnPList2:
 	COMMA STRING WritelnPList2 									{$$=insert_WritelnPList2($2, $3);}
 	| COMMA Expr WritelnPList2 									{$$=insert_WritelnPList($2, $3);}
-	|															{$$=insert_WritelnPList(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 Expr:
@@ -280,7 +280,7 @@ ParamList:
 
 ParamList2:
 	COMMA Expr ParamList2										{$$=insert_ParamList($2, $3);}
-	|															{$$=insert_ParamList(NULL, NULL);}
+	|															{$$=NULL;}
 	;
 
 %%

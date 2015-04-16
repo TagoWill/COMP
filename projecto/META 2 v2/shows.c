@@ -157,15 +157,7 @@ void show_statcomplicado(is_Stat *list, int tamanho){
 		/*caso geral -> o comp se tiver mais que uma statlist e criado
 			caso especifico -> e necessario criar o statlist caso do while*/
 		if(list->queraioeisto == tipo_comp){
-			if(list->cs !=NULL){
-				if(list->cs->statlist != NULL){
-					if(list->cs->statlist->next != NULL){
-						espacamento(tamanho-1);
-						printf("StatList\n");
-					}
-				}
-			}
-			show_statcomplicado(list->cs,tamanho+1);
+			show_compstat(list->cs,tamanho);
 		}
 		if(list->queraioeisto == tipo_ifthenelse){
 			espacamento(tamanho);
@@ -223,10 +215,29 @@ void show_statlist(is_Stat *sl, int tamanho){
 	}
 }
 
+void show_compstat(is_Stat *cs, int tamanho){
+	if(cs != NULL){
+
+				if(cs->statlist != NULL){
+					if(cs->statlist->next != NULL){
+						espacamento(tamanho);
+						printf("StatList\n");
+						tamanho++;
+						show_statcomplicado(cs->statlist,tamanho);
+						tamanho--;
+					}else{
+						show_statcomplicado(cs->statlist,tamanho);
+					}
+				}else{
+					show_statcomplicado(cs->statlist,tamanho);
+				}
+
+	}
+}
+
 void show_statpart(is_StatPart *sp, int tamanho){
 	if(sp !=  NULL){
-		is_Stat *aux = sp->cs->statlist;
-		show_statlist(aux, tamanho);
+		show_compstat(sp->cs, tamanho);
 	}
 }
 
@@ -309,9 +320,9 @@ void show_progblock(is_ProgBlock *pb, int tamanho){
 	espacamento(tamanho);
 	printf("FuncPart\n");
 	show_funcpart(pb->fpl, tamanho+1);
-	espacamento(tamanho);
-	printf("StatList\n");
-	show_statpart(pb->sp, tamanho+1);
+	//espacamento(tamanho);
+	//printf("StatList\n");
+	show_statpart(pb->sp, tamanho);
 }
 
 void show_progheading(is_ProgHeading *ph, int tamanho){
