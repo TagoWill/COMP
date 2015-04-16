@@ -50,62 +50,62 @@ ENDCOMMENT                          "*)"|"}"
 
 %%
 {STARTCOMMENT}              {lineaux=line; colaux=col; col += yyleng; BEGIN(comment);}
-<comment><<EOF>>            {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux); BEGIN 0;}
+<comment><<EOF>>            {printf("Line %d, col %d: unterminated comment\n", lineaux, colaux);lineaux = line; colaux = col; BEGIN 0;}
 <comment>{NEWLINE}			{col=1; line++;}
 <comment>{ENDCOMMENT}		{BEGIN 0; col+=yyleng;}
 <comment>.                  {col++;}
-{ASSIGN}                                                        {col +=yyleng; return ASSIGN;}
-{BEGIN}                                                         {col +=yyleng;return BEG;}
-{COLON}                                                         {col +=yyleng;return COLON;}
-{COMMA}                                                         {col +=yyleng;return COMMA;}
-{DO}                                                            {col +=yyleng;return DO;}
-{DOT}                                                           {col +=yyleng;return DOT;}
-{ELSE}                                                          {col +=yyleng;return ELSE;}
-{END}                                                           {col +=yyleng; return END;}
-{FORWARD}                                                       {col +=yyleng;return FORWARD;}
-{FUNCTION}                                                      {col +=yyleng;return FUNCTION;}
-{IF}                                                            {col +=yyleng;return IF;}
-{LBRAC}                                                         {col +=yyleng;return LBRAC;}
-{NOT}                                                           {col +=yyleng;return NOT;}
-{OUTPUT}                                                        {col +=yyleng;return OUTPUT;}
-{PARAMSTR}                                                      {col +=yyleng;return PARAMSTR;}
-{PROGRAM}                                                       {col +=yyleng;return PROGRAM;}
-{RBRAC}                                                         {col +=yyleng;return RBRAC;}
-{REPEAT}                                                        {col +=yyleng;return REPEAT;}
-{SEMIC}                                                         {col +=yyleng;return SEMIC;}
-{THEN}                                                          {col +=yyleng;return THEN;}
-{UNTIL}                                                         {col +=yyleng;return UNTIL;}
-{VAL}                                                           {col +=yyleng;return VAL;}
-{VAR}                                                           {col +=yyleng;return VAR;}
-{WHILE}                                                         {col +=yyleng;return WHILE;}
-{WRITELN}                                                       {col +=yyleng;return WRITELN;}
-and 															{col += yyleng; return(AND);}
-or 																{col += yyleng; return(OR);}
-"<"																{col += yyleng; return(LESS);}
-">"																{col += yyleng; return(GREATER);}
-"="																{col += yyleng; return(EQUALS);}
-"<>"															{col += yyleng; return(DIFFERENT);}
-"<="															{col += yyleng; return(LEQUAL);}
-">="															{col += yyleng; return(GEQUAL);}
-"+"	 															{col += yyleng; return(PLUS);}
-"-"	 															{col += yyleng; return(MINUS);}
-"*"																{col += yyleng; return(MULT);}
-"/"																{col += yyleng; return(REALDIV);}
-mod																{col += yyleng; return(MOD);}
-div																{col += yyleng; return(DIV);}
+{ASSIGN}                                                        {lineaux = line; colaux = col;col +=yyleng; return ASSIGN;}
+{BEGIN}                                                         {lineaux = line; colaux = col;col +=yyleng;return BEG;}
+{COLON}                                                         {lineaux = line; colaux = col;col +=yyleng;return COLON;}
+{COMMA}                                                         {lineaux = line; colaux = col;col +=yyleng;return COMMA;}
+{DO}                                                            {lineaux = line; colaux = col;col +=yyleng;return DO;}
+{DOT}                                                           {lineaux = line; colaux = col;col +=yyleng;return DOT;}
+{ELSE}                                                          {lineaux = line; colaux = col;col +=yyleng;return ELSE;}
+{END}                                                           {lineaux = line; colaux = col;col +=yyleng; return END;}
+{FORWARD}                                                       {lineaux = line; colaux = col;col +=yyleng;return FORWARD;}
+{FUNCTION}                                                      {lineaux = line; colaux = col;col +=yyleng;return FUNCTION;}
+{IF}                                                            {lineaux = line; colaux = col;col +=yyleng;return IF;}
+{LBRAC}                                                         {lineaux = line; colaux = col;col +=yyleng;return LBRAC;}
+{NOT}                                                           {lineaux = line; colaux = col;col +=yyleng;return NOT;}
+{OUTPUT}                                                        {lineaux = line; colaux = col;col +=yyleng;return OUTPUT;}
+{PARAMSTR}                                                      {lineaux = line; colaux = col;col +=yyleng;return PARAMSTR;}
+{PROGRAM}                                                       {lineaux = line; colaux = col;col +=yyleng;return PROGRAM;}
+{RBRAC}                                                         {lineaux = line; colaux = col;col +=yyleng;return RBRAC;}
+{REPEAT}                                                        {lineaux = line; colaux = col;col +=yyleng;return REPEAT;}
+{SEMIC}                                                         {lineaux = line; colaux = col;col +=yyleng;return SEMIC;}
+{THEN}                                                          {lineaux = line; colaux = col;col +=yyleng;return THEN;}
+{UNTIL}                                                         {lineaux = line; colaux = col;col +=yyleng;return UNTIL;}
+{VAL}                                                           {lineaux = line; colaux = col;col +=yyleng;return VAL;}
+{VAR}                                                           {lineaux = line; colaux = col;col +=yyleng;return VAR;}
+{WHILE}                                                         {lineaux = line; colaux = col;col +=yyleng;return WHILE;}
+{WRITELN}                                                       {lineaux = line; colaux = col;col +=yyleng;return WRITELN;}
+and 															{lineaux = line; colaux = col;col += yyleng; return(AND);}
+or 																{lineaux = line; colaux = col;col += yyleng; return(OR);}
+"<"																{lineaux = line; colaux = col;col += yyleng; return(LESS);}
+">"																{lineaux = line; colaux = col;col += yyleng; return(GREATER);}
+"="																{lineaux = line; colaux = col;col += yyleng; return(EQUALS);}
+"<>"															{lineaux = line; colaux = col;col += yyleng; return(DIFFERENT);}
+"<="															{lineaux = line; colaux = col;col += yyleng; return(LEQUAL);}
+">="															{lineaux = line; colaux = col;col += yyleng; return(GEQUAL);}
+"+"	 															{lineaux = line; colaux = col;col += yyleng; return(PLUS);}
+"-"	 															{lineaux = line; colaux = col;col += yyleng; return(MINUS);}
+"*"																{lineaux = line; colaux = col;col += yyleng; return(MULT);}
+"/"																{lineaux = line; colaux = col;col += yyleng; return(REALDIV);}
+mod																{lineaux = line; colaux = col;col += yyleng; return(MOD);}
+div																{lineaux = line; colaux = col;col += yyleng; return(DIV);}
 
-{RESERVED}                                                      {col +=yyleng;yylval.str=(char*)strdup(yytext);return RESERVED;}
+{RESERVED}                                                      {lineaux = line; colaux = col;col +=yyleng;yylval.str=(char*)strdup(yytext);return RESERVED;}
 
-{INTLIT}                                                        {col+=yyleng;yylval.str=(char*)strdup(yytext);return INTLIT;}
-{ID}                                                            {col += yyleng; yylval.str=(char*)strdup(yytext); return ID;}
-{REALLIT}                                                       {col+=yyleng;yylval.str=(char*)strdup(yytext);return REALLIT;}
-'([^\n']*('')*)*                               					{printf("Line %d, col %d: unterminated string\n", line, col);}
-'([^\n']|''|\\.)*('')*'                                         {col+=yyleng;yylval.str=(char*)strdup(yytext);return STRING;}
-{TAB}                                                           {col += yyleng;}
-{NEWLINE}                                                       {line++; col=1;}
-{BLANKSPACE}                                                    {col++;}
-
-.                   {printf("Line %d, col %d: illegal character ('%s')\n", line, col, yytext); col += yyleng;}
+{INTLIT}                                                        {lineaux = line; colaux = col;col+=yyleng;yylval.str=(char*)strdup(yytext);return INTLIT;}
+{ID}                                                            {lineaux = line; colaux = col;col += yyleng; yylval.str=(char*)strdup(yytext); return ID;}
+{REALLIT}                                                       {lineaux = line; colaux = col;col+=yyleng;yylval.str=(char*)strdup(yytext);return REALLIT;}
+'([^\n']*('')*)*                               					{printf("Line %d, col %d: unterminated string\n", line, col);lineaux = line; colaux = col;col+=yyleng;}
+'([^\n']|''|\\.)*('')*'                                         {lineaux = line; colaux = col;col+=yyleng;yylval.str=(char*)strdup(yytext);return STRING;}
+{TAB}                                                           {lineaux = line; colaux = col;col += yyleng;}
+{NEWLINE}                                                       {lineaux = line; colaux = col;line++; col=1;}
+{BLANKSPACE}                                                    {lineaux = line; colaux = col;col++;}
+<<EOF>>															{lineaux = line; colaux = col; return *yytext;}
+.                   {printf("Line %d, col %d: illegal character ('%s')\n", line, col, yytext);lineaux = line; colaux = col; col += yyleng;}
 
 %%
 

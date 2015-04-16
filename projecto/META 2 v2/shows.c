@@ -6,7 +6,7 @@
 void espacamento(int tamanho){
 	int i;
 	for(i=0;i<tamanho;i++){
-		printf("  ");
+		printf("..");
 	}
 }
 

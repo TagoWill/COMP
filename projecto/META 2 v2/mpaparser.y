@@ -6,8 +6,8 @@
 	#include <string.h>
 	#include "y.tab.h"
 	
-	extern int line;
-	extern int col;
+	extern int lineaux;
+	extern int colaux;
 	extern char *yytext;
 	extern int yyleng;
 	int erros = 0;
@@ -83,12 +83,10 @@
 %token <str> REALLIT
 %token <str> STRING
 
-
-
+%left	PLUS MINUS OR
 %left 	MULT REALDIV DIV MOD AND
-%right	PLUS MINUS OR
 %left	GREATER LESS GEQUAL LEQUAL EQUALS DIFFERENT
-%right 	NOT
+%left 	NOT ASSIGN
 %left 	IF
 %left	THEN
 %left   ELSE
@@ -225,8 +223,8 @@ Stat:
 	;
 
 WritelnPList:
-	LBRAC Expr RBRAC WritelnPList2 								{$$=insert_WritelnPList($2, $4);}
-	| LBRAC STRING RBRAC WritelnPList2						 	{$$=insert_WritelnPList2($2, $4);}
+	LBRAC Expr WritelnPList2 RBRAC								{$$=insert_WritelnPList($2, $3);}
+	| LBRAC STRING WritelnPList2 RBRAC						 	{$$=insert_WritelnPList2($2, $3);}
 	;
 
 WritelnPList2:
@@ -271,13 +269,9 @@ ParamList2:
 %%
 int yyerror (char *s)
 {
-	if(col-yyleng==0)
-	{
-        col++;
-		printf ("Line %d, col %d: %s: %s\n", line, (col), s, yytext);
-	} else {
-		printf ("Line %d, col %d: %s: %s\n", line, (col-yyleng), s, yytext);
-	}
+
+	printf ("Line %d, col %d: %s: %s\n", lineaux, colaux, s, yytext);
+
 	erros=1;
 	return 1;
 }
