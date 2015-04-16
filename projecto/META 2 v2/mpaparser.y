@@ -237,11 +237,11 @@ WritelnPList2:
 
 Expr:
 	Expr PLUS Expr 												{$$=insert_ExprO($1, is_PLUS, $3);}
-	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_REALDIV, $3);}
-	| Expr REALDIV Expr 										{$$=insert_ExprO($1, is_SUB, $3);}
+	| Expr MINUS Expr 											{$$=insert_ExprO($1, is_SUB, $3);}
 	| Expr AND Expr 											{$$=insert_ExprO($1, is_AND, $3);}
 	| Expr OR Expr 												{$$=insert_ExprO($1, is_OR, $3);}
 	| Expr MULT Expr 											{$$=insert_ExprO($1, is_MULT, $3);}
+	| Expr REALDIV Expr 										{$$=insert_ExprO($1, is_REALDIV, $3);}
 	| Expr DIV Expr 											{$$=insert_ExprO($1, is_DIV, $3);}
 	| Expr MOD Expr	 											{$$=insert_ExprO($1, is_MOD, $3);}
 	| Expr GREATER Expr 										{$$=insert_ExprO($1, is_GREATER, $3);}
@@ -271,8 +271,9 @@ ParamList2:
 %%
 int yyerror (char *s)
 {
-	if(strcmp(s, "")==0)
+	if(col-yyleng==0)
 	{
+        col++;
 		printf ("Line %d, col %d: %s: %s\n", line, (col), s, yytext);
 	} else {
 		printf ("Line %d, col %d: %s: %s\n", line, (col-yyleng), s, yytext);
