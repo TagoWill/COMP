@@ -223,6 +223,7 @@ is_Stat *insert_StatIT(is_Expr *iexpr, is_Stat *istat1)
 	stITE->queraioeisto = tipo_ifthen;
 	stITE->expr = iexpr;
 	stITE->stat1 = istat1;
+	stITE->stat2 = NULL;
 	return stITE;
 }
 

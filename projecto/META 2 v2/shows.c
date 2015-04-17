@@ -163,24 +163,48 @@ void show_statcomplicado(is_Stat *list, int tamanho){
 			espacamento(tamanho);
 			printf("IfElse\n");
 			show_expr(list->expr, tamanho+1);
+			if(list->stat1 == NULL || list->stat1->next != NULL){
+				espacamento(tamanho+1);
+				printf("StatList\n");
+			}
 			show_statcomplicado(list->stat1,tamanho+1);
+			if(list->stat2 == NULL || list->stat2->next != NULL){
+				espacamento(tamanho+1);
+				printf("StatList\n");
+			}
 			show_statcomplicado(list->stat2,tamanho+1);
 		}
 		if(list->queraioeisto == tipo_ifthen){
 			espacamento(tamanho);
 			printf("IfElse\n");
 			show_expr(list->expr, tamanho+1);
+
+			if(list->stat1 == NULL || list->stat1->next != NULL){
+				espacamento(tamanho+1);
+				printf("StatList\n");
+			}
 			show_statcomplicado(list->stat1,tamanho+1);
+			espacamento(tamanho+1);
+			printf("StatList\n");
+
 		}
 		if(list->queraioeisto == tipo_while){
 			espacamento(tamanho);
 			printf("While\n");
+			if(list->stat1 == NULL || list->stat1->next != NULL){
+				espacamento(tamanho+1);
+				printf("StatList\n");
+			}
 			show_expr(list->expr, tamanho+1);
 			show_statcomplicado(list->stat1,tamanho+1);
 		}
 		if(list->queraioeisto == tipo_repeat){
 			espacamento(tamanho);
 			printf("Repeat\n");
+			if(list->stat1 == NULL || list->stat1->next != NULL){
+				espacamento(tamanho+1);
+				printf("StatList\n");
+			}
 			show_statcomplicado(list->statlist,tamanho+1);
 			show_expr(list->expr, tamanho+1);
 		}
@@ -231,7 +255,9 @@ void show_compstat(is_Stat *cs, int tamanho){
 				}else{
 					show_statcomplicado(cs->statlist,tamanho);
 				}
-
+	}else{
+		espacamento(tamanho);
+		printf("StatList\n");
 	}
 }
 
@@ -320,9 +346,14 @@ void show_progblock(is_ProgBlock *pb, int tamanho){
 	espacamento(tamanho);
 	printf("FuncPart\n");
 	show_funcpart(pb->fpl, tamanho+1);
-	//espacamento(tamanho);
-	//printf("StatList\n");
-	show_statpart(pb->sp, tamanho);
+	if(pb->sp == NULL){
+		espacamento(tamanho);
+		printf("StatList\n");
+	}
+	else{
+		show_statpart(pb->sp, tamanho);
+	}
+	
 }
 
 void show_progheading(is_ProgHeading *ph, int tamanho){

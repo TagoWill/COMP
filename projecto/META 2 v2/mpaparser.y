@@ -196,19 +196,19 @@ FuncBlock:
 	;
 
 StatPart:
-	CompStat 													{$$=insert_StatPart($1);}
+	CompStat 													{if($1==NULL){$$=NULL;}else{$$=insert_StatPart($1);}}
 	;
 
 CompStat:
-	BEG StatList END 											{$$=insert_CompStat($2);}
+	BEG StatList END 											{if($2==NULL){$$=NULL;}else{$$=insert_CompStat($2);}}
 	;
 
 StatList:
-	Stat StatList2 												{$$=insert_StatList($1, $2);}
+	Stat StatList2 												{if($1 == NULL && $2 == NULL){$$ = NULL;}else{$$=insert_StatList($1, $2);}}
 	;
 
 StatList2:
-	SEMIC Stat StatList2 										{$$=insert_StatList($2, $3);}
+	SEMIC Stat StatList2 										{if($2 == NULL && $3 == NULL){$$=NULL;}else{$$=insert_StatList($2, $3);}}
 	|															{$$=NULL;}
 	;
 
