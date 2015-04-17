@@ -18,7 +18,8 @@ void show_writelnplist(is_WritelnPList *iwl, int tamanho)
 			show_expr(iwl->ex, tamanho);
 		}
 		if(iwl->string != NULL){
-			printf("String (%s)\n", iwl->string);
+			espacamento(tamanho);
+			printf("String(%s)\n", iwl->string);
 		}
 	}
 }
@@ -31,11 +32,15 @@ void show_expr(is_Expr *iex, int tamanho)
 		}
 		if(iex->te == is_PLUS || iex->te == is_MINUS || iex->te == is_AND || iex->te == is_OR ||iex->te == is_MULT ||
 			iex->te == is_DIV ||iex->te == is_GREATER ||iex->te == is_LESS ||iex->te == is_GEQUAL ||iex->te == is_EQUALS ||
-			iex->te == is_DIFFERENT || iex->te == is_NOT || iex->te == is_SUB || iex->te == is_REALDIV){
+			iex->te == is_DIFFERENT || iex->te == is_NOT || iex->te == is_SUB || iex->te == is_REALDIV || iex->te == is_ADD){
 			switch(iex->te){
 				case is_PLUS:
 					espacamento(tamanho);
 					printf("Plus\n");
+					break;
+				case is_ADD:
+					espacamento(tamanho);
+					printf("Add\n");
 					break;
 				case is_MINUS:
 					espacamento(tamanho);
@@ -98,9 +103,17 @@ void show_expr(is_Expr *iex, int tamanho)
 			show_expr(iex->ex2, tamanho+1);
 		}
 		if(iex->te == is_ID){
-			espacamento(tamanho);
-			printf("Id(%s)\n", iex->intrealid);
-			show_paramlist(iex->ipl, tamanho);
+			if(iex->ipl != NULL){
+				espacamento(tamanho);
+				printf("Call\n");
+				espacamento(tamanho+1);
+				printf("Id(%s)\n", iex->intrealid);
+				show_paramlist(iex->ipl, tamanho+1);
+			}else{
+				espacamento(tamanho);
+				printf("Id(%s)\n", iex->intrealid);
+				show_paramlist(iex->ipl, tamanho);
+			}
 		}
 		if(iex->te == is_INTLIT){
 			espacamento(tamanho);
@@ -191,11 +204,11 @@ void show_statcomplicado(is_Stat *list, int tamanho){
 		if(list->queraioeisto == tipo_while){
 			espacamento(tamanho);
 			printf("While\n");
+			show_expr(list->expr, tamanho+1);
 			if(list->stat1 == NULL || list->stat1->next != NULL){
 				espacamento(tamanho+1);
 				printf("StatList\n");
 			}
-			show_expr(list->expr, tamanho+1);
 			show_statcomplicado(list->stat1,tamanho+1);
 		}
 		if(list->queraioeisto == tipo_repeat){
@@ -244,6 +257,7 @@ void show_compstat(is_Stat *cs, int tamanho){
 
 				if(cs->statlist != NULL){
 					if(cs->statlist->next != NULL){
+						if(cs->statlist->next->statlist != NULL)
 						espacamento(tamanho);
 						printf("StatList\n");
 						tamanho++;

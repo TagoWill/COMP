@@ -253,7 +253,7 @@ Expr2:
 	| Expr2 MINUS Expr3 										{$$=insert_ExprO($1, is_SUB, $3);}
 	| Expr2 AND Expr3 											{$$=insert_ExprO($1, is_AND, $3);}
 	| Expr2 OR Expr3 											{$$=insert_ExprO($1, is_OR, $3);}
-	| Expr2 PLUS Expr3 											{$$=insert_ExprO($1, is_PLUS, $3);}
+	| Expr2 PLUS Expr3 											{$$=insert_ExprO($1, is_ADD, $3);}
 	;
 
 Expr3:
