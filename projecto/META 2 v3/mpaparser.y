@@ -188,7 +188,7 @@ CompStat:
 	;
 
 StatList:
-	Stat StatList2 												{if($1 != NULL && $2 != NULL){$$=inserir_no(is_STATLIST,inserir_irmao($1, $2));}else{if($1==NULL){$$=$2}else{$$=$1;}}}
+	Stat StatList2 												{if($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1 }
 	;
 
 StatList2:
@@ -226,7 +226,7 @@ Expr:
 	| Expr2 LESS Expr2 											{$$=inserir_no(is_LESS, inserir_irmao($1, $3));}
 	| Expr2 GEQUAL Expr2 										{$$=inserir_no(is_GEQUAL, inserir_irmao($1, $3));}
 	| Expr2 EQUALS Expr2 										{$$=inserir_no(is_EQUALS, inserir_irmao($1, $3));}
-	| Expr2 LEQUAL Expr2 										{$$=inserir_no(is_LEQUAL, inserir_irmao($1, $3);}
+	| Expr2 LEQUAL Expr2 										{$$=inserir_no(is_LEQUAL, inserir_irmao($1, $3));}
 	| Expr2 DIFFERENT Expr2 									{$$=inserir_no(is_DIFFERENT, inserir_irmao($1, $3));}
 	;
 

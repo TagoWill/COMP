@@ -98,9 +98,9 @@ void show_prog(is_Nos *noactual, int tamanho){
 		espacamento(tamanho);
 
 		if(noactual->valor != NULL){
-			printf("%s(%s)\n",istoe(noactual->tipo) ,noactual->valor);
+			printf("%s(%s)\n",istoe(noactual->queraioeisto) ,noactual->valor);
 		}else{
-			printf("%s\n",noactual->tipo);
+			printf("%s\n",noactual->queraioeisto);
 		}
 
 		if(noactual->nofilho != NULL){
