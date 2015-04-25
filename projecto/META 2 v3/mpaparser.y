@@ -180,7 +180,7 @@ FuncBlock:
 	;
 
 StatPart:
-	CompStat 													{$$ = ($1 == NULL)?inserir_no(is_STATLIST, NULL):$1}
+	CompStat 													{$$ = ($1 == NULL)?inserir_no(is_STATLIST, NULL):$1;}
 	;
 
 CompStat:
