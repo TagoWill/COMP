@@ -188,11 +188,11 @@ CompStat:
 	;
 
 StatList:
-	Stat StatList2 												{($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1; }
+	Stat StatList2 												{$$=($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1; }
 	;
 
 StatList2:
-	SEMIC Stat StatList2 										{inserir_irmao($2, $3);}
+	SEMIC Stat StatList2 										{$$=inserir_irmao($2, $3);}
 	|															{$$=NULL;}
 	;
 
