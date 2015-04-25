@@ -281,6 +281,6 @@ int main()
 {
 	yyparse();
 	if(erros != 1)
-		show_prog(myprogram);
+		show_prog(myprogram, 0);
 	return 0;
 }
