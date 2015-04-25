@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-is_Nos inserir_No(tipos_nos tipo, is_Nos *filho){
+is_Nos inserir_no(tipos_nos tipo, is_Nos *filho){
 	is_Nos* novono = (is_Nos*)malloc(sizeof(is_Nos));
 	novono->queraioeisto = tipo;
 	novono->valor = NULL;

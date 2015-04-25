@@ -19,13 +19,78 @@ char *istoe(tipos_nos tipo){
 			return "VarPart";
 		case is_VARDECL:
 			return "VarDecl";
-
-
-		is_VARDECL, is_FUNCPART, is_FUNCDECL, is_FUNCDEF, is_FUNCPARAMS, is_PARAMS, 
-	is_VARPARAMS, is_IFELSE, is-REPEAT, is_WHILE, is_WRITELN is_STATLIST, is_VALPARAM, is_CALL, is_ASSIGN, is_ID, 
-	is_PLUS, is_MINUS, is_AND, is_OR, is_MULT, is_DIV, is_MOD, is_GREATER, is_LESS, is_GEQUAL, is_LEQUAL, 
-	is_EQUALS, is_DIFFERENT, is_NOT, is_INTLIT, is_REALLIT, is_ID, is_EXP, is_SUB, is_REALDIV, is_ADD, is_STRING
-	}
+		case is_FUNCPART:
+			return "FuncPart";
+		case is_FUNCDECL:
+			return "FuncDecl";
+		case is_FUNCPARAMS:
+			return "FuncParams";
+		case is_PARAMS:
+			return "Params";
+		case is_VARPARAMS:
+			return "VarParams";
+		case is_IFELSE:
+			return "IfElse";
+		case is_REPEAT:
+			return "Repeat";
+		case is_WHILE:
+			return "While";
+		case is_WRITELN:
+			return "WriteLn";
+		case is_STATLIST:
+			return "StatList";
+		case is_VALPARAM:
+			return "ValParam";
+		case is_CALL:
+			return "Call";
+		case is_ASSIGN:
+			return "Assign";
+		case is_ID:
+			return "Id";
+		case is_PLUS:
+			return "Plus";
+		case is_MINUS:
+			return "Minus";
+		case is_AND:
+			return "And";
+		case is_OR:
+			return "Or";
+		case is_MULT:
+			return "Mult";
+		case is_DIV:
+			return "Div";
+		case is_MOD:
+			return "Mod";
+		case is_GREATER:
+			return "Gt";
+		case is_LESS:
+			return "Lt";
+		case is_GEQUAL:
+			return "Geq";
+		case is_LEQUAL:
+			return "Leq";
+		case is_EQUALS:
+			return "Eq";
+		case is_DIFFERENT:
+			return "Neq";
+		case is_NOT:
+			return "Not";
+		case is_INTLIT:
+			return "IntLit";
+		case is_REALLIT:
+			return "RealLit";
+		case is_ID:
+			return "Id";
+		case is_EXP:
+			return "Exp";
+		case is_SUB:
+			return "Sub";
+		case is_REALDIV:
+			return "RealDiv";
+		case is_ADD:
+			return "Add";
+		case is_STRING:
+			return "String";
 
 }
 
@@ -35,9 +100,9 @@ void show_prog(is_Nos *noactual, int tamanho){
 		espacamento(tamanho);
 
 		if(noactual->valor != NULL){
-			printf("%s(%s)\n", /*FALTA*/ ,no->valor);
+			printf("%s(%s)\n",istoe(no->tipo) ,no->valor);
 		}else{
-			printf("%s\n", /*FALTA*/);
+			printf("%s\n",no->tipo);
 		}
 
 		if(no->nofilho != NULL){

@@ -2,4 +2,5 @@
 
 
 void espacamento(int tamanho);
-void show_prog(is_Prog *prog);
+char *istoe(tipos_nos tipo);
+void show_prog(is_Nos *noactual, int tamanho);
