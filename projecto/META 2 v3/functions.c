@@ -5,7 +5,7 @@
 #include <string.h>
 #include <ctype.h>
 
-is_Nos inserir_no(tipos_nos tipo, is_Nos *filho){
+is_Nos *inserir_no(tipos_nos tipo, is_Nos *filho){
 	is_Nos* novono = (is_Nos*)malloc(sizeof(is_Nos));
 	novono->queraioeisto = tipo;
 	novono->valor = NULL;
@@ -15,7 +15,7 @@ is_Nos inserir_no(tipos_nos tipo, is_Nos *filho){
 	return novono;
 }
 
-is_Nos inserir_valor(tipos_nos tipo, char *valor){
+is_Nos *inserir_valor(tipos_nos tipo, char *valor){
 
 	is_Nos *novono = (is_Nos*)malloc(sizeof(is_Nos));
 	novono->queraioeisto = tipo;
@@ -26,7 +26,7 @@ is_Nos inserir_valor(tipos_nos tipo, char *valor){
 	return novono;
 }
 
-is_Nos inserir_irmao(is_Nos *lista1, is_Nos *lista2){
+is_Nos *inserir_irmao(is_Nos *lista1, is_Nos *lista2){
 
 	is_Nos aux = lista1;
 	if(lista1==NULL){
