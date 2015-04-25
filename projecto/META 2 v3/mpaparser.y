@@ -180,11 +180,11 @@ FuncBlock:
 	;
 
 StatPart:
-	CompStat 													{if($1==NULL){$$=inserir_no(is_STATLIST, NULL);}else{$$=$1;}}
+	CompStat 													{$$ = ($1 == NULL)?inserir_no(is_STATLIST, NULL):$1}
 	;
 
 CompStat:
-	BEG StatList END 											{$$==$2;}
+	BEG StatList END 											{$$==NULL;}
 	;
 
 StatList:
