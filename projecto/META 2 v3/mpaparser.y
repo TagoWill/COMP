@@ -188,7 +188,7 @@ CompStat:
 	;
 
 StatList:
-	Stat StatList2 												{if($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1; }
+	Stat StatList2 												{($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1; }
 	;
 
 StatList2:
@@ -215,8 +215,8 @@ WritelnPList:
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2 									{$$=insert_WritelnPList2($2, $3);}
-	| COMMA Expr WritelnPList2 									{$$=insert_WritelnPList($2, $3);}
+	COMMA STRING WritelnPList2 									{$$=inserir_irmao(inserir_valor(is_STRING, $2), $3);}
+	| COMMA Expr WritelnPList2 									{$$=inserir_irmao($2, $3);}
 	|															{$$=NULL;}
 	;
 

@@ -94,7 +94,7 @@ char *istoe(tipos_nos tipo){
 
 void show_prog(is_Nos *noactual, int tamanho){
 
-	if(noactual != NULL){
+	/*if(noactual != NULL){
 		espacamento(tamanho);
 
 		if(noactual->valor != NULL){
@@ -109,7 +109,5 @@ void show_prog(is_Nos *noactual, int tamanho){
 		if(noactual->nonext != NULL){
 			show_prog(noactual->nonext, tamanho);
 		}
-	}
+	}*/
 }
-
-
