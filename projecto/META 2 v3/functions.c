@@ -28,7 +28,7 @@ is_Nos *inserir_valor(tipos_nos tipo, char *valor){
 
 is_Nos *inserir_irmao(is_Nos *lista1, is_Nos *lista2){
 
-	is_Nos aux = lista1;
+	is_Nos *aux = lista1;
 	if(lista1==NULL){
 		return lista2;
 	}

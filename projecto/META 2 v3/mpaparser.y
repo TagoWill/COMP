@@ -13,7 +13,7 @@
 	int erros = 0;
 
 
-	is_Prog* myprogram = NULL;
+	is_Nos* myprogram = NULL;
 %}
 
 %union {

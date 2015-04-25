@@ -45,8 +45,6 @@ char *istoe(tipos_nos tipo){
 			return "Call";
 		case is_ASSIGN:
 			return "Assign";
-		case is_ID:
-			return "Id";
 		case is_PLUS:
 			return "Plus";
 		case is_MINUS:
@@ -100,16 +98,16 @@ void show_prog(is_Nos *noactual, int tamanho){
 		espacamento(tamanho);
 
 		if(noactual->valor != NULL){
-			printf("%s(%s)\n",istoe(no->tipo) ,no->valor);
+			printf("%s(%s)\n",istoe(noactual->tipo) ,noactual->valor);
 		}else{
-			printf("%s\n",no->tipo);
+			printf("%s\n",noactual->tipo);
 		}
 
-		if(no->nofilho != NULL){
-			show_prog(no->nofilho, tamanho+1);
+		if(noactual->nofilho != NULL){
+			show_prog(noactual->nofilho, tamanho+1);
 		}
-		if(no->nonext != NULL){
-			show_prog(no->nonext, tamanho);
+		if(noactual->nonext != NULL){
+			show_prog(noactual->nonext, tamanho);
 		}
 	}
 }
