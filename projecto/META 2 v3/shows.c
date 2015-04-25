@@ -100,7 +100,7 @@ void show_prog(is_Nos *noactual, int tamanho){
 		if(noactual->valor != NULL){
 			printf("%s(%s)\n",istoe(noactual->queraioeisto) ,noactual->valor);
 		}else{
-			printf("%s\n",noactual->queraioeisto);
+			printf("%s\n", noactual->queraioeisto);
 		}
 
 		if(noactual->nofilho != NULL){

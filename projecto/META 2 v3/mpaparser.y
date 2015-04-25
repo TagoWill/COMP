@@ -75,7 +75,7 @@
 %nonassoc	THEN
 %nonassoc   ELSE
 
-%type <paratodos>  Prog
+%type <paratodos> Prog
 %type <paratodos> ProgHeading
 %type <paratodos> ProgBlock
 %type <paratodos> VarPart
@@ -90,14 +90,14 @@
 %type <paratodos> FuncIdent
 %type <paratodos> FormalParamList
 %type <paratodos> FormalParams
-%type <paratodos>	FormalParams2
+%type <paratodos> FormalParams2
 %type <paratodos> FuncBlock
 %type <paratodos> CompStat
 %type <paratodos> StatList
 %type <paratodos> StatList2
 %type <paratodos> Stat
 %type <paratodos> WritelnPList
-%type <wparatodosl> WritelnPList2
+%type <paratodos> WritelnPList2
 %type <paratodos> Expr
 %type <paratodos> Expr2
 %type <paratodos> Expr3
@@ -115,7 +115,7 @@ ProgHeading:
 	;
 
 ProgBlock:
-	VarPart FuncPart StatPart 									{$$=inserir_irmao(inserir_no(is_VARPART, $1), inserir_no(is_FUNCPART,$2), $3);}
+	VarPart FuncPart StatPart 									{$$=inserir_irmao(inserir_no(is_VARPART, $1), inserir_irmao(inserir_no(is_FUNCPART,$2), $3));}
 	;
 
 VarPart:
@@ -148,13 +148,13 @@ FuncPart:
 
 FuncDeclaration:
 	FuncHeading SEMIC FORWARD 									{$$=inserir_nos(is_FUNCDECL, $1);}
-	| FuncIdent SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDEF, inserir_irmao($1, $3);}
-	| FuncHeading SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDEF, inserir_irmao($1, $3);}
+	| FuncIdent SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));}
+	| FuncHeading SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));}
 	;
 
 FuncHeading:
-	FUNCTION ID FormalParamList COLON ID 						{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FuncParams, $3), inserir_valor(is_ID,$5)));}
-	| FUNCTION ID COLON ID 										{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FuncParams, NULL) , inserir_valor(is_ID, $4)));}
+	FUNCTION ID FormalParamList COLON ID 						{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FUNCPARAMS, $3), inserir_valor(is_ID, $5)));}
+	| FUNCTION ID COLON ID 										{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FUNCPARAMS, NULL) , inserir_valor(is_ID, $4)));}
 	;
 
 FuncIdent:
@@ -184,11 +184,11 @@ StatPart:
 	;
 
 CompStat:
-	BEG StatList END 											{$$==$2}
+	BEG StatList END 											{$$==$2;}
 	;
 
 StatList:
-	Stat StatList2 												{if($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1 }
+	Stat StatList2 												{if($1 != NULL && $2 != NULL)?inserir_no(is_STATLIST, inserir_irmao($1,$2)):$1; }
 	;
 
 StatList2:
