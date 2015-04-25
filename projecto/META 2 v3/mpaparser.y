@@ -107,7 +107,7 @@
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT 							{$$=inserir_No(is_PROGRAM, inserir_irmao($1, $3));	myprogram=$$;}
+	ProgHeading SEMIC ProgBlock DOT 							{$$=inserir_no(is_PROGRAM, inserir_irmao($1, $3));	myprogram=$$;}
 	;
 
 ProgHeading:
@@ -147,9 +147,9 @@ FuncPart:
 	;
 
 FuncDeclaration:
-	FuncHeading SEMIC FORWARD 									{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, $1);*/}
-	| FuncIdent SEMIC FuncBlock 								{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));*/}
-	| FuncHeading SEMIC FuncBlock 								{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));*/}
+	FuncHeading SEMIC FORWARD 									{$$=inserir_no(is_FUNCDECL, $1);}
+	| FuncIdent SEMIC FuncBlock 								{$$=inserir_no(is_FUNCDECL, inserir_irmao($1, $3));}
+	| FuncHeading SEMIC FuncBlock 								{$$=inserir_no(is_FUNCDECL, inserir_irmao($1, $3));}
 	;
 
 FuncHeading:
