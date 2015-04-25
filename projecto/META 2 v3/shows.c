@@ -89,12 +89,14 @@ char *istoe(tipos_nos tipo){
 			return "Add";
 		case is_STRING:
 			return "String";
+		default:
+			return "Nao sei o que fazer";
 
 }
 
 void show_prog(is_Nos *noactual, int tamanho){
 
-	/*if(noactual != NULL){
+	if(noactual != NULL){
 		espacamento(tamanho);
 
 		if(noactual->valor != NULL){
@@ -109,5 +111,5 @@ void show_prog(is_Nos *noactual, int tamanho){
 		if(noactual->nonext != NULL){
 			show_prog(noactual->nonext, tamanho);
 		}
-	}*/
+	}
 }

@@ -147,9 +147,9 @@ FuncPart:
 	;
 
 FuncDeclaration:
-	FuncHeading SEMIC FORWARD 									{$$=inserir_nos(is_FUNCDECL, $1);}
-	| FuncIdent SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));}
-	| FuncHeading SEMIC FuncBlock 								{$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));}
+	FuncHeading SEMIC FORWARD 									{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, $1);*/}
+	| FuncIdent SEMIC FuncBlock 								{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));*/}
+	| FuncHeading SEMIC FuncBlock 								{$$=NULL;/*$$=inserir_nos(is_FUNCDECL, inserir_irmao($1, $3));*/}
 	;
 
 FuncHeading:
