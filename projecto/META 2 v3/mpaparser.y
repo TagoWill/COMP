@@ -107,7 +107,7 @@
 
 %%
 Prog: 
-	ProgHeading SEMIC ProgBlock DOT 							{$$=inserir_No(is_PROGRAM, inserir_irmao($1, $3));	myprogram=$$;}
+	ProgHeading SEMIC ProgBlock DOT 							{$$=NULL;/*$$=inserir_No(is_PROGRAM, inserir_irmao($1, $3));*/	myprogram=$$;}
 	;
 
 ProgHeading:

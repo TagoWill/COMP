@@ -91,7 +91,7 @@ char *istoe(tipos_nos tipo){
 			return "String";
 		default:
 			return "Nao sei o que fazer";
-
+	}
 }
 
 void show_prog(is_Nos *noactual, int tamanho){
