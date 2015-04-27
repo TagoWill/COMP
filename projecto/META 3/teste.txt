@@ -1,0 +1,5 @@
+program gdc(output);
+var x, y :integer;
+begin
+
+end.

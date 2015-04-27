@@ -3,8 +3,7 @@
 #include<string.h>
 #include<stdio.h>
 
-extern table_element* symtab;
-
+extern program_table* symtab;
 
 //Insere um novo identificador na cauda de uma lista ligada de simbolo
 table_element *insert_el(char *str, basic_type t)
