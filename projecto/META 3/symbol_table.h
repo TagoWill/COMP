@@ -9,6 +9,8 @@ typedef struct _t3
 	basic_type tabletype;
 	char *name;
 	char *type;
+	int isconstant;
+	char *valreturn;
 	struct _t3 *variaveis;
 	struct _t3 *filho;
 	struct _t3 *next;
@@ -17,7 +19,7 @@ typedef struct _t3
 
 
 void cria();
-table *inserir_coisas(char *valor, char *tipo);
+table *inserir_coisas(char *valor, char *ret);
 void imprimirTabela(table* actual);
 void imprimeTabelas(table* actual);
 /*table_element *insert_el(char *str, basic_type t);

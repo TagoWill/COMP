@@ -2,13 +2,13 @@
 #include "symbol_table.h"
 
 
-int check_program(is_Nos* p);
+int check_program(is_Nos* noactual, char* param);
 
-int checkProgBlock(is_Nos* p);
-int checkVarPart(is_Nos *p);
-int check_VarDecl(is_Nos *p);
-int check_idlist(is_Nos *p, char *tipo);
-/*
+char *checkVarPart(is_Nos *noactual);
+
+
+/*int check_idlist(is_Nos *p, char *tipo);
+
 int check_vardec_list(is_vardec_list* ivl);
 int check_vardec(is_vardec* iv);
 int check_integer_dec(is_integer_dec* iid);

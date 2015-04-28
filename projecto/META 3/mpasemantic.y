@@ -14,7 +14,7 @@
 	extern int yyleng;
 	int erros = 0;
 
-	program_table *symtab=NULL;
+	table *symtab=NULL;
 
 	is_Nos* myprogram = NULL;
 %}
@@ -283,7 +283,7 @@ int yyerror (char *s)
 int main()
 {
 	yyparse();
-	int err = check_program(myprogram);
+	int err = check_program(myprogram, NULL);
 	printf("%d\n", err);
 	imprimeTabelas(symtab);
 	if(erros != 1)

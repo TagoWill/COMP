@@ -2,8 +2,11 @@
 #include "semantics.h"
 #include "symbol_table.h"
 #include <stdio.h>
+#include <malloc.h>
+#include <string.h>
 
-int check_program(is_Nos* noactual)
+
+int check_program(is_Nos* noactual, char* param)
 {
 
 
@@ -14,17 +17,37 @@ int check_program(is_Nos* noactual)
 		
 			case is_PROGRAM:
 				cria();
-				check_program(noactual->nofilho);
+				check_program(noactual->nofilho, param);
+				check_program(noactual->nonext, param);
 				break;
-
+			case is_VARDECL:
+				checkVarPart(noactual->nofilho);
+				check_program(noactual->nonext, param);
+				break;
 			default:
-				check_program(noactual->nofilho);
-				check_program(noactual->nonext);
-
+				check_program(noactual->nofilho, param);
+				check_program(noactual->nonext, param);
 		}
 	}
 	
 	return errorcount;
+}
+
+
+char *checkVarPart(is_Nos *noactual){
+	if(noactual != NULL){
+		if(strcmp(noactual->valor, "integer")==0)
+			return "_integer_";
+		if(strcmp(noactual->valor, "real")==0)
+			return "_real_";
+		if(strcmp(noactual->valor, "boolean")==0)
+			return "_boolean_";
+			
+		table *new = inserir_coisas(noactual->valor,NULL);
+		char *tipo=checkVarPart(noactual->nonext);
+		new->type = (char*)malloc(sizeof(char));
+		strcpy(new->type, tipo);
+	}
 }
 
 /*

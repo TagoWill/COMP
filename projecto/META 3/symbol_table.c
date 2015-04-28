@@ -15,6 +15,8 @@ void cria(){
 	boo->tabletype = is_variavel;
 	boo->name = "boolean";
 	boo->type = "_type_";
+	boo->isconstant=1;
+	boo->valreturn = "_boolean_";
 	boo->next = NULL;
 	boo->pai =NULL;
 	boo->filho=NULL;
@@ -26,6 +28,8 @@ void cria(){
 	in->tabletype = is_variavel;
 	in->name = "integer";
 	in->type = "_type_";
+	in->isconstant=1;
+	in->valreturn = "_integer_";
 	in->next = NULL;
 	in->pai =NULL;
 	in->filho=NULL;
@@ -38,6 +42,8 @@ void cria(){
 	rea->tabletype = is_variavel;
 	rea->name = "real";
 	rea->type = "_type_";
+	rea->isconstant=1;
+	rea->valreturn ="_real_";
 	rea->next = NULL;
 	rea->pai =NULL;
 	rea->filho=NULL;
@@ -50,6 +56,8 @@ void cria(){
 	fals->tabletype = is_variavel;
 	fals->name = "false";
 	fals->type = "_boolean_";
+	fals->isconstant = 1;
+	fals->valreturn = "_false_";
 	fals->next = NULL;
 	fals->pai =NULL;
 	fals->filho=NULL;
@@ -57,6 +65,20 @@ void cria(){
 
 	aux = aux->next;
 	aux->next = fals;
+
+	table *tru = (table*)malloc(sizeof(table));
+	tru->tabletype = is_variavel;
+	tru->name = "true";
+	tru->type = "_boolean_";
+	tru->isconstant = 1;
+	tru->valreturn = "_true_";
+	tru->next = NULL;
+	tru->pai =NULL;
+	tru->filho=NULL;
+	tru->variaveis=NULL;
+
+	aux = aux->next;
+	aux->next = tru;
 
 	table *parac = (table*)malloc(sizeof(table));
 	parac->tabletype = is_variavel;
@@ -74,6 +96,7 @@ void cria(){
 	func1->tabletype = is_function;
 	func1->name = "paramcount";
 	func1->type = "_integer_";
+	func1->valreturn = "return";
 	func1->next = NULL;
 	func1->pai =outer;
 	func1->filho=NULL;
@@ -97,6 +120,7 @@ void cria(){
 	newSymbol->tabletype = is_program;
 	newSymbol->name = "program";
 	newSymbol->type = "_integer_";
+	newSymbol->valreturn = "return";
 	newSymbol->next = NULL;
 	newSymbol->filho=NULL;
 	newSymbol->variaveis=NULL;
@@ -108,19 +132,28 @@ void cria(){
 
 }
 
-table *inserir_coisas(char *valor, char *tipo){
+table *inserir_coisas(char *valor, char *ret){
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
 	table *previous;
 	newSymbol->name = (char*)malloc(sizeof(char));
-	//newSymbol->soporagora = (char*)malloc(sizeof(char));
-
+	newSymbol->tabletype = is_variavel;
 	strcpy(newSymbol->name, valor);
-	//strcpy(newSymbol->soporagora, tipo);
+	newSymbol->type =NULL;
+	newSymbol->isconstant=0;
+	if(ret != NULL){
+		newSymbol->valreturn = (char*)malloc(sizeof(char));
+		strcpy(newSymbol->valreturn, ret);
+	}else{
+		newSymbol->valreturn = NULL;
+	}
+	newSymbol->variaveis == NULL;
+	newSymbol->filho=NULL;
+	newSymbol->pai =NULL;
 	newSymbol->next=NULL;
 
-	if(symtab){
-		for(aux=symtab;aux;previous=aux , aux=aux->next){
+	if(symtab != NULL){
+		for(aux=symtab;aux != NULL; previous=aux , aux=aux->next){
 			if(strcmp(aux->name, valor)==0){
 				return NULL;
 			}
@@ -140,20 +173,22 @@ void imprimirTabela(table* actual){
 			break;
 		case is_function:
 			printf("\n===== Function Symbol Table =====\n");
-			printf("%s ", actual->name);
-			printf("%s ", actual->type);
-			printf("return\n" );
+			printf("%s\t", actual->name);
+			printf("%s\t", actual->type);
+			printf("%s\n", actual->valreturn);
 			break;
 		case is_program:
 			printf("\n===== Program Symbol Table =====\n");
 			break;
 		case is_variavel:
-			printf("%s ", actual->name);
-			printf("%s\n", actual->type );
+			printf("%s\t", actual->name);
+			printf("%s\t", actual->type );
+			if(actual->isconstant == 1)printf("constant");
+			if(actual->valreturn != NULL)printf("\t%s", actual->valreturn);
+			printf("\n");
 			break;
 		default:
-			printf("%s\n", actual->name);
-			printf("%s\n", actual->type);
+			printf("O daniel e coco\n");
 
 	}
 	if(actual->variaveis != NULL)
