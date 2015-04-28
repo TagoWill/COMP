@@ -3,26 +3,31 @@
 #include "symbol_table.h"
 #include <stdio.h>
 
-int check_program(is_Nos* p)
+int check_program(is_Nos* noactual)
 {
+
+
+
 	int errorcount=0;
+	if(noactual != NULL){
+		switch(noactual->queraioeisto){
+		
+			case is_PROGRAM:
+				cria();
+				check_program(noactual->nofilho);
+				break;
 
-	errorcount = checkProgBlock(p->nofilho->next);
+			default:
+				check_program(noactual->nofilho);
+				check_program(noactual->nonext);
+
+		}
+	}
 	
-	/*errorcount=check_vardec_list(p->vlist);
-	errorcount+=check_statement_list(p->slist);
-	*/
 	return errorcount;
 }
 
-int checkProgBlock(is_Nos* p){
-	int errorcount = 0;
-
-	errorcount = checkVarPart(p->nofilho);
-
-	return errorcount;
-}
-
+/*
 int check_vardec_list(is_vardec_list* ivl)
 {
 	int errorcount=0;
@@ -121,5 +126,5 @@ int check_write_statement(is_write_statement* iws)
 	return 0;
 }
 
-
+*/
 
