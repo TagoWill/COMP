@@ -17,13 +17,12 @@ typedef struct _t3
 	struct _t3 *pai;
 } table;
 
-
+table *encontra_na_tabela_outer(char *valor);
+table *encontra_na_tabela(char *valor);
 void cria();
-table *inserir_coisas(char *valor, char *ret);
+table *inserir_funcoes(char *valor, char *type);
+table *inserir_coisas(char *valor, char *type,char *ret);
 void imprimirTabela(table* actual);
 void imprimeTabelas(table* actual);
-/*table_element *insert_el(char *str, basic_type t);
-void show_table();
-table_element *search_el(char *str);*/
 
 #endif

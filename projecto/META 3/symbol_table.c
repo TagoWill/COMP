@@ -5,6 +5,38 @@
 
 extern table* symtab;
 
+table *encontra_na_tabela_outer(char *valor){
+	table *aux = symtab;
+	while(aux->tabletype != is_outer){
+		aux = aux->pai;
+	}
+	for(aux=aux->variaveis;aux!= NULL;aux=aux->next){
+		if(strcasecmp(aux->name,valor)==0){
+			return aux;
+		}
+	}
+	return NULL;
+}
+
+table *encontra_na_tabela(char *valor){
+	table *aux, *aux2;
+	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
+		if(strcasecmp(aux->name,valor)==0){
+			return aux;
+		}
+	}
+	aux=symtab->pai;
+	while(aux!=NULL){
+		for(aux2=aux->variaveis;aux2!=NULL;aux2=aux2->next){
+			if(strcasecmp(aux2->name,valor)==0){
+				return aux;
+			}
+		}
+		aux=aux->pai;
+	}
+	return NULL;
+}
+
 void cria(){
 	table *aux;
 	table *outer = (table*)malloc(sizeof(table));
@@ -132,14 +164,72 @@ void cria(){
 
 }
 
-table *inserir_coisas(char *valor, char *ret){
+table *inserir_funcoes(char *valor, char *type){
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
 	table *previous;
-	newSymbol->name = (char*)malloc(sizeof(char));
+	if(valor != NULL){
+		newSymbol->name = (char*)malloc(sizeof(char));
+		strcpy(newSymbol->name, valor);
+	}else{
+		newSymbol->name = NULL;
+	}
+
+	newSymbol->tabletype = is_function;
+	
+	if(type != NULL){
+		newSymbol->type = (char*)malloc(sizeof(char));
+		if(strcmp(type, "integer")==0)
+		strcpy(newSymbol->type, "_integer_");
+	if(strcmp(type, "real")==0)
+		strcpy(newSymbol->type, "_real_");
+	if(strcmp(type, "boolean")==0)
+		strcpy(newSymbol->type, "_boolean_");
+	}else{
+		newSymbol->type = NULL;
+	}
+	newSymbol->isconstant=0;
+	newSymbol->valreturn = (char*)malloc(sizeof(char));
+	strcpy(newSymbol->valreturn, "return");
+
+	newSymbol->variaveis == NULL;
+	newSymbol->filho=NULL;
+	newSymbol->pai =symtab;
+	newSymbol->next=NULL;
+
+	if(symtab->filho != NULL){
+		for(aux=symtab->filho;aux != NULL; previous=aux , aux=aux->next){
+			if(strcmp(aux->name, valor)==0){
+				return NULL;
+			}
+		}
+		previous->next=newSymbol;
+	}else{
+		symtab->filho=newSymbol;
+	}
+	return newSymbol;
+}
+
+table *inserir_coisas(char *valor, char *type,char *ret){
+	table *newSymbol = (table*)malloc(sizeof(table));
+	table *aux;
+	table *previous;
+	if(valor != NULL){
+		newSymbol->name = (char*)malloc(sizeof(char));
+		strcpy(newSymbol->name, valor);
+	}else{
+		newSymbol->name=NULL;
+	}
+
+
 	newSymbol->tabletype = is_variavel;
-	strcpy(newSymbol->name, valor);
-	newSymbol->type =NULL;
+	
+	if(type != NULL){
+		newSymbol->type = (char*)malloc(sizeof(char));
+		strcpy(newSymbol->type, type);
+	}else{
+		newSymbol->type = NULL;
+	}
 	newSymbol->isconstant=0;
 	if(ret != NULL){
 		newSymbol->valreturn = (char*)malloc(sizeof(char));
@@ -152,15 +242,15 @@ table *inserir_coisas(char *valor, char *ret){
 	newSymbol->pai =NULL;
 	newSymbol->next=NULL;
 
-	if(symtab != NULL){
-		for(aux=symtab;aux != NULL; previous=aux , aux=aux->next){
+	if(symtab->variaveis != NULL){
+		for(aux=symtab->variaveis;aux != NULL; previous=aux , aux=aux->next){
 			if(strcmp(aux->name, valor)==0){
 				return NULL;
 			}
 		}
 		previous->next=newSymbol;
 	}else{
-		symtab=newSymbol;
+		symtab->variaveis=newSymbol;
 	}
 	return newSymbol;
 
@@ -183,8 +273,8 @@ void imprimirTabela(table* actual){
 		case is_variavel:
 			printf("%s\t", actual->name);
 			printf("%s\t", actual->type );
-			if(actual->isconstant == 1)printf("constant");
-			if(actual->valreturn != NULL)printf("\t%s", actual->valreturn);
+			if(actual->isconstant == 1)printf("constant\t");
+			if(actual->valreturn != NULL)printf("%s", actual->valreturn);
 			printf("\n");
 			break;
 		default:
@@ -211,53 +301,3 @@ void imprimeTabelas(table* actual){
 	
 }
 
-//Insere um novo identificador na cauda de uma lista ligada de simbolo
-/*table *insert_el(char *str, basic_type t)
-{
-	table *newSymbol=(table*) malloc(sizeof(table));
-	table *aux;
-	table* previous;
-
-	strcpy(newSymbol->name, str);
-	newSymbol->type=t;
-	newSymbol->next=NULL;	
-
-	if(symtab)	//Se table ja tem elementos
-	{	//Procura cauda da lista e verifica se simbolo ja existe (NOTA: assume-se uma tabela de simbolos globais!)
-		for(aux=symtab; aux; previous=aux, aux=aux->next)
-			if(strcmp(aux->name, str)==0)
-				return NULL;
-		
-		previous->next=newSymbol;	//adiciona ao final da lista
-	}
-	else	//symtab tem um elemento -> o novo simbolo
-		symtab=newSymbol;		
-	
-	return newSymbol; 
-}
-
-void show_table()
-{
-table_element *aux;
-printf("\n");
-for(aux=symtab; aux; aux=aux->next)
-	printf("symbol %s, type %d\n", aux->name, aux->type);
-}
-
-//Procura um identificador, devolve 0 caso nao exista
-table_element *search_el(char *str)
-{
-table_element *aux;
-
-for(aux=symtab; aux; aux=aux->next)
-	if(strcmp(aux->name, str)==0)
-		return aux;
-
-return NULL;
-}
-
-
-
-
-
-*/

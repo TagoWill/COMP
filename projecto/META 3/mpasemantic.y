@@ -280,13 +280,33 @@ int yyerror (char *s)
 	return 1;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	yyparse();
 	int err = check_program(myprogram, NULL);
-	printf("%d\n", err);
-	imprimeTabelas(symtab);
-	if(erros != 1)
-		//show_prog(myprogram, 0);
+	if(erros != 1){
+		if(argc == 2){
+			if(strcmp("-t", argv[1])==0){
+				show_prog(myprogram,0);
+			}else if(strcmp("-s", argv[1])==0){
+				imprimeTabelas(symtab);
+			}
+		}else if(argc == 3){
+			if(strcmp("-t", argv[1])==0){
+				if(strcmp("-s", argv[2])==0){
+					show_prog(myprogram,0);
+					printf("\n");
+					imprimeTabelas(symtab);
+				}
+			}
+			if(strcmp("-s", argv[1])==0){
+				if(strcmp("-t", argv[2])==0){
+					show_prog(myprogram,0);
+					printf("\n");
+					imprimeTabelas(symtab);
+				}
+			}
+		}
+	}
 	return 0;
 }

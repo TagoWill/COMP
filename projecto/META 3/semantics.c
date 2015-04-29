@@ -5,6 +5,10 @@
 #include <malloc.h>
 #include <string.h>
 
+extern table* symtab;
+extern int lineaux;
+extern int colaux;
+extern int erros;
 
 int check_program(is_Nos* noactual, char* param)
 {
@@ -12,7 +16,7 @@ int check_program(is_Nos* noactual, char* param)
 
 
 	int errorcount=0;
-	if(noactual != NULL){
+	if(noactual != NULL && erros == 0){
 		switch(noactual->queraioeisto){
 		
 			case is_PROGRAM:
@@ -21,9 +25,24 @@ int check_program(is_Nos* noactual, char* param)
 				check_program(noactual->nonext, param);
 				break;
 			case is_VARDECL:
-				checkVarPart(noactual->nofilho);
+				checkVarPart(noactual->nofilho, NULL);
+				check_program(noactual->nonext, NULL);
+				break;
+			case is_VARPARAMS:
+				checkVarPart(noactual->nofilho, param);
 				check_program(noactual->nonext, param);
 				break;
+			case is_PARAMS:
+				checkVarPart(noactual->nofilho, param);
+				check_program(noactual->nonext, param);
+				break;
+			case is_FUNCPART:
+				checkFuncPart(noactual->nofilho);
+				check_program(noactual->nonext, param);
+				break;
+			case is_ASSIGN:
+				checkAssign(noactual->nofilho);
+				check_program(noactual->nonext, param);
 			default:
 				check_program(noactual->nofilho, param);
 				check_program(noactual->nonext, param);
@@ -33,121 +52,80 @@ int check_program(is_Nos* noactual, char* param)
 	return errorcount;
 }
 
-
-char *checkVarPart(is_Nos *noactual){
-	if(noactual != NULL){
-		if(strcmp(noactual->valor, "integer")==0)
-			return "_integer_";
-		if(strcmp(noactual->valor, "real")==0)
-			return "_real_";
-		if(strcmp(noactual->valor, "boolean")==0)
-			return "_boolean_";
-			
-		table *new = inserir_coisas(noactual->valor,NULL);
-		char *tipo=checkVarPart(noactual->nonext);
-		new->type = (char*)malloc(sizeof(char));
-		strcpy(new->type, tipo);
-	}
-}
-
-/*
-int check_vardec_list(is_vardec_list* ivl)
-{
-	int errorcount=0;
-	is_vardec_list* tmp;
-	
-	for(tmp=ivl; tmp; tmp=tmp->next)
-		errorcount+=check_vardec(tmp->val);
-
-	return errorcount;
-}
-
-int check_vardec(is_vardec* iv)
-{	
-
-
-	switch(iv->disc_d)
-	{
-	case d_integer: 	return check_integer_dec(iv->data_vardec.u_integer_dec);
-	case d_character: 	return check_character_dec(iv->data_vardec.u_character_dec);
-	case d_double:		return check_double_dec(iv->data_vardec.u_double_dec);	
-
-	}
-
-	return 0;
-
-}
-
-int check_integer_dec(is_integer_dec* iid)
-{
-	table_element* newel=insert_el(iid->id, integer);
-	
-	if(newel==NULL)
-		{
-		printf("Symbol %s already defined!\n", iid->id);
-		return 1;
+void checkAssign(is_Nos *noactual){
+	/*if(noactual != NULL){
+		table *mexer = encontra_na_tabela(noactual->valor);
+		if(mexer != NULL){
+			printf("debug - %s %s %d\n", mexer->name, mexer->type, mexer->isconstant);
+			if(mexer->isconstant == 0){
+				printf("lol\n");
+			}else{
+				erros = 1;
+				printf("ERRO NO POSSO FAZER ISSO\n");
+			}
 		}
-	return 0;
+	}*/
 }
 
-int check_character_dec(is_character_dec* icd)
-{
-        table_element* newel=insert_el(icd->id, character);
+void checkFuncPart(is_Nos *noactual){
+	if(noactual != NULL){
+		
+		checkFuncDeclaration(noactual->nofilho);
 
-        if(newel==NULL)
-                {
-                printf("Symbol %s already defined!\n", icd->id);
-                return 1;
-                }
-        return 0;
-}
-
-int check_double_dec(is_double_dec* idd)
-{
-        table_element* newel=insert_el(idd->id, doub);
-
-        if(newel==NULL)
-                {
-                printf("Symbol %s already defined!\n", idd->id);
-                return 1;
-                }
-        return 0;
-}
-
-int check_statement_list(is_statement_list* isl)
-{
-        int errorcount=0;
-        is_statement_list* tmp;
-
-        for(tmp=isl; tmp; tmp=tmp->next)
-                errorcount+=check_statement(tmp->val);
-
-        return errorcount;
-}
-
-
-int check_statement(is_statement* is)
-{
-
-	switch(is->disc_d)
-	{
-	case d_write: return check_write_statement(is->data_statement.u_write_statement);	
+		checkFuncPart(noactual->nonext);
 	}
-
 }
 
-int check_write_statement(is_write_statement* iws)
-{
-	table_element* aux=search_el(iws->id);
-
-	if(aux==NULL)
-	{
-		printf("Symbol %s not declared!\n", iws->id);
-		return 1;
+void checkFuncDeclaration(is_Nos *noactual){
+	if(noactual != NULL){
+		table *original = symtab;
+		inserir_coisas(noactual->valor, "_function_", NULL);
+		
+		table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
+		symtab = funcao;
+		check_program(noactual->nonext,"param");
+		symtab = original;
 	}
-	
-	return 0;
 }
 
-*/
-
+char *checkVarPart(is_Nos *noactual, char *param){
+	if(noactual != NULL && erros == 0){
+		if(noactual->nonext == NULL){
+			if(encontra_na_tabela_outer(noactual->valor)!=NULL){
+				if(strcmp(noactual->valor, "integer")==0){
+					return "_integer_";
+				}
+				if(strcmp(noactual->valor, "real")==0){
+					return "_real_";
+				}
+				if(strcmp(noactual->valor, "boolean")==0){
+					return "_boolean_";
+				}
+				else{
+					return noactual->valor;
+					/*erros =1;
+					printf("Line <linha>, col <coluna>: Type identifier expected\n");*/
+				}
+			}else{
+				erros =1;
+				printf("Line <linha>, col <coluna>: Type identifier expected\n");
+			}
+		}else{
+			if(encontra_na_tabela(noactual->valor)==NULL){
+				table *new = inserir_coisas(noactual->valor,NULL,param);
+				char *tipo=checkVarPart(noactual->nonext, param);
+				if(tipo != NULL){
+					new->type = (char*)malloc(sizeof(char));
+					strcpy(new->type, tipo);
+				}else{
+					new->type = NULL;
+				}
+				return tipo;
+			}else{
+				erros = 1;
+				printf("Line <linha>, col <coluna>: Symbol %s already defined\n", noactual->valor);
+			}
+		}
+	}
+	return NULL;
+}
