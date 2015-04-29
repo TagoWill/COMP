@@ -211,12 +211,17 @@ table *inserir_funcoes(char *valor, char *type){
 }
 
 table *inserir_coisas(char *valor, char *type,char *ret){
+	int i;
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
 	table *previous;
+	char *lower = valor;
+	for(i = 0; lower[i]; i++){
+  		lower[i] = tolower(lower[i]);
+	}
 	if(valor != NULL){
 		newSymbol->name = (char*)malloc(sizeof(char));
-		strcpy(newSymbol->name, valor);
+		strcpy(newSymbol->name, lower);
 	}else{
 		newSymbol->name=NULL;
 	}
@@ -272,13 +277,11 @@ void imprimirTabela(table* actual){
 			break;
 		case is_variavel:
 			printf("%s\t", actual->name);
-			printf("%s\t", actual->type );
-			if(actual->isconstant == 1)printf("constant\t");
-			if(actual->valreturn != NULL)printf("%s", actual->valreturn);
+			printf("%s", actual->type );
+			if(actual->isconstant == 1)printf("\tconstant");
+			if(actual->valreturn != NULL)printf("\t%s", actual->valreturn);
 			printf("\n");
 			break;
-		default:
-			printf("O daniel e coco\n");
 
 	}
 	if(actual->variaveis != NULL)
