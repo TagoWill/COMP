@@ -5,6 +5,7 @@
 
 extern table* symtab;
 
+/* Funcao que procura um dado valor na tabela Outer Symbol Table */
 table *encontra_na_tabela_outer(char *valor){
 	table *aux = symtab;
 	while(aux->tabletype != is_outer){
@@ -18,6 +19,7 @@ table *encontra_na_tabela_outer(char *valor){
 	return NULL;
 }
 
+/* Funcao que procura um dado valor nas tabelas Function Symbol Table e Program Symbol Table */
 table *encontra_na_tabela(char *valor){
 	table *aux, *aux2;
 	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
@@ -37,6 +39,7 @@ table *encontra_na_tabela(char *valor){
 	return NULL;
 }
 
+/* Funcao que preenche a tabela estatica Outer Symbol Table - Faz parte da funcao check_program */
 void cria(){
 	table *aux;
 	table *outer = (table*)malloc(sizeof(table));
@@ -164,6 +167,7 @@ void cria(){
 
 }
 
+/* Funcao que preenche a tabela Function Symbol Table - Faz parte da funcao checkFuncDeclaration */
 table *inserir_funcoes(char *valor, char *type){
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
@@ -210,6 +214,7 @@ table *inserir_funcoes(char *valor, char *type){
 	return newSymbol;
 }
 
+/* Funcao que preenche a tabela Function Symbol Table - Faz parte da funcao checkFuncDeclaration */
 table *inserir_coisas(char *valor, char *type,char *ret){
 	int i;
 	table *newSymbol = (table*)malloc(sizeof(table));
@@ -225,7 +230,6 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 	}else{
 		newSymbol->name=NULL;
 	}
-
 
 	newSymbol->tabletype = is_variavel;
 	
@@ -261,6 +265,7 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 
 }
 
+/* Funcao que imprime as tabelas de simbolos - Faz parte da imprimeTabelas */
 void imprimirTabela(table* actual){
 	switch(actual->tabletype){
 		case is_outer:
@@ -290,17 +295,15 @@ void imprimirTabela(table* actual){
 		imprimirTabela(actual->next);
 	if(actual->filho != NULL)
 		imprimirTabela(actual->filho);
-
 }
 
-void imprimeTabelas(table* actual){
-	
+/* Funcao que manda imprimir as tabelas de simbolos de forma ordenada */
+void imprimeTabelas(table* actual)
+{
 	if(actual->tabletype != is_outer){
 		imprimeTabelas(actual->pai);
 	}else{
 		imprimirTabela(actual);
 	}
-
-	
 }
 

@@ -13,6 +13,8 @@ typedef struct _a1
 	char *valor;
 	struct _a1 *nofilho;
 	struct _a1 *nonext;
+	int lina;
+	int cola;
 } is_Nos;
 
 

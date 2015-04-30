@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/* Funcao que introduz o espacamento correcto (em pontos) na impressao do código - Faz parte do show_prog */
 void espacamento(int tamanho){
 	int i;
 	for(i=0;i<tamanho;i++){
@@ -10,8 +11,9 @@ void espacamento(int tamanho){
 	}
 }
 
-char *istoe(tipos_nos tipo){
-
+/* Funcao que imprime o tipo de operacao lida - Faz parte do show_prog */
+char *istoe(tipos_nos tipo)
+{
 	switch(tipo){
 		case is_PROGRAM:
 			return "Program";
@@ -98,8 +100,9 @@ char *istoe(tipos_nos tipo){
 	}
 }
 
-void show_prog(is_Nos *noactual, int tamanho){
-
+/* Imprime o código introduzido */
+void show_prog(is_Nos *noactual, int tamanho)
+{
 	if(noactual != NULL){
 		espacamento(tamanho);
 
