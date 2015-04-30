@@ -28,8 +28,28 @@ table *encontra_na_tabela_outer(char *valor){
 	return NULL;
 }
 
-table *encontra_na_tabela(char *valor){
+table *encontra_em_tudo(char *valor){
 	table *aux, *aux2;
+	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
+		if(strcasecmp(aux->name,valor)==0){
+			return aux;
+		}
+	}
+	aux = symtab->pai;
+	while(aux!=NULL){
+		for(aux2=aux->variaveis;aux2!= NULL;aux2=aux2->next){
+			if(strcasecmp(aux2->name,valor)==0){
+				return aux2;
+			}
+		}
+		aux= aux->pai;
+	}
+
+	return NULL;
+}
+
+table *encontra_na_tabela(char *valor){
+	table *aux;
 	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
 		if(strcasecmp(aux->name,valor)==0){
 			return aux;

@@ -282,6 +282,7 @@ int yyerror (char *s)
 
 int main(int argc, char *argv[])
 {
+	/*Se houver um erro pode imprimir a AST*/
 	yyparse();
 	int err = check_program(myprogram, NULL);
 	if(erros != 1){

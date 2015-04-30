@@ -53,8 +53,8 @@ int check_program(is_Nos* noactual, char* param)
 }
 
 void checkAssign(is_Nos *noactual){
-	/*if(noactual != NULL){
-		table *mexer = encontra_na_tabela(noactual->valor);
+	if(noactual != NULL){
+		table *mexer = encontra_em_tudo(noactual->valor);
 		if(mexer != NULL){
 			printf("debug - %s %s %d\n", mexer->name, mexer->type, mexer->isconstant);
 			if(mexer->isconstant == 0){
@@ -63,8 +63,11 @@ void checkAssign(is_Nos *noactual){
 				erros = 1;
 				printf("ERRO NO POSSO FAZER ISSO\n");
 			}
+		}else{
+			erros=1;
+			printf("Symbol %s not defined\n", noactual->valor);
 		}
-	}*/
+	}
 }
 
 void checkFuncPart(is_Nos *noactual, char *param){
@@ -82,6 +85,7 @@ void checkFuncDeclaration(is_Nos *noactual, char *param){
 		table *procura = encontra_funcao_na_tabela(noactual->valor);
 
 		if(procura == NULL){
+
 			inserir_coisas(noactual->valor, "_function_", NULL);
 		
 			table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
@@ -89,9 +93,16 @@ void checkFuncDeclaration(is_Nos *noactual, char *param){
 			check_program(noactual->nonext, param);
 			symtab = original;
 		}else{
-			symtab = procura;
-			check_program(noactual->nonext, param);
-			symtab = original;
+			/*ERRO SE JA TIVER PARAMENTROS DEFINIDOS*/
+			if(procura->variaveis == NULL && procura->filho == NULL){
+				symtab = procura;
+				check_program(noactual->nonext, param);
+				symtab = original;
+			}
+			else{
+				erros =1;
+				printf("funcao ja definida\n");
+			}
 		}
 	}
 }
@@ -99,7 +110,7 @@ void checkFuncDeclaration(is_Nos *noactual, char *param){
 char *checkVarPart(is_Nos *noactual, char *param){
 	if(noactual != NULL && erros == 0){
 		if(noactual->nonext == NULL){
-			/*ERRO SE JA TIVER PARAMENTROS DEFINIDOS*/
+			
 			table *aux = encontra_na_tabela_outer(noactual->valor);
 			if(aux!=NULL && strcasecmp(aux->type, "_type_")==0){
 				
