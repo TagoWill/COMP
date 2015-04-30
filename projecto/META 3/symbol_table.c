@@ -2,11 +2,12 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 extern table* symtab;
 
 table *encontra_funcao_na_tabela(char *valor){
-	table *aux, *aux2;;
+	table *aux;
 	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
 		if(strcasecmp(aux->name,valor)==0){
 			return aux;
@@ -213,7 +214,6 @@ table *inserir_funcoes(char *valor, char *type){
 	newSymbol->valreturn = (char*)malloc(sizeof(char));
 	strcpy(newSymbol->valreturn, "return");
 
-	newSymbol->variaveis == NULL;
 	newSymbol->filho=NULL;
 	newSymbol->pai =symtab;
 	newSymbol->next=NULL;
@@ -263,7 +263,6 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 	}else{
 		newSymbol->valreturn = NULL;
 	}
-	newSymbol->variaveis == NULL;
 	newSymbol->filho=NULL;
 	newSymbol->pai =NULL;
 	newSymbol->next=NULL;
