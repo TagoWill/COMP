@@ -6,11 +6,15 @@
 #include <string.h>
 
 extern table* symtab;
+extern int lineaux;
+extern int colaux;
 extern int erros;
 
-/* Funcao que procura erros no codigo e ao mesmo tempo preenche as tabelas de simbolos */
 int check_program(is_Nos* noactual, char* param)
 {
+
+
+
 	int errorcount=0;
 	if(noactual != NULL && erros == 0){
 		switch(noactual->queraioeisto){
@@ -25,15 +29,15 @@ int check_program(is_Nos* noactual, char* param)
 				check_program(noactual->nonext, NULL);
 				break;
 			case is_VARPARAMS:
-				checkVarPart(noactual->nofilho, param);
+				checkVarPart(noactual->nofilho, "varparam");
 				check_program(noactual->nonext, param);
 				break;
 			case is_PARAMS:
-				checkVarPart(noactual->nofilho, param);
+				checkVarPart(noactual->nofilho, "param");
 				check_program(noactual->nonext, param);
 				break;
 			case is_FUNCPART:
-				checkFuncPart(noactual->nofilho);
+				checkFuncPart(noactual->nofilho, NULL);
 				check_program(noactual->nonext, param);
 				break;
 			case is_ASSIGN:
@@ -48,7 +52,6 @@ int check_program(is_Nos* noactual, char* param)
 	return errorcount;
 }
 
-/* Funcao que procura erros no codigo na atribuicao de valores a variaveis - Faz parte da funcao check_program */
 void checkAssign(is_Nos *noactual){
 	/*if(noactual != NULL){
 		table *mexer = encontra_na_tabela(noactual->valor);
@@ -64,52 +67,46 @@ void checkAssign(is_Nos *noactual){
 	}*/
 }
 
-/* Funcao que procura erros no codigo da criacao de funcoes - Faz parte da funcao check_program */
-void checkFuncPart(is_Nos *noactual){
+void checkFuncPart(is_Nos *noactual, char *param){
 	if(noactual != NULL){
 		
-		checkFuncDeclaration(noactual->nofilho);
-
-		checkFuncPart(noactual->nonext);
+		checkFuncDeclaration(noactual->nofilho, param);
+		
+		checkFuncPart(noactual->nonext, param);
 	}
 }
 
-/* Funcao que procura erros no codigo da declaracao de funcoes - Faz parte da funcao checkFuncPart */
-void checkFuncDeclaration(is_Nos *noactual){
+void checkFuncDeclaration(is_Nos *noactual, char *param){
 	if(noactual != NULL){
 		table *original = symtab;
-		inserir_coisas(noactual->valor, "_function_", NULL);
+		table *procura = encontra_funcao_na_tabela(noactual->valor);
+
+		if(procura == NULL){
+			inserir_coisas(noactual->valor, "_function_", NULL);
 		
-		table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
-		symtab = funcao;
-		check_program(noactual->nonext,"param");
-		symtab = original;
+			table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
+			symtab = funcao;
+			check_program(noactual->nonext, param);
+			symtab = original;
+		}else{
+			symtab = procura;
+			check_program(noactual->nonext, param);
+			symtab = original;
+		}
 	}
 }
 
-/* Funcao que procura erros no codigo da definicao de variaveis - Faz parte da funcao check_program */
 char *checkVarPart(is_Nos *noactual, char *param){
 	if(noactual != NULL && erros == 0){
 		if(noactual->nonext == NULL){
+			/*ERRO SE JA TIVER PARAMENTROS DEFINIDOS*/
 			table *aux = encontra_na_tabela_outer(noactual->valor);
-			if(aux!=NULL){
-				if(strcmp(aux->type, "_type_")==0)
-				{
-					if(strcmp(noactual->valor, "integer")==0){
-						return "_integer_";
-					}
-					if(strcmp(noactual->valor, "real")==0){
-						return "_real_";
-					}
-					if(strcmp(noactual->valor, "boolean")==0){
-						return "_boolean_";
-					}
-				}else{
-					erros =1;
-					printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
-				}
+			if(aux!=NULL && strcasecmp(aux->type, "_type_")==0){
+				
+				return aux->valreturn;
+				
 			}else{
-				erros = 1;
+				erros =1;
 				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
 			}
 		}else{

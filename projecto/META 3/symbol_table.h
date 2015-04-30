@@ -17,6 +17,7 @@ typedef struct _t3
 	struct _t3 *pai;
 } table;
 
+table *encontra_funcao_na_tabela(char *valor);
 table *encontra_na_tabela_outer(char *valor);
 table *encontra_na_tabela(char *valor);
 void cria();

@@ -1,11 +1,20 @@
 #include "symbol_table.h"
-#include<malloc.h>
-#include<string.h>
-#include<stdio.h>
+#include <malloc.h>
+#include <string.h>
+#include <stdio.h>
 
 extern table* symtab;
 
-/* Funcao que procura um dado valor na tabela Outer Symbol Table */
+table *encontra_funcao_na_tabela(char *valor){
+	table *aux, *aux2;;
+	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
+		if(strcasecmp(aux->name,valor)==0){
+			return aux;
+		}
+	}
+	return NULL;
+}
+
 table *encontra_na_tabela_outer(char *valor){
 	table *aux = symtab;
 	while(aux->tabletype != is_outer){
@@ -19,7 +28,6 @@ table *encontra_na_tabela_outer(char *valor){
 	return NULL;
 }
 
-/* Funcao que procura um dado valor nas tabelas Function Symbol Table e Program Symbol Table */
 table *encontra_na_tabela(char *valor){
 	table *aux, *aux2;
 	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
@@ -27,19 +35,9 @@ table *encontra_na_tabela(char *valor){
 			return aux;
 		}
 	}
-	aux=symtab->pai;
-	while(aux!=NULL){
-		for(aux2=aux->variaveis;aux2!=NULL;aux2=aux2->next){
-			if(strcasecmp(aux2->name,valor)==0){
-				return aux;
-			}
-		}
-		aux=aux->pai;
-	}
 	return NULL;
 }
 
-/* Funcao que preenche a tabela estatica Outer Symbol Table - Faz parte da funcao check_program */
 void cria(){
 	table *aux;
 	table *outer = (table*)malloc(sizeof(table));
@@ -167,7 +165,6 @@ void cria(){
 
 }
 
-/* Funcao que preenche a tabela Function Symbol Table - Faz parte da funcao checkFuncDeclaration */
 table *inserir_funcoes(char *valor, char *type){
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
@@ -183,11 +180,11 @@ table *inserir_funcoes(char *valor, char *type){
 	
 	if(type != NULL){
 		newSymbol->type = (char*)malloc(sizeof(char));
-		if(strcmp(type, "integer")==0)
+		if(strcasecmp(type, "integer")==0)
 		strcpy(newSymbol->type, "_integer_");
-	if(strcmp(type, "real")==0)
+	if(strcasecmp(type, "real")==0)
 		strcpy(newSymbol->type, "_real_");
-	if(strcmp(type, "boolean")==0)
+	if(strcasecmp(type, "boolean")==0)
 		strcpy(newSymbol->type, "_boolean_");
 	}else{
 		newSymbol->type = NULL;
@@ -203,7 +200,7 @@ table *inserir_funcoes(char *valor, char *type){
 
 	if(symtab->filho != NULL){
 		for(aux=symtab->filho;aux != NULL; previous=aux , aux=aux->next){
-			if(strcmp(aux->name, valor)==0){
+			if(strcasecmp(aux->name, valor)==0){
 				return NULL;
 			}
 		}
@@ -214,7 +211,6 @@ table *inserir_funcoes(char *valor, char *type){
 	return newSymbol;
 }
 
-/* Funcao que preenche a tabela Function Symbol Table - Faz parte da funcao checkFuncDeclaration */
 table *inserir_coisas(char *valor, char *type,char *ret){
 	int i;
 	table *newSymbol = (table*)malloc(sizeof(table));
@@ -230,6 +226,7 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 	}else{
 		newSymbol->name=NULL;
 	}
+
 
 	newSymbol->tabletype = is_variavel;
 	
@@ -253,7 +250,7 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 
 	if(symtab->variaveis != NULL){
 		for(aux=symtab->variaveis;aux != NULL; previous=aux , aux=aux->next){
-			if(strcmp(aux->name, valor)==0){
+			if(strcasecmp(aux->name, valor)==0){
 				return NULL;
 			}
 		}
@@ -265,7 +262,6 @@ table *inserir_coisas(char *valor, char *type,char *ret){
 
 }
 
-/* Funcao que imprime as tabelas de simbolos - Faz parte da imprimeTabelas */
 void imprimirTabela(table* actual){
 	switch(actual->tabletype){
 		case is_outer:
@@ -295,15 +291,17 @@ void imprimirTabela(table* actual){
 		imprimirTabela(actual->next);
 	if(actual->filho != NULL)
 		imprimirTabela(actual->filho);
+
 }
 
-/* Funcao que manda imprimir as tabelas de simbolos de forma ordenada */
-void imprimeTabelas(table* actual)
-{
+void imprimeTabelas(table* actual){
+	
 	if(actual->tabletype != is_outer){
 		imprimeTabelas(actual->pai);
 	}else{
 		imprimirTabela(actual);
 	}
+
+	
 }
 
