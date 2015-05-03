@@ -6,6 +6,26 @@
 
 extern table* symtab;
 
+table *encontra_funcao_em_tudo(char *valor){
+	table *aux, *aux2;
+	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
+		if(strcasecmp(aux->name,valor)==0 && aux->type != NULL){
+			return aux;
+		}
+	}
+	aux = symtab->pai;
+	while(aux!=NULL){
+		for(aux2=aux->filho;aux2!= NULL;aux2=aux2->next){
+			if(strcasecmp(aux2->name,valor)==0){
+				return aux2;
+			}
+		}
+		aux= aux->pai;
+	}
+
+	return NULL;
+}
+
 table *encontra_funcao_na_tabela(char *valor){
 	table *aux;
 	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
@@ -32,7 +52,7 @@ table *encontra_na_tabela_outer(char *valor){
 table *encontra_em_tudo(char *valor){
 	table *aux, *aux2;
 	for(aux=symtab->variaveis;aux!= NULL;aux=aux->next){
-		if(strcasecmp(aux->name,valor)==0){
+		if(strcasecmp(aux->name,valor)==0 && aux->type != NULL){
 			return aux;
 		}
 	}
