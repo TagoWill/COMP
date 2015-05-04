@@ -18,6 +18,7 @@ typedef struct _t3
 } table;
 
 table *encontra_funcao_em_tudo(char *valor);
+table *encontra_para_return(char *valor);
 table *encontra_funcao_na_tabela(char *valor);
 table *encontra_na_tabela_outer(char *valor);
 table *encontra_em_tudo(char *valor);

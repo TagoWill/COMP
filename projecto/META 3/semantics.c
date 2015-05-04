@@ -134,7 +134,7 @@ char *checkExpr(is_Nos *noactual){
 				if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_integer_")==0 && strcmp(aux3, "_integer_")==0){
 					return aux2;
 				}else{
-							/*LINHAS ERRADAS*/
+
 					erros = 1;
 					printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
 						noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
@@ -147,6 +147,7 @@ char *checkExpr(is_Nos *noactual){
 			case is_ADD:
 			case is_SUB: ;
 			if(erros != 1){
+				char *operador;
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
@@ -159,8 +160,18 @@ char *checkExpr(is_Nos *noactual){
 					}else{
 							/*LINHAS ERRADAS*/
 						erros = 1;
+						switch(noactual->queraioeisto){
+							case is_ADD:
+								operador = "+";
+								break;
+							case is_SUB:
+								operador = "-";
+								break;
+							default:
+								operador = istoe(noactual->queraioeisto);
+						}
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
-							noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+							noactual->lina, noactual->cola, operador, aux2, aux3);
 						return NULL;
 					}
 				}
@@ -169,16 +180,23 @@ char *checkExpr(is_Nos *noactual){
 
 			case is_REALDIV: ;
 			if(erros != 1){
+				char *operador;
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
 					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
 						return "_real_";
 					}else{
-							/*LINHAS ERRADAS*/
+							switch(noactual->queraioeisto){
+							case is_REALDIV:
+								operador = "/";
+								break;
+							default:
+								operador = istoe(noactual->queraioeisto);
+						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
-							noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+							noactual->lina, noactual->cola, operador,aux2, aux3);
 						return NULL;
 					}
 				}
@@ -190,16 +208,33 @@ char *checkExpr(is_Nos *noactual){
 			case is_LEQUAL:
 			case is_GREATER: ;
 			if(erros != 1){
+				char *operador;
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
 					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
 						return "_boolean_";
 					}else{
-							/*LINHAS ERRADAS*/
+							
+						switch(noactual->queraioeisto){
+							case is_LESS:
+								operador = "<";
+								break;
+							case is_GEQUAL:
+								operador = ">=";
+								break;
+							case is_LEQUAL:
+								operador = "<=";
+								break;
+							case is_GREATER:
+								operador = ">";
+								break;
+							default:
+								operador = istoe(noactual->queraioeisto);
+						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n",
-							noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+							noactual->lina, noactual->cola, operador,aux2, aux3);
 						return NULL;
 					}
 				}
@@ -209,16 +244,26 @@ char *checkExpr(is_Nos *noactual){
 			case is_DIFFERENT:
 			case is_EQUALS: ;
 			if(erros != 1){
+				char *operador;
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
 					if(aux2 != NULL && aux3 != NULL){
 						return "_boolean_";
 					}else{
-							/*LINHAS ERRADAS*/
+							switch(noactual->queraioeisto){
+							case is_DIFFERENT:
+								operador = "<>";
+								break;
+							case is_EQUALS:
+								operador = "=";
+								break;
+							default:
+								operador = istoe(noactual->queraioeisto);
+						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
-							noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+							noactual->lina, noactual->cola, operador,aux2, aux3);
 						return NULL;
 					}
 				}
@@ -261,7 +306,6 @@ char *checkExpr(is_Nos *noactual){
 						for(contadordevariaveis=noactual->nofilho->nonext;contadordevariaveis!=NULL;contadordevariaveis=contadordevariaveis->nonext){
 							contador2++;
 						}
-
 						if(contador1 == contador2){
 							contadordevariaveis=noactual->nofilho->nonext;
 							contador1=0;
@@ -311,11 +355,22 @@ void checkValParam(is_Nos *noactual){
 		char *aux = checkExpr(noactual->nofilho);
 		table *aux2 = encontra_em_tudo(noactual->nofilho->nonext->valor);
 		if(erros != 1){
-			if(aux != NULL &&aux2 != NULL){
-				if(strcmp(aux, aux2->type)!=0){
-					erros=1;
-					printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected %s)\n",
+			if(aux != NULL && aux2 != NULL){
+				if(strcmp(aux, aux2->type)!=0 || strcmp(aux, "_boolean_")==0 || strcmp(aux2->type, "_boolean_")==0){
+					if(strcmp(aux, "_boolean_")==0 && strcmp(aux2->type, "_boolean_")!=0){
+						erros=1;
+						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected %s)\n",
 						noactual->lina, noactual->cola, aux, aux2->type);
+					}else if(strcmp(aux, "_boolean_")==0 && strcmp(aux2->type, "_boolean_")==0){
+						erros=1;
+						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected _real_)\n",
+						noactual->lina, noactual->cola, aux);
+					}else{
+						erros=1;
+						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected %s)\n",
+						noactual->lina, noactual->cola, aux2->type, aux);
+					}
+					
 				}
 			}else{
 				erros =1;
@@ -334,7 +389,7 @@ void checkRepeat(is_Nos *noactual){
 			if(erros != 1 && aux != NULL && strcmp(aux, "_boolean_")!=0){
 				erros=1;
 				printf("Line %d, col %d: Incompatible type in repeat-until statement (got %s, expected _boolean_)\n",
-					noactual->lina, noactual->cola, aux);
+					noactual->nofilho->lina, noactual->nofilho->cola, aux);
 			}
 		}
 	}
@@ -347,7 +402,7 @@ void checkWhile(is_Nos *noactual){
 			if(aux != NULL && strcmp(aux, "_boolean_")!=0){
 				erros=1;
 				printf("Line %d, col %d: Incompatible type in while statement (got %s, expected _boolean_)\n",
-					noactual->lina, noactual->cola, aux);
+					noactual->nofilho->lina, noactual->nofilho->cola, aux);
 			}
 			check_program(noactual->nofilho->nonext, NULL);
 		}
@@ -361,7 +416,7 @@ void checkIfThen(is_Nos *noactual){
 			if(aux != NULL && strcmp(aux, "_boolean_")!=0){
 				erros=1;
 				printf("Line %d, col %d: Incompatible type in if statement (got %s, expected _boolean_)\n",
-					noactual->lina, noactual->cola, aux);
+					noactual->nofilho->lina, noactual->nofilho->cola, aux);
 			}
 			check_program(noactual->nofilho->nonext, NULL);
 			check_program(noactual->nofilho->nonext->nonext, NULL);
@@ -388,7 +443,14 @@ void checkWriteLn(is_Nos *noactual){
 
 void checkAssign(is_Nos *noactual){
 	if(noactual != NULL){
+		table *verifica;
 		table *mexer = encontra_em_tudo(noactual->valor);
+		if(strcmp(mexer->type, "_function_")==0){
+			verifica = encontra_para_return(mexer->name);
+			if(verifica != NULL){
+				mexer = verifica;
+			}
+		}
 		if(mexer != NULL){
 			if(mexer->isconstant == 0){
 				char *aux = checkExpr(noactual->nonext);
@@ -397,7 +459,7 @@ void checkAssign(is_Nos *noactual){
 					if(strcmp(mexer->type, aux)!=0){
 						erros = 1;
 						printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
-							noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
+							noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
 					}
 				}
 			}

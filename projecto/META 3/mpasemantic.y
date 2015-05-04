@@ -204,9 +204,9 @@ Stat:
 	| IF Expr THEN Stat ELSE Stat  								{$$=inserir_no(is_IFELSE, inserir_irmao($2, inserir_irmao(($4 == NULL)?inserir_no(is_STATLIST, $4,@4.first_column):$4, ($6 == NULL)?inserir_no(is_STATLIST, $6,@6.first_column):$6)),@1.first_column);}
 	| IF Expr THEN Stat  										{$$=inserir_no(is_IFELSE, inserir_irmao($2, ($4 == NULL)?inserir_irmao(inserir_no(is_STATLIST, NULL,@4.first_column),inserir_no(is_STATLIST,NULL,@1.first_column)):inserir_irmao($4,inserir_no(is_STATLIST,NULL,@1.first_column))),@1.first_column);}
 	| WHILE Expr DO Stat 										{$$=inserir_no(is_WHILE, inserir_irmao($2, ($4 == NULL)?inserir_no(is_STATLIST,NULL,@4.first_column):$4), @1.first_column);}
-	| REPEAT StatList UNTIL Expr 								{$$=inserir_no(is_REPEAT, inserir_irmao(($2==NULL)?inserir_no(is_STATLIST,NULL,@2.first_column):$2, $4),@1.first_column);}
+	| REPEAT StatList UNTIL Expr 								{$$=inserir_no(is_REPEAT, inserir_irmao(($2==NULL)?inserir_no(is_STATLIST,NULL,@2.first_column):$2, $4),@4.first_column);}
 	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{$$=inserir_no(is_VALPARAM, inserir_irmao($5, inserir_valor(is_ID,$8,@8.first_column)),@1.first_column);}
-	| ID ASSIGN Expr 											{$$=inserir_no(is_ASSIGN, inserir_irmao(inserir_valor(is_ID, $1,@1.first_column), $3),@1.first_column);}
+	| ID ASSIGN Expr 											{$$=inserir_no(is_ASSIGN, inserir_irmao(inserir_valor(is_ID, $1,@1.first_column), $3),@3.first_column);}
 	| WRITELN WritelnPList 										{$$=inserir_no(is_WRITELN, $2,@1.first_column);}
 	| WRITELN 													{$$=inserir_no(is_WRITELN, NULL,@1.first_column);}
 	|															{$$=NULL;}

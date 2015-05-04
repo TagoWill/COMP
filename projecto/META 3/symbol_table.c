@@ -26,6 +26,13 @@ table *encontra_funcao_em_tudo(char *valor){
 	return NULL;
 }
 
+table *encontra_para_return(char *valor){
+	if(strcasecmp(symtab->name,valor)==0){
+		return symtab;
+	}
+	return NULL;
+}
+
 table *encontra_funcao_na_tabela(char *valor){
 	table *aux;
 	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
@@ -211,7 +218,7 @@ table *inserir_funcoes(char *valor, char *type){
 	table *aux;
 	table *previous;
 	if(valor != NULL){
-		newSymbol->name = (char*)malloc(sizeof(char));
+		newSymbol->name = (char*)malloc(sizeof(char)*50);
 		strcpy(newSymbol->name, valor);
 	}else{
 		newSymbol->name = NULL;
@@ -261,7 +268,7 @@ table *inserir_coisas(char *valor, char *type,char *ret){
   		lower[i] = tolower(lower[i]);
 	}
 	if(valor != NULL){
-		newSymbol->name = (char*)malloc(sizeof(char));
+		newSymbol->name = (char*)malloc(sizeof(char)*50);
 		strcpy(newSymbol->name, lower);
 	}else{
 		newSymbol->name=NULL;
