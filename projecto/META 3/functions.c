@@ -16,14 +16,12 @@ is_Nos *inserir_no(tipos_nos tipo, is_Nos *filho)
 	novono->valor = NULL;
 	novono->nofilho = filho;
 	novono->nonext = NULL;
-	novono->lina = lineaux;
-	novono->cola = colaux;
 
 	return novono;
 }
 
 /* Funcao que cria um no e adiciona-lhe um valor e um tipo */
-is_Nos *inserir_valor(tipos_nos tipo, char *valor)
+is_Nos *inserir_valor(tipos_nos tipo, char *valor, int col)
 {
 	is_Nos *novono = (is_Nos*)malloc(sizeof(is_Nos));
 	novono->queraioeisto = tipo;
@@ -31,7 +29,7 @@ is_Nos *inserir_valor(tipos_nos tipo, char *valor)
 	novono->nofilho = NULL;
 	novono->nonext = NULL;
 	novono->lina = lineaux;
-	novono->cola = colaux;
+	novono->cola = col;
 
 	return novono;
 }

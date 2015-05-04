@@ -1,13 +1,19 @@
 %{
     #include "structures.h"
     #include "y.tab.h"
+
+
+    int yycolumn = 1;
+    #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;yylloc.first_column = yycolumn; yylloc.last_column = yycolumn+yyleng-1; yycolumn += yyleng;
+
+
     int col = 1;
     int line = 1;
     int colaux = 0;
     int lineaux = 0;
     
 %}
-
+%option yylineno
 %option case-insensitive
 
 ID                                  [a-zA-Z][a-zA-Z0-9]*
@@ -102,7 +108,7 @@ div																{lineaux = line; colaux = col;col += yyleng; return(DIV);}
 '([^\n']*('')*)*                               					{printf("Line %d, col %d: unterminated string\n", line, col);lineaux = line; colaux = col;col+=yyleng;}
 '([^\n']|''|\\.)*('')*'                                         {lineaux = line; colaux = col;col+=yyleng;yylval.str=(char*)strdup(yytext);return STRING;}
 {TAB}                                                           {lineaux = line; colaux = col;col += yyleng;}
-{NEWLINE}                                                       {lineaux = line; colaux = col;line++; col=1;}
+{NEWLINE}                                                       {yycolumn = 1;lineaux = line; colaux = col;line++; col=1;}
 {BLANKSPACE}                                                    {lineaux = line; colaux = col;col++;}
 <<EOF>>															{lineaux = line; colaux = col; return *yytext;}
 .                   {printf("Line %d, col %d: illegal character ('%s')\n", line, col, yytext);lineaux = line; colaux = col; col += yyleng;}

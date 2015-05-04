@@ -15,6 +15,7 @@ typedef struct _a1
 	struct _a1 *nonext;
 	int lina;
 	int cola;
+	int tamanhopalavra;
 } is_Nos;
 
 

@@ -18,7 +18,7 @@
 
 	is_Nos* myprogram = NULL;
 %}
-
+%locations
 %union {
 	char *str;
 	is_Nos* paratodos;
@@ -114,7 +114,7 @@ Prog:
 	;
 
 ProgHeading:
-	PROGRAM	ID LBRAC OUTPUT RBRAC 								{$$=inserir_valor(is_ID, $2);}
+	PROGRAM	ID LBRAC OUTPUT RBRAC 								{$$=inserir_valor(is_ID, $2, @2.first_column);}
 	;
 
 ProgBlock:
@@ -132,15 +132,15 @@ VarPart2:
 	;
 
 VarDeclaration:
-	IDList COLON ID 											{$$=inserir_irmao($1, inserir_valor(is_ID, $3));}
+	IDList COLON ID 											{$$=inserir_irmao($1, inserir_valor(is_ID, $3, @3.first_column));}
 	;
 
 IDList:
-	ID IDList2 													{$$=inserir_irmao(inserir_valor(is_ID, $1), $2);}
+	ID IDList2 													{$$=inserir_irmao(inserir_valor(is_ID, $1, @1.first_column), $2);}
 	;
 
 IDList2:
-	COMMA ID IDList2 											{$$=inserir_irmao(inserir_valor(is_ID, $2), $3);}
+	COMMA ID IDList2 											{$$=inserir_irmao(inserir_valor(is_ID, $2, @2.first_column), $3);}
 	|															{$$=NULL;}
 	;
 
@@ -156,12 +156,12 @@ FuncDeclaration:
 	;
 
 FuncHeading:
-	FUNCTION ID FormalParamList COLON ID 						{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FUNCPARAMS, $3), inserir_valor(is_ID, $5)));}
-	| FUNCTION ID COLON ID 										{$$=inserir_irmao(inserir_valor(is_ID,$2), inserir_irmao(inserir_no(is_FUNCPARAMS, NULL) , inserir_valor(is_ID, $4)));}
+	FUNCTION ID FormalParamList COLON ID 						{$$=inserir_irmao(inserir_valor(is_ID,$2, @2.first_column), inserir_irmao(inserir_no(is_FUNCPARAMS, $3), inserir_valor(is_ID, $5, @5.first_column)));}
+	| FUNCTION ID COLON ID 										{$$=inserir_irmao(inserir_valor(is_ID,$2,@2.first_column), inserir_irmao(inserir_no(is_FUNCPARAMS, NULL) , inserir_valor(is_ID, $4, @4.first_column)));}
 	;
 
 FuncIdent:
-	FUNCTION ID 												{$$=inserir_valor(is_ID, $2);}
+	FUNCTION ID 												{$$=inserir_valor(is_ID, $2,@2.first_column);}
 	;
 
 FormalParamList:
@@ -169,8 +169,8 @@ FormalParamList:
 	;
 
 FormalParams:
-	VAR IDList COLON ID FormalParams2							{$$ = inserir_irmao(inserir_no(is_VARPARAMS, inserir_irmao($2, inserir_valor(is_ID,$4))), $5);}
-	| IDList COLON ID FormalParams2							{$$ = inserir_irmao(inserir_no(is_PARAMS, inserir_irmao($1, inserir_valor(is_ID,$3))), $4);}
+	VAR IDList COLON ID FormalParams2							{$$ = inserir_irmao(inserir_no(is_VARPARAMS, inserir_irmao($2, inserir_valor(is_ID,$4,@4.first_column))), $5);}
+	| IDList COLON ID FormalParams2							{$$ = inserir_irmao(inserir_no(is_PARAMS, inserir_irmao($1, inserir_valor(is_ID,$3, @3.first_column))), $4);}
 	;
 
 FormalParams2:
@@ -183,7 +183,7 @@ FuncBlock:
 	;
 
 StatPart:
-	CompStat 													{$$ = ($1 == NULL)?inserir_valor(is_STATLIST, NULL):$1;}
+	CompStat 													{$$ = ($1 == NULL)?inserir_valor(is_STATLIST, NULL, @1.first_column):$1;}
 	;
 
 CompStat:
@@ -205,8 +205,8 @@ Stat:
 	| IF Expr THEN Stat  										{$$=inserir_no(is_IFELSE, inserir_irmao($2, ($4 == NULL)?inserir_irmao(inserir_no(is_STATLIST, NULL),inserir_no(is_STATLIST,NULL)):inserir_irmao($4,inserir_no(is_STATLIST,NULL))));}
 	| WHILE Expr DO Stat 										{$$=inserir_no(is_WHILE, inserir_irmao($2, ($4 == NULL)?inserir_no(is_STATLIST,NULL):$4));}
 	| REPEAT StatList UNTIL Expr 								{$$=inserir_no(is_REPEAT, inserir_irmao(($2==NULL)?inserir_no(is_STATLIST,NULL):$2, $4));}
-	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{$$=inserir_no(is_VALPARAM, inserir_irmao($5, inserir_valor(is_ID,$8)));}
-	| ID ASSIGN Expr 											{$$=inserir_no(is_ASSIGN, inserir_irmao(inserir_valor(is_ID, $1), $3));}
+	| VAL LBRAC PARAMSTR LBRAC Expr RBRAC COMMA ID RBRAC		{$$=inserir_no(is_VALPARAM, inserir_irmao($5, inserir_valor(is_ID,$8,@8.first_column)));}
+	| ID ASSIGN Expr 											{$$=inserir_no(is_ASSIGN, inserir_irmao(inserir_valor(is_ID, $1,@1.first_column), $3));}
 	| WRITELN WritelnPList 										{$$=inserir_no(is_WRITELN, $2);}
 	| WRITELN 													{$$=inserir_no(is_WRITELN, NULL);}
 	|															{$$=NULL;}
@@ -214,11 +214,11 @@ Stat:
 
 WritelnPList:
 	LBRAC Expr WritelnPList2 RBRAC								{$$=inserir_irmao($2, $3);}
-	| LBRAC STRING WritelnPList2 RBRAC						 	{$$=inserir_irmao(inserir_valor(is_STRING, $2), $3);}
+	| LBRAC STRING WritelnPList2 RBRAC						 	{$$=inserir_irmao(inserir_valor(is_STRING, $2, @2.first_column), $3);}
 	;
 
 WritelnPList2:
-	COMMA STRING WritelnPList2 									{$$=inserir_irmao(inserir_valor(is_STRING, $2), $3);}
+	COMMA STRING WritelnPList2 									{$$=inserir_irmao(inserir_valor(is_STRING, $2, @2.first_column), $3);}
 	| COMMA Expr WritelnPList2 									{$$=inserir_irmao($2, $3);}
 	|															{$$=NULL;}
 	;
@@ -255,10 +255,10 @@ Expr3:
 Expr4:
 	LBRAC Expr RBRAC 											{$$=$2;}
 	| NOT Expr4 												{$$=inserir_no(is_NOT, $2);}
-	| INTLIT 													{$$=inserir_valor(is_INTLIT, $1);}
-	| REALLIT 													{$$=inserir_valor(is_REALLIT, $1);}
-	| ID ParamList 												{$$=inserir_no(is_CALL, inserir_irmao(inserir_valor(is_ID, $1), $2));}
-	| ID 														{$$=inserir_valor(is_ID, $1);}
+	| INTLIT 													{$$=inserir_valor(is_INTLIT, $1, @1.first_column);}
+	| REALLIT 													{$$=inserir_valor(is_REALLIT, $1, @1.first_column);}
+	| ID ParamList 												{$$=inserir_no(is_CALL, inserir_irmao(inserir_valor(is_ID, $1, @1.first_column), $2));}
+	| ID 														{$$=inserir_valor(is_ID, $1, @1.first_column);}
 	;
 
 ParamList:

@@ -70,7 +70,7 @@ char *checkExpr(is_Nos *noactual){
 					return aux->type;
 				}else{
 					erros = 1;
-					printf("Line %d, col %d: Symbol %s not defined\n", noactual->lina, noactual->cola - strlen(noactual->valor), noactual->valor);
+					printf("Line %d, col %d: Symbol %s not defined\n", noactual->lina, noactual->cola, noactual->valor);
 					return NULL;
 				}
 			case is_NOT: ;
@@ -112,7 +112,23 @@ char *checkExpr(is_Nos *noactual){
 
 			case is_MULT:
 			case is_ADD:
-			case is_SUB:
+			case is_SUB: ;
+				aux2 = checkExpr(noactual->nofilho);
+				aux3 = checkExpr(noactual->nofilho->nonext);
+				if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
+					if(strcmp(aux2, "_integer_")==0 && strcmp(aux3, "_integer_")!=0){
+						return "_integer_"
+					}else{
+						return "_real_";
+					}
+				}else{
+					/*LINHAS ERRADAS*/
+					erros = 1;
+					printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
+						noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+					return NULL;
+				}
+			
 			case is_REALDIV: ;
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
@@ -125,7 +141,7 @@ char *checkExpr(is_Nos *noactual){
 						noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
 					return NULL;
 				}
-			
+
 			case is_LESS:
 			case is_GEQUAL:
 			case is_LEQUAL:
@@ -170,6 +186,9 @@ char *checkExpr(is_Nos *noactual){
 						noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
 					return NULL;
 				}
+
+			default:
+				return "LOL";
 			
 
 		}
@@ -182,7 +201,7 @@ void checkAssign(is_Nos *noactual){
 		if(mexer != NULL){
 			if(mexer->isconstant == 0){
 				char *aux = checkExpr(noactual->nonext);
-				/*if(erros != 1 && aux != NULL){
+				if(erros != 1 && aux != NULL){
 					if(strcmp(mexer->type, aux)==0){
 						printf("TUDO BEM\n");
 					}else{
@@ -190,14 +209,16 @@ void checkAssign(is_Nos *noactual){
 						printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
 							noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
 					}
-				}*/
+				}
 			}else{
 				erros = 1;
-				printf("Line %d, col %d: Variable identifier expected\n", noactual->lina, noactual->cola - strlen(noactual->valor));
+				printf("Line %d, col %d: Variable identifier expected\n", 
+					noactual->lina, noactual->cola);
 			}
 		}else{
 			erros=1;
-			printf("Line %d, col %d: Symbol %s not defined\n", noactual->lina, noactual->cola - strlen(noactual->valor), noactual->valor);
+			printf("Line %d, col %d: Symbol %s not defined\n", 
+				noactual->lina, noactual->cola, noactual->valor);
 		}
 	}
 }
@@ -212,17 +233,24 @@ void checkFuncPart(is_Nos *noactual, char *param){
 }
 
 void checkFuncDeclaration(is_Nos *noactual, char *param){
-	if(noactual != NULL){
+	if(noactual != NULL && erros != 1){
 		table *original = symtab;
 		table *procura = encontra_funcao_na_tabela(noactual->valor);
 
 		if(procura == NULL){
 			inserir_coisas(noactual->valor, "_function_", NULL);
+
+			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
+			if(strcmp(verifica->type, "_type_")==0){
 		
-			table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
-			symtab = funcao;
-			check_program(noactual->nonext, param);
-			symtab = original;
+				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
+				symtab = funcao;
+				check_program(noactual->nonext, param);
+				symtab = original;
+			}else{
+				erros =1;
+				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+			}
 		}else{
 			symtab = procura;
 			check_program(noactual->nonext, param);
@@ -241,11 +269,13 @@ char *checkVarPart(is_Nos *noactual, char *param){
 					return aux->valreturn;
 				}else{
 					erros =1;
-				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+					printf("Line %d, col %d: Type identifier expected\n", 
+						noactual->lina, noactual->cola);
 				}
 			}else{
 				erros =1;
-				printf("Line %d, col %d: Symbol %s not defined\n", noactual->lina, noactual->cola, noactual->valor);
+				printf("Line %d, col %d: Symbol %s not defined\n", 
+					noactual->lina, noactual->cola, noactual->valor);
 			}
 		}else{
 			if(encontra_na_tabela(noactual->valor)==NULL){
@@ -258,7 +288,8 @@ char *checkVarPart(is_Nos *noactual, char *param){
 				return tipo;
 			}else{
 				erros = 1;
-				printf("Line %d, col %d: Symbol %s already defined\n", noactual->lina, noactual->cola - strlen(noactual->valor), noactual->valor);
+				printf("Line %d, col %d: Symbol %s already defined\n", 
+					noactual->lina, noactual->cola, noactual->valor);
 			}
 		}
 	}
