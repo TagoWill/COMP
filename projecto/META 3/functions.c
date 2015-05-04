@@ -9,13 +9,15 @@ extern int lineaux;
 extern int colaux;
 
 /* Funcao que cria um novo no - Necessario caso seja um no a imprimir */
-is_Nos *inserir_no(tipos_nos tipo, is_Nos *filho)
+is_Nos *inserir_no(tipos_nos tipo, is_Nos *filho, int col)
 {
 	is_Nos* novono = (is_Nos*)malloc(sizeof(is_Nos));
 	novono->queraioeisto = tipo;
 	novono->valor = NULL;
 	novono->nofilho = filho;
 	novono->nonext = NULL;
+	novono->lina = lineaux;
+	novono->cola = col;
 
 	return novono;
 }
