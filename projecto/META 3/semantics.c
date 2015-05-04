@@ -336,8 +336,8 @@ char *checkExpr(is_Nos *noactual){
 					return aux->type;
 				}else{
 					erros=1;
-					printf("Line %d, col %d: Function identifier expected\n", 
-						noactual->lina, noactual->cola);
+					printf("Line %d, col %d: Symbol %s not defined\n", 
+						noactual->lina, noactual->cola, noactual->nofilho->valor);
 					return NULL;
 				}
 			}
@@ -433,7 +433,7 @@ void checkWriteLn(is_Nos *noactual){
 				if(strcmp(aux, "_type_")==0){
 					erros=1;
 					printf("Line %d, col %d: Cannot write values of type %s\n",
-						noactual->lina, noactual->cola, aux);
+						noactual->nofilho->lina, noactual->nofilho->cola, aux);
 				}
 			}
 			checkWriteLn(noactual->nonext);
@@ -445,7 +445,7 @@ void checkAssign(is_Nos *noactual){
 	if(noactual != NULL){
 		table *verifica;
 		table *mexer = encontra_em_tudo(noactual->valor);
-		if(strcmp(mexer->type, "_function_")==0){
+		if(mexer != NULL && strcmp(mexer->type, "_function_")==0){
 			verifica = encontra_para_return(mexer->name);
 			if(verifica != NULL){
 				mexer = verifica;
@@ -457,9 +457,12 @@ void checkAssign(is_Nos *noactual){
 				if(erros != 1){
 				if(aux != NULL){
 					if(strcmp(mexer->type, aux)!=0){
-						erros = 1;
-						printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
-							noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
+						/*ISTO AINDA N ESTA BEM*/
+						if(strcmp(mexer->type, "_boolean_")==0 || strcmp(aux,"_boolean_")==0){
+							erros = 1;
+							printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
+								noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
+						}
 					}
 				}
 			}
