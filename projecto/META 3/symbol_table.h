@@ -11,12 +11,14 @@ typedef struct _t3
 	char *type;
 	int isconstant;
 	char *valreturn;
+	int usado;
 	struct _t3 *variaveis;
 	struct _t3 *filho;
 	struct _t3 *next;
 	struct _t3 *pai;
 } table;
 
+void changeStatus();
 table *encontra_funcao_em_tudo(char *valor);
 table *encontra_para_return(char *valor);
 table *encontra_funcao_na_tabela(char *valor);
@@ -24,7 +26,7 @@ table *encontra_na_tabela_outer(char *valor);
 table *encontra_em_tudo(char *valor);
 table *encontra_na_tabela(char *valor);
 void cria();
-table *inserir_funcoes(char *valor, char *type);
+table *inserir_funcoes(char *valor, char *type, int usado);
 table *inserir_coisas(char *valor, char *type,char *ret);
 void imprimirTabela(table* actual);
 void imprimeTabelas(table* actual);

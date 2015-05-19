@@ -13,4 +13,7 @@ void checkWriteLn(is_Nos *noactual);
 void checkAssign(is_Nos *noactual);
 char *checkVarPart(is_Nos *noactual, char *param);
 void checkFuncPart(is_Nos *noactual, char *param);
-void checkFuncDeclaration(is_Nos *noactual, char *param);
+//void checkFuncDeclaration(is_Nos *noactual, char *param);
+void checkFucnDef(is_Nos *noactual, char *param);
+void checkFucnDecl(is_Nos *noactual, char *param);
+void checkFucnDef2(is_Nos *noactual, char *param);

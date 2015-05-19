@@ -6,6 +6,10 @@
 
 extern table* symtab;
 
+void changeStatus(){
+	symtab->usado = 1;
+}
+
 table *encontra_funcao_em_tudo(char *valor){
 	table *aux, *aux2;
 	for(aux=symtab->filho;aux!= NULL;aux=aux->next){
@@ -213,7 +217,7 @@ void cria(){
 
 }
 
-table *inserir_funcoes(char *valor, char *type){
+table *inserir_funcoes(char *valor, char *type, int usado){
 	table *newSymbol = (table*)malloc(sizeof(table));
 	table *aux;
 	table *previous;
@@ -240,6 +244,7 @@ table *inserir_funcoes(char *valor, char *type){
 	newSymbol->isconstant=0;
 	newSymbol->valreturn = (char*)malloc(sizeof(char));
 	strcpy(newSymbol->valreturn, "return");
+	newSymbol->usado = usado;
 
 	newSymbol->filho=NULL;
 	newSymbol->pai =symtab;

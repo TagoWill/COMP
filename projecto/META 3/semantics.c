@@ -14,8 +14,6 @@ extern int erros;
 int check_program(is_Nos* noactual, char* param)
 {
 
-
-
 	int errorcount=0;
 	if(noactual != NULL && erros != 1){
 		switch(noactual->queraioeisto){
@@ -74,7 +72,7 @@ int check_program(is_Nos* noactual, char* param)
 }
 
 char *checkExpr(is_Nos *noactual){
-	if(noactual != NULL){
+	if(noactual != NULL && erros != 1){
 		is_Nos *contadordevariaveis;
 		table *aux;
 		char *aux2, *aux3;
@@ -389,7 +387,7 @@ void checkRepeat(is_Nos *noactual){
 			if(erros != 1 && aux != NULL && strcmp(aux, "_boolean_")!=0){
 				erros=1;
 				printf("Line %d, col %d: Incompatible type in repeat-until statement (got %s, expected _boolean_)\n",
-					noactual->nofilho->lina, noactual->nofilho->cola, aux);
+					noactual->nofilho->nonext->lina, noactual->nofilho->nonext->cola, aux);
 			}
 		}
 	}
@@ -461,7 +459,12 @@ void checkAssign(is_Nos *noactual){
 						if(strcmp(mexer->type, "_boolean_")==0 || strcmp(aux,"_boolean_")==0){
 							erros = 1;
 							printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
-								noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
+								noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
+						}
+						if(strcmp(mexer->type, "_integer_")==0 && strcmp(aux,"_real_")==0){
+							erros = 1;
+							printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
+								noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
 						}
 					}
 				}
@@ -482,13 +485,59 @@ void checkAssign(is_Nos *noactual){
 void checkFuncPart(is_Nos *noactual, char *param){
 	if(noactual != NULL){
 
-		checkFuncDeclaration(noactual->nofilho, param);
+		if(noactual->queraioeisto == is_FUNCDEF){
+			
+			checkFucnDef(noactual->nofilho, param);
+		}
+		if(noactual->queraioeisto == is_FUNCDEF2){
+			
+			checkFucnDef2(noactual->nofilho, param);
+		}
+		if(noactual->queraioeisto == is_FUNCDECL){
+			
+			checkFucnDecl(noactual->nofilho, param);
+		}
+		//checkFuncDeclaration(noactual->nofilho, param);
 
 		checkFuncPart(noactual->nonext, param);
 	}
 }
 
-void checkFuncDeclaration(is_Nos *noactual, char *param){
+/*void checkFuncDeclaration(is_Nos *noactual, char *param){
+	if(noactual != NULL && erros != 1){
+		
+		table *original = symtab;
+		table *procura = encontra_funcao_na_tabela(noactual->valor);
+
+		if(procura == NULL){
+			inserir_coisas(noactual->valor, "_function_", NULL);
+
+			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
+			if(strcmp(verifica->type, "_type_")==0){
+				
+				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 1);
+				symtab = funcao;
+				check_program(noactual->nonext, param);
+				symtab = original;
+			}else{
+				erros =1;
+				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+			}
+		}else{
+			symtab = procura;
+			if(symtab->usados == 0){
+				changeStatus();
+				check_program(noactual->nonext, param);
+			}else{
+				erros =1;
+				printf("Line %d, col %d: USADO!\n", noactual->lina, noactual->cola);
+			}
+			symtab = original;
+		}
+	}
+}*/
+
+void checkFucnDecl(is_Nos *noactual, char *param){
 	if(noactual != NULL && erros != 1){
 		table *original = symtab;
 		table *procura = encontra_funcao_na_tabela(noactual->valor);
@@ -499,7 +548,31 @@ void checkFuncDeclaration(is_Nos *noactual, char *param){
 			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
 			if(strcmp(verifica->type, "_type_")==0){
 				
-				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor);
+				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 0);
+				symtab = funcao;
+				check_program(noactual->nonext, param);
+				symtab = original;
+			}else{
+				erros =1;
+				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+			}
+		}
+			
+	}
+}
+
+void checkFucnDef(is_Nos *noactual, char *param){
+	if(noactual != NULL && erros != 1){
+		table *original = symtab;
+		table *procura = encontra_funcao_na_tabela(noactual->valor);
+
+		if(procura == NULL){
+			inserir_coisas(noactual->valor, "_function_", NULL);
+
+			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
+			if(strcmp(verifica->type, "_type_")==0){
+				
+				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 1);
 				symtab = funcao;
 				check_program(noactual->nonext, param);
 				symtab = original;
@@ -508,9 +581,30 @@ void checkFuncDeclaration(is_Nos *noactual, char *param){
 				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
 			}
 		}else{
-			symtab = procura;
-			check_program(noactual->nonext, param);
-			symtab = original;
+			printf("NAO E SUPOSTO DAR ERRO\n");
+		}
+	}
+}
+
+void checkFucnDef2(is_Nos *noactual, char *param){
+	if(noactual != NULL && erros != 1){
+		table *original = symtab;
+		table *procura = encontra_funcao_na_tabela(noactual->valor);
+
+		if(procura != NULL){
+			if(procura->usado == 0){
+				symtab = procura;
+				changeStatus();
+				check_program(noactual->nonext, param);
+				symtab = original;
+			}else{
+				erros =1;
+				printf("JA USADO\n");
+			}
+		}else{
+			erros =1;
+			printf("Line %d, col %d: Symbol %s not defined\n", 
+					noactual->lina, noactual->cola, noactual->valor);
 		}
 	}
 }
