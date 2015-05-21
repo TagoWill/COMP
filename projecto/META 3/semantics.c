@@ -44,7 +44,7 @@ int check_program(is_Nos* noactual, char* param)
 			check_program(noactual->nonext, param);
 			break;
 			case is_WRITELN:
-			checkWriteLn(noactual);
+			checkWriteLn(noactual->nofilho);
 			check_program(noactual->nonext, param);
 			break;
 			case is_IFELSE:
@@ -358,22 +358,30 @@ void checkValParam(is_Nos *noactual){
 					if(strcmp(aux, "_boolean_")==0 && strcmp(aux2->type, "_boolean_")!=0){
 						erros=1;
 						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected %s)\n",
-						noactual->lina, noactual->cola, aux, aux2->type);
-					}else if(strcmp(aux, "_boolean_")==0 && strcmp(aux2->type, "_boolean_")==0){
-						erros=1;
-						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected _real_)\n",
-						noactual->lina, noactual->cola, aux);
-					}else{
-						erros=1;
-						printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected %s)\n",
-						noactual->lina, noactual->cola, aux2->type, aux);
+							noactual->nofilho->lina, noactual->nofilho->cola, aux, aux2->type);
+					}else {
+						if(strcmp(aux, "_real_")==0){
+							erros=1;
+							printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected _integer_)\n",
+								noactual->nofilho->lina, noactual->nofilho->cola, aux);
+						}else{
+							erros=1;
+							printf("Line %d, col %d: Incompatible type in val-paramstr statement (got %s, expected _integer_)\n",
+								noactual->nofilho->nonext->lina, noactual->nofilho->nonext->cola, aux2->type);
+						}
 					}
 					
 				}
 			}else{
 				erros =1;
-				printf("Line %d, col %d: Symbol %s not defined\n", 
-					noactual->nofilho->nonext->lina, noactual->nofilho->nonext->cola, noactual->nofilho->nonext->valor);
+				if(aux == NULL){
+					printf("Line %d, col %d: Symbol %s not defined\n", 
+						noactual->lina, noactual->cola, noactual->nofilho->valor);
+				}else{
+					printf("Line %d, col %d: Symbol %s not defined\n", 
+						noactual->nofilho->nonext->lina, noactual->nofilho->nonext->cola, noactual->nofilho->nonext->valor);	
+				}
+				
 			}
 		}
 	}
@@ -425,13 +433,13 @@ void checkIfThen(is_Nos *noactual){
 void checkWriteLn(is_Nos *noactual){
 	if(noactual != NULL && erros!=1){
 		char *aux;
-		aux = checkExpr(noactual->nofilho);
+		aux = checkExpr(noactual);
 		if(erros != 1){
 			if(aux != NULL){
 				if(strcmp(aux, "_type_")==0){
 					erros=1;
 					printf("Line %d, col %d: Cannot write values of type %s\n",
-						noactual->nofilho->lina, noactual->nofilho->cola, aux);
+						noactual->lina, noactual->cola, aux);
 				}
 			}
 			checkWriteLn(noactual->nonext);
@@ -456,15 +464,20 @@ void checkAssign(is_Nos *noactual){
 				if(aux != NULL){
 					if(strcmp(mexer->type, aux)!=0){
 						/*ISTO AINDA N ESTA BEM*/
+						if(strcmp(mexer->type, "_function_")==0){
+							erros = 1;
+							printf("Line %d, col %d: Variable identifier expected\n", 
+								noactual->lina, noactual->cola);
+						}
 						if(strcmp(mexer->type, "_boolean_")==0 || strcmp(aux,"_boolean_")==0){
 							erros = 1;
 							printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
-								noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
+								noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
 						}
 						if(strcmp(mexer->type, "_integer_")==0 && strcmp(aux,"_real_")==0){
 							erros = 1;
 							printf("Line %d, col %d: Incompatible type in assigment to %s (got %s, expected %s)\n", 
-								noactual->lina, noactual->cola, mexer->name, aux, mexer->type);
+								noactual->nonext->lina, noactual->nonext->cola, mexer->name, aux, mexer->type);
 						}
 					}
 				}
