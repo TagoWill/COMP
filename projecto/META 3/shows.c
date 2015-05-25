@@ -1,7 +1,9 @@
 #include "shows.h"
 #include "structures.h"
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
+#include <ctype.h>
 
 /* Funcao que introduz o espacamento correcto (em pontos) na impressao do código - Faz parte do show_prog */
 void espacamento(int tamanho){
@@ -98,6 +100,17 @@ char *istoe(tipos_nos tipo)
 		default:
 			return "Nao sei o que fazer";
 	}
+}
+
+char *letraspequenas(tipos_nos tipo){
+	int i;
+	char *lower = istoe(tipo);
+	char *lower2  = (char *)malloc(sizeof(char));
+	for(i = 0; lower[i]; i++){
+  		lower2[i] = tolower(lower[i]);
+	}
+
+	return lower2;
 }
 
 /* Imprime o código introduzido */
