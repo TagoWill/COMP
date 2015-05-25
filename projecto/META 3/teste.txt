@@ -1,5 +1,10 @@
-program gdc(output);
-var x, y :integer;
+program gdc2(output);
+var x,b:integer;c:real;r:boolean;
+function a(var g:integer):integer;
 begin
+end;
+begin
+
+x := 2+a;
 
 end.
