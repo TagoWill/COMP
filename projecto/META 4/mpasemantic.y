@@ -310,9 +310,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	CodeGenerator llvmcode;
-	llvmcode.generateCode(myprogram);
-	llvmcode.runCode();
+	generateCode(myprogram);
 
 	return 0;
 }
