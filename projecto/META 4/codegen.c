@@ -1,54 +1,66 @@
-#include "structures.h"
 #include "codegen.h"
+#include "structures.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-void generateCode(is_Node* noactual, char* param)
+void generateCode(is_Nos* noactual, char* param)
 {
-	LLVMModuleRef mod = NULL;
-
 	if(noactual != NULL){
 		switch(noactual->queraioeisto){
 			case is_PROGRAM:
-				mod = LLVMModuleCreateWithName("myprogram");
+				//printf("is_PROGRAM\n");
+				printf("define i32 @main() {\n");
 				generateCode(noactual->nofilho, param);
 				generateCode(noactual->nonext, param);
+				printf("}\n");
 				break;
 			case is_VARDECL:
+				printf("is_VARDECL\n");
 				genVarPart(noactual->nofilho, NULL);
 				generateCode(noactual->nonext, NULL);
 				break;
 			case is_VARPARAMS:
+				printf("is_VARPARAMS\n");
 				genVarPart(noactual->nofilho, "varparam");
 				generateCode(noactual->nonext, param);
 				break;
 			case is_PARAMS:
+				printf("is_PARAMS\n");
 				genVarPart(noactual->nofilho, "param");
 				generateCode(noactual->nonext, param);
 				break;
 			case is_FUNCPART:
+				printf("is_FUNCPART\n");
 				genFuncPart(noactual->nofilho, NULL);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_ASSIGN:
+				printf("is_ASSIGN\n");
 				genAssign(noactual->nofilho);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_WRITELN:
+				printf("is_WRITELN\n");
 				genWriteLn(noactual);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_IFELSE:
+				printf("is_IFELSE\n");
 				genIfThen(noactual);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_WHILE:
+				printf("is_WHILE\n");
 				genWhile(noactual);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_REPEAT:
+				printf("is_REPEAT\n");
 				genRepeat(noactual);
 				generateCode(noactual->nonext, param);
 				break;
 			case is_VALPARAM:
+				printf("is_VALPARAM\n");
 				genValParam(noactual);
 				generateCode(noactual->nonext, param);
 			default:
@@ -56,124 +68,46 @@ void generateCode(is_Node* noactual, char* param)
 				generateCode(noactual->nonext, param);
 		}
 	}
-
-	if(mod!=NULL)
-	{
-		LLVMVerifyModule(mod, LLVMAbortProcessAction, &error);
-  		LLVMDisposeMessage(error); // Handler == LLVMAbortProcessAction -> No need to check errors
-
-  		LLVMExecutionEngineRef engine;
-  		LLVMModuleProviderRef provider = LLVMCreateModuleProviderForExistingModule(mod);
-  		error = NULL;
-  		LLVMCreateJITCompiler(&engine, provider, &error);
-  		if(error) {
-    		fprintf(stderr, "%s\n", error);
-    		LLVMDisposeMessage(error);
-    		abort();
-  		}
-
-  		LLVMPassManagerRef pass = LLVMCreatePassManager();
-  		LLVMAddTargetData(LLVMGetExecutionEngineTargetData(engine), pass);
-  		LLVMAddConstantPropagationPass(pass);
-  		LLVMAddInstructionCombiningPass(pass);
-  		LLVMAddPromoteMemoryToRegisterPass(pass);
-  		// LLVMAddDemoteMemoryToRegisterPass(pass); // Demotes every possible value to memory
-  		LLVMAddGVNPass(pass);
-  		LLVMAddCFGSimplificationPass(pass);
-  		LLVMRunPassManager(pass, mod);
-  		LLVMDumpModule(mod);
-
-  		LLVMGenericValueRef exec_args[] = {LLVMCreateGenericValueOfInt(LLVMInt32Type(), 10, 0)};
-  		LLVMGenericValueRef exec_res = LLVMRunFunction(engine, fac, 1, exec_args);
-  		fprintf(stderr, "\n");
-  		fprintf(stderr, "; Running program with JIT...\n");
-  		fprintf(stderr, "; Result: %d\n", LLVMGenericValueToInt(exec_res, 0));
-
-  		LLVMDisposePassManager(pass);
-  		LLVMDisposeBuilder(builder);
-  		LLVMDisposeExecutionEngine(engine);
-  	}	
 }
 
-void genVarPart(is_Node* root, char *param)
+void genVarPart(is_Nos* root, char *param)
 {
 	/* Funcao para ir buscar as variaveis e os seus tipos para depois converter para llvm */
+	printf("%%%s = alloca i32\n", root->valor);
 }
 
-void genFuncPart(is_Node* root, char *param)
+void genFuncPart(is_Nos* root, char *param)
 {
 	/* Funcao para ir buscar uma funcao pascal e converte-la para llvm */
-	if(noactual != NULL)
-	{
-		LLVMTypeRef fac_args[] = { LLVMInt32Type() };
-  		LLVMValueRef fac = LLVMAddFunction(mod, "fac", LLVMFunctionType(LLVMInt32Type(), fac_args, 1, 0));
-  		LLVMSetFunctionCallConv(fac, LLVMCCallConv);
-  		LLVMValueRef n = LLVMGetParam(fac, 0);
-	}
+	printf("define tipo nome da funcao() {");
 }
 
-void genAssign(is_Node* root);
+void genAssign(is_Nos* root)
 {
 
 }
 
-void genWriteLn(is_Node* root);
+void genWriteLn(is_Nos* root)
 {
 
 }
 
-void genIfThen(is_Node* root);
-{
-	/*LLVMBasicBlockRef entry = LLVMAppendBasicBlock(fac, "entry");
-	LLVMBasicBlockRef iftrue = LLVMAppendBasicBlock(fac, "iftrue");
-  	LLVMBasicBlockRef iffalse = LLVMAppendBasicBlock(fac, "iffalse");
-	LLVMBasicBlockRef end = LLVMAppendBasicBlock(fac, "end");
-  	LLVMBuilderRef builder = LLVMCreateBuilder();
-
-  	LLVMPositionBuilderAtEnd(builder, entry);
-  	LLVMValueRef If = LLVMBuildICmp(builder, LLVMIntEQ, n, LLVMConstInt(LLVMInt32Type(), 0, 0), "n == 0");
-  	LLVMBuildCondBr(builder, If, iftrue, iffalse);
-
-  	LLVMPositionBuilderAtEnd(builder, iftrue);
-  	LLVMValueRef res_iftrue = LLVMConstInt(LLVMInt32Type(), 1, 0);
-  	LLVMBuildBr(builder, end);
-
-  	LLVMPositionBuilderAtEnd(builder, iffalse);
-  	LLVMValueRef n_minus = LLVMBuildSub(builder, n, LLVMConstInt(LLVMInt32Type(), 1, 0), "n - 1");
-  	LLVMValueRef call_fac_args[] = {n_minus};
-  	LLVMValueRef call_fac = LLVMBuildCall(builder, fac, call_fac_args, 1, "fac(n - 1)");
-  	LLVMValueRef res_iffalse = LLVMBuildMul(builder, n, call_fac, "n * fac(n - 1)");
-  	LLVMBuildBr(builder, end);
-
-  	LLVMPositionBuilderAtEnd(builder, end);
-  	LLVMValueRef res = LLVMBuildPhi(builder, LLVMInt32Type(), "result");
-  	LLVMValueRef phi_vals[] = {res_iftrue, res_iffalse};
-  	LLVMBasicBlockRef phi_blocks[] = {iftrue, iffalse};
-  	LLVMAddIncoming(res, phi_vals, phi_blocks, 2);
-  	LLVMBuildRet(builder, res);*/
-}
-
-void genWhile(is_Node* root);
-{
-	/*LLVMBasicBlockRef entry_while = LLVMAppendBasicBlock(fac, "entry_while");
-	LLVMBasicBlockRef end_do = LLVMAppendBasicBlock(fac, "end_do");
-  	LLVMBuilderRef builder = LLVMCreateBuilder();
-
-  	LLVMPositionBuilderAtEnd(builder, entry_while);
-  	LLVMPositionBuilderAtEnd(builder, end_do);*/
-}
-
-void genRepeat(is_Node* root);
-{
-	/*LLVMBasicBlockRef entry_repeat = LLVMAppendBasicBlock(fac, "entry_repeat");
-	LLVMBasicBlockRef end_while = LLVMAppendBasicBlock(fac, "end_while");
-  	LLVMBuilderRef builder = LLVMCreateBuilder();
-
-  	LLVMPositionBuilderAtEnd(builder, entry_repeat);
-  	LLVMPositionBuilderAtEnd(builder, end_while);*/
-}
-
-void genValParam(is_Node* root);
+void genIfThen(is_Nos* root)
 {
 	
+}
+
+void genWhile(is_Nos* root)
+{
+	
+}
+
+void genRepeat(is_Nos* root)
+{
+	
+}
+
+void genValParam(is_Nos* root)
+{
+
 }

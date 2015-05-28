@@ -286,7 +286,12 @@ int main(int argc, char *argv[])
 	yyparse();
 	int err = check_program(myprogram, NULL);
 	if(erros != 1){
-		if(argc == 2){
+		if(argc == 1)
+		{
+			//printf("This is llvm code!\n");
+			generateCode(myprogram, NULL);
+		}
+		else if(argc == 2){
 			if(strcmp("-t", argv[1])==0){
 				show_prog(myprogram,0);
 			}else if(strcmp("-s", argv[1])==0){
@@ -309,8 +314,6 @@ int main(int argc, char *argv[])
 			}
 		}
 	}
-
-	generateCode(myprogram);
 
 	return 0;
 }
