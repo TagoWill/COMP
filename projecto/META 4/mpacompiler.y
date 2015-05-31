@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 		if(argc == 1)
 		{
 			//printf("This is llvm code!\n");
-			generateCode(myprogram, NULL);
+			generateCode(myprogram, NULL, 0);
 		}
 		else if(argc == 2){
 			if(strcmp("-t", argv[1])==0){
