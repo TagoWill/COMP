@@ -4,6 +4,7 @@
 
 int check_program(is_Nos* noactual, char* param);
 char *checkExpr(is_Nos *noactual);
+void *doubleCheckIsCall(is_Nos *noactual);
 char *checkParamStr(is_Nos *noactual);
 void checkValParam(is_Nos *noactual);
 void checkRepeat(is_Nos *noactual);

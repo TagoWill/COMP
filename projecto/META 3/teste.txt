@@ -1,6 +1,6 @@
 program gdc2(output);
 var x,b:integer;c:real;r:boolean;
-function a(var g:integer):integer;
+function a(var g:integer):o;
 begin
 end;
 begin
