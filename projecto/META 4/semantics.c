@@ -13,7 +13,6 @@ extern int erros;
 
 int check_program(is_Nos* noactual, char* param)
 {
-
 	int errorcount=0;
 	if(noactual != NULL && erros != 1){
 		switch(noactual->queraioeisto){
@@ -67,7 +66,6 @@ int check_program(is_Nos* noactual, char* param)
 			check_program(noactual->nonext, param);
 		}
 	}
-
 	return errorcount;
 }
 
@@ -98,29 +96,43 @@ char *checkExpr(is_Nos *noactual){
 			case is_NOT: ;
 			if(erros != 1){
 				aux2 = checkExpr(noactual->nofilho);
+				if(aux2 != NULL){
 				if(strcmp(aux2, "_boolean_")==0){
 					return aux2;
 				}else{
 					erros = 1;
-					printf("Line %d, col %d: Operator Not cannot be applied to type %s\n", noactual->lina, noactual->cola, aux2);
+					printf("Line %d, col %d: Operator not cannot be applied to type %s\n", noactual->lina, noactual->cola, aux2);
 					return NULL;
 				}
+			}
 			}
 			return NULL;
 
 			case is_PLUS:
 			case is_MINUS: ;
 			if(erros != 1){
+				char * operador;
 				aux2 = checkExpr(noactual->nofilho);
-				if(strcmp(aux2, "_boolean_")==0){
+				if(aux2 != NULL){
+				if(strcmp(aux2, "_boolean_")==0 || strcmp(aux2, "_type_")==0){
 					erros = 1;
-							/*Linhas erradas*/
+					switch(noactual->queraioeisto){
+							case is_PLUS:
+								operador = "+";
+								break;
+							case is_MINUS:
+								operador = "-";
+								break;
+							default:
+								operador = letraspequenas(noactual->queraioeisto);
+						}
 					printf("Line %d, col %d: Operator %s cannot be applied to type %s\n", 
-						noactual->lina, noactual->cola, istoe(noactual->queraioeisto), aux2);
+						noactual->lina, noactual->cola, operador, aux2);
 					return NULL;
 				}else{
 					return aux2;
 				}
+			}
 			}
 			return NULL;
 
@@ -129,13 +141,15 @@ char *checkExpr(is_Nos *noactual){
 			if(erros != 1){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
+				if(erros == 1){
+					return NULL;
+				}
 				if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_integer_")==0 && strcmp(aux3, "_integer_")==0){
 					return aux2;
 				}else{
-
 					erros = 1;
 					printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
-						noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+						noactual->lina, noactual->cola, letraspequenas(noactual->queraioeisto),aux2, aux3);
 					return NULL;
 				}
 			}
@@ -149,14 +163,14 @@ char *checkExpr(is_Nos *noactual){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
-					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
+					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0
+																	&& strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
 						if(strcmp(aux2, "_integer_")==0 && strcmp(aux3, "_integer_")==0){
 							return "_integer_";
 						}else{
 							return "_real_";
 						}
 					}else{
-							/*LINHAS ERRADAS*/
 						erros = 1;
 						switch(noactual->queraioeisto){
 							case is_ADD:
@@ -165,8 +179,11 @@ char *checkExpr(is_Nos *noactual){
 							case is_SUB:
 								operador = "-";
 								break;
+							case is_MULT:
+								operador = "*";
+								break;
 							default:
-								operador = istoe(noactual->queraioeisto);
+								operador = letraspequenas(noactual->queraioeisto);
 						}
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
 							noactual->lina, noactual->cola, operador, aux2, aux3);
@@ -182,7 +199,8 @@ char *checkExpr(is_Nos *noactual){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
-					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
+					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0
+									&& strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
 						return "_real_";
 					}else{
 							switch(noactual->queraioeisto){
@@ -190,7 +208,7 @@ char *checkExpr(is_Nos *noactual){
 								operador = "/";
 								break;
 							default:
-								operador = istoe(noactual->queraioeisto);
+								operador = letraspequenas(noactual->queraioeisto);
 						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
@@ -210,9 +228,13 @@ char *checkExpr(is_Nos *noactual){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
-					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0){
+					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0
+										&& strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
 						return "_boolean_";
 					}else{
+						if(strcmp(aux2, "_boolean_")==0 && strcmp(aux3, "_boolean_")==0 && strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
+							return "_boolean_";
+						}
 							
 						switch(noactual->queraioeisto){
 							case is_LESS:
@@ -228,7 +250,7 @@ char *checkExpr(is_Nos *noactual){
 								operador = ">";
 								break;
 							default:
-								operador = istoe(noactual->queraioeisto);
+								operador = letraspequenas(noactual->queraioeisto);
 						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n",
@@ -246,9 +268,13 @@ char *checkExpr(is_Nos *noactual){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
-					if(aux2 != NULL && aux3 != NULL){
+					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")!=0 && strcmp(aux3, "_boolean_")!=0
+										&& strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
 						return "_boolean_";
 					}else{
+						if(strcmp(aux2, "_boolean_")==0 && strcmp(aux3, "_boolean_")==0 && strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
+							return "_boolean_";
+						}
 							switch(noactual->queraioeisto){
 							case is_DIFFERENT:
 								operador = "<>";
@@ -257,7 +283,7 @@ char *checkExpr(is_Nos *noactual){
 								operador = "=";
 								break;
 							default:
-								operador = istoe(noactual->queraioeisto);
+								operador = letraspequenas(noactual->queraioeisto);
 						}
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
@@ -274,13 +300,13 @@ char *checkExpr(is_Nos *noactual){
 				aux2 = checkExpr(noactual->nofilho);
 				aux3 = checkExpr(noactual->nofilho->nonext);
 				if(erros != 1){
-					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")==0 && strcmp(aux3, "_boolean_")==0){
+					if(aux2 != NULL && aux3 != NULL && strcmp(aux2, "_boolean_")==0 && strcmp(aux3, "_boolean_")==0
+						&& strcmp(aux2, "_type_")!=0 && strcmp(aux3, "_type_")!=0){
 						return "_boolean_";
 					}else{
-							/*LINHAS ERRADAS*/
 						erros = 1;
 						printf("Line %d, col %d: Operator %s cannot be applied to types %s, %s\n", 
-							noactual->lina, noactual->cola, istoe(noactual->queraioeisto),aux2, aux3);
+							noactual->lina, noactual->cola, letraspequenas(noactual->queraioeisto),aux2, aux3);
 						return NULL;
 					}
 				}
@@ -310,6 +336,9 @@ char *checkExpr(is_Nos *noactual){
 							for(vervariaveis=aux->variaveis;vervariaveis!=NULL;vervariaveis=vervariaveis->next){
 								if(vervariaveis->valreturn != NULL){
 									aux2 = checkExpr(contadordevariaveis);
+									if(aux2 != NULL){
+										return aux->type;
+									}
 									contador1++;
 									if(strcmp(aux2, vervariaveis->type)!=0){
 										erros=1;
@@ -559,15 +588,20 @@ void checkFucnDecl(is_Nos *noactual, char *param){
 			inserir_coisas(noactual->valor, "_function_", NULL);
 
 			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
-			if(strcmp(verifica->type, "_type_")==0){
+			if(verifica != NULL && strcmp(verifica->type, "_type_")==0){
 				
 				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 0);
 				symtab = funcao;
 				check_program(noactual->nonext, param);
 				symtab = original;
 			}else{
-				erros =1;
-				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				if(verifica == NULL){
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->nonext->nonext->lina, noactual->nonext->nonext->cola);
+				}else{
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				}
 			}
 		}
 			
@@ -583,15 +617,20 @@ void checkFucnDef(is_Nos *noactual, char *param){
 			inserir_coisas(noactual->valor, "_function_", NULL);
 
 			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
-			if(strcmp(verifica->type, "_type_")==0){
+			if(verifica != NULL && strcmp(verifica->type, "_type_")==0){
 				
 				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 1);
 				symtab = funcao;
 				check_program(noactual->nonext, param);
 				symtab = original;
 			}else{
-				erros =1;
-				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				if(verifica == NULL){
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->nonext->nonext->lina, noactual->nonext->nonext->cola);
+				}else{
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				}
 			}
 		}else{
 			printf("NAO E SUPOSTO DAR ERRO\n");
