@@ -1,11 +1,14 @@
 #include "structures.h"
 
-void generateCode(is_Nos* root, char* param);
-void genVarPart(is_Nos* root, char *param);
-void genFuncPart(is_Nos* root, char *param);
-void genAssign(is_Nos* root);
-void genWriteLn(is_Nos* root);
-void genIfThen(is_Nos* root);
-void genWhile(is_Nos* root);
-void genRepeat(is_Nos* root);
-void genValParam(is_Nos* root);
+void generateCode(is_Nos* noactual, char* param, int tamanho);
+void genVarPart(is_Nos* noactual, char *param, int tamanho);
+void genFuncPart(is_Nos* noactual, char *param, int tamanho);
+void genFuncDef(is_Nos* noactual, char *param, int tamanho);
+void genAssign(is_Nos* noactual, int tamanho);
+char* genExpr(is_Nos* noactual);
+void genWriteLn(is_Nos* noactual);
+void genIfThen(is_Nos* noactual);
+void genWhile(is_Nos* noactual);
+void genRepeat(is_Nos* noactual);
+void genValParam(is_Nos* noactual);
+void espacamento2(int tamanho);
