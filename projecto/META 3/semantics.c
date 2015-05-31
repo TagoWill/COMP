@@ -13,7 +13,6 @@ extern int erros;
 
 int check_program(is_Nos* noactual, char* param)
 {
-
 	int errorcount=0;
 	if(noactual != NULL && erros != 1){
 		switch(noactual->queraioeisto){
@@ -67,7 +66,6 @@ int check_program(is_Nos* noactual, char* param)
 			check_program(noactual->nonext, param);
 		}
 	}
-
 	return errorcount;
 }
 
@@ -590,15 +588,20 @@ void checkFucnDecl(is_Nos *noactual, char *param){
 			inserir_coisas(noactual->valor, "_function_", NULL);
 
 			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
-			if(strcmp(verifica->type, "_type_")==0){
+			if(verifica != NULL && strcmp(verifica->type, "_type_")==0){
 				
 				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 0);
 				symtab = funcao;
 				check_program(noactual->nonext, param);
 				symtab = original;
 			}else{
-				erros =1;
-				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				if(verifica == NULL){
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->nonext->nonext->lina, noactual->nonext->nonext->cola);
+				}else{
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				}
 			}
 		}
 			
@@ -614,15 +617,20 @@ void checkFucnDef(is_Nos *noactual, char *param){
 			inserir_coisas(noactual->valor, "_function_", NULL);
 
 			table *verifica = encontra_em_tudo(noactual->nonext->nonext->valor);
-			if(strcmp(verifica->type, "_type_")==0){
+			if(verifica != NULL && strcmp(verifica->type, "_type_")==0){
 				
 				table *funcao = inserir_funcoes(noactual->valor, noactual->nonext->nonext->valor, 1);
 				symtab = funcao;
 				check_program(noactual->nonext, param);
 				symtab = original;
 			}else{
-				erros =1;
-				printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				if(verifica == NULL){
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->nonext->nonext->lina, noactual->nonext->nonext->cola);
+				}else{
+					erros =1;
+					printf("Line %d, col %d: Type identifier expected\n", noactual->lina, noactual->cola);
+				}
 			}
 		}else{
 			printf("NAO E SUPOSTO DAR ERRO\n");
